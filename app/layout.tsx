@@ -4,6 +4,7 @@ import { Inter, Playfair_Display } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import Navbar from '@/components/ui/navbar';
 import Footer from '@/components/ui/footer';
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -46,6 +47,7 @@ export default function RootLayout({
         >
           <Navbar />
           <main className="min-h-screen">{children}</main>
+          <GoogleAnalytics gaId="G-W9GLHNQCGG" />
           <Footer />
         </ThemeProvider>
       </body>
