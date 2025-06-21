@@ -196,8 +196,7 @@ export default function ServicesCTA() {
                 <Link href="/get-started">
                   <Button
                     size="lg"
-                    variant="outline"
-                    className="border-white text-white hover:bg-white hover:text-blue-600"
+                    className="bg-blue-600 hover:bg-blue-700 text-white border-white hover:border-blue-700"
                   >
                     Start Free Consultation
                     <ArrowRight className="ml-2 h-5 w-5" />

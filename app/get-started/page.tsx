@@ -33,80 +33,110 @@ import {
   MessageSquare,
   Calendar,
   Award,
+  Check,
+  Phone,
+  Mail,
+  Globe,
+  Target,
+  TrendingUp,
+  Award as AwardIcon,
+  ThumbsUp,
+  Eye,
+  Heart,
 } from "lucide-react";
 import Link from "next/link";
 
 export default function GetStartedPage() {
-  const [activeTab, setActiveTab] = useState("transcription");
+  const [activeTab, setActiveTab] = useState("speech-to-text");
 
   const services = [
     {
-      id: "transcription",
-      title: "Manual Transcription",
-      description: "Professional human transcription of Urdu audio",
+      id: "speech-to-text",
+      title: "Urdu Speech-to-Text",
+      description:
+        "Convert spoken Urdu to accurate written text with our advanced human-powered speech recognition service. Perfect for interviews, meetings, podcasts, and voice notes.",
       icon: Mic,
       features: [
-        "100% human transcriptionists",
-        "Native Urdu speakers",
-        "Context-aware accuracy",
-        "Professional editing included",
+        "Native Urdu speakers for accurate transcription",
+        "Handles various accents and dialects",
+        "Real-time processing capabilities",
+        "Quality assurance by language experts",
+        "Multiple audio format support",
+        "Speaker identification available",
       ],
       steps: [
         {
           title: "Submit Audio",
-          description: "Upload your Urdu audio file in any format",
+          description:
+            "Upload your Urdu audio file in any format (MP3, WAV, M4A, etc.)",
           icon: Upload,
         },
         {
-          title: "Human Review",
+          title: "Human Processing",
           description:
-            "Our native Urdu speakers listen and transcribe manually",
+            "Our native Urdu speakers listen and convert speech to text with cultural context",
           icon: Users,
         },
         {
           title: "Quality Check",
-          description: "Multiple rounds of human review for accuracy",
+          description: "Multiple rounds of human review for 99%+ accuracy",
           icon: CheckCircle,
         },
         {
           title: "Final Delivery",
-          description: "Receive your professionally transcribed document",
+          description:
+            "Receive your professionally converted text document with timestamps",
           icon: Download,
         },
       ],
+      useCases: [
+        "Interviews",
+        "Meetings",
+        "Podcasts",
+        "Voice notes",
+        "Lectures",
+        "Presentations",
+      ],
+      turnaround: "2-24 hours",
+      accuracy: "99%+",
     },
     {
       id: "translation",
-      title: "Human Translation",
+      title: "Urdu Translation",
       description:
-        "Professional human translation services - From any language to Urdu and vice versa",
+        "Professional translation services between Urdu and 80+ languages with cultural context preservation. Certified translations available for legal and official documents.",
       icon: Languages,
       features: [
-        "Native Urdu translators",
+        "Native bilingual translators",
         "Cultural context preservation",
-        "Subject matter experts",
+        "Industry-specific terminology",
+        "Multiple language pairs supported",
         "Certified translations available",
-        "Bidirectional translation (Any language ↔ Urdu)",
+        "Bidirectional translation support",
       ],
       steps: [
         {
           title: "Submit Document",
-          description: "Upload your document for translation",
+          description:
+            "Upload your document for translation with specific requirements",
           icon: Upload,
         },
         {
           title: "Expert Assignment",
-          description: "We assign your project to qualified native speakers",
+          description:
+            "We assign your project to qualified native speakers with relevant expertise",
           icon: UserCheck,
         },
         {
           title: "Human Translation",
-          description: "Professional translators work on your content",
+          description:
+            "Professional translators work on your content with cultural sensitivity",
           icon: Languages,
         },
         {
           title: "Quality Assurance",
-          description: "Multiple human reviewers ensure accuracy",
+          description:
+            "Multiple human reviewers ensure accuracy and cultural appropriateness",
           icon: Award,
         },
       ],
@@ -212,87 +242,316 @@ export default function GetStartedPage() {
         "Balti",
         "Wakhi",
       ],
+      useCases: [
+        "Documents",
+        "Websites",
+        "Marketing materials",
+        "Legal texts",
+        "Academic papers",
+        "Business content",
+      ],
+      turnaround: "1-3 days",
+      accuracy: "100%",
     },
     {
-      id: "voice-over",
-      title: "Voice-Over Services",
-      description: "Professional Urdu voice-over and audio services",
-      icon: Headphones,
+      id: "transcription",
+      title: "Urdu Transcription",
+      description:
+        "Detailed transcription of Urdu audio and video content with timestamps and speaker identification. Ideal for research, legal proceedings, and content creation.",
+      icon: FileText,
       features: [
-        "Native Urdu voice artists",
-        "Professional recording studios",
-        "Multiple voice options",
-        "Audio editing and mixing",
+        "Speaker identification and timestamps",
+        "Background noise handling",
+        "Multiple audio format support",
+        "Professional editing and proofreading",
+        "Custom formatting options",
+        "Verbatim or clean transcription",
       ],
       steps: [
         {
-          title: "Project Consultation",
-          description: "Discuss your voice-over requirements with our team",
-          icon: MessageSquare,
+          title: "Submit Audio/Video",
+          description:
+            "Upload your Urdu audio or video file in any format with specific requirements",
+          icon: Upload,
         },
         {
-          title: "Voice Artist Selection",
+          title: "Human Transcription",
           description:
-            "Choose from our pool of professional Urdu voice artists",
+            "Our native Urdu speakers transcribe with accurate timestamps and speaker identification",
           icon: Users,
         },
         {
-          title: "Professional Recording",
+          title: "Quality Check",
           description:
-            "Record in our professional studio with expert direction",
-          icon: Play,
+            "Multiple rounds of human review for accuracy and completeness",
+          icon: CheckCircle,
         },
         {
-          title: "Audio Production",
-          description: "Professional editing, mixing, and final delivery",
-          icon: Settings,
+          title: "Final Delivery",
+          description:
+            "Receive your professionally transcribed document in your preferred format",
+          icon: Download,
         },
       ],
+      useCases: [
+        "Video content",
+        "Audio recordings",
+        "Interviews",
+        "Lectures",
+        "Legal proceedings",
+        "Research data",
+      ],
+      turnaround: "1-2 days",
+      accuracy: "99%+",
+    },
+    {
+      id: "content-creation",
+      title: "Urdu Content Creation",
+      description:
+        "Native Urdu content creation services for websites, marketing materials, and documentation. SEO-optimized content that resonates with Urdu-speaking audiences.",
+      icon: FileText,
+      features: [
+        "SEO-optimized content",
+        "Creative writing expertise",
+        "Brand voice consistency",
+        "Cultural relevance",
+        "Keyword optimization",
+        "Content strategy planning",
+      ],
+      steps: [
+        {
+          title: "Project Brief",
+          description:
+            "Discuss your content requirements, target audience, and SEO goals",
+          icon: MessageSquare,
+        },
+        {
+          title: "Content Creation",
+          description:
+            "Native Urdu writers create engaging, culturally relevant content",
+          icon: FileText,
+        },
+        {
+          title: "Review & Edit",
+          description:
+            "Professional editing, SEO optimization, and cultural review",
+          icon: CheckCircle,
+        },
+        {
+          title: "Final Delivery",
+          description:
+            "Receive your professionally written content ready for publication",
+          icon: Download,
+        },
+      ],
+      useCases: [
+        "Blog posts",
+        "Marketing copy",
+        "Product descriptions",
+        "Social media",
+        "Website content",
+        "Email campaigns",
+      ],
+      turnaround: "2-5 days",
+      accuracy: "100%",
+    },
+    {
+      id: "subtitling",
+      title: "Urdu Subtitling",
+      description:
+        "Professional Urdu subtitling services for videos, films, and multimedia content with perfect timing. Support for multiple subtitle formats and platforms.",
+      icon: FileText,
+      features: [
+        "Perfect timing synchronization",
+        "Cultural adaptation",
+        "Multiple subtitle formats",
+        "Quality review process",
+        "Platform-specific optimization",
+        "Closed captions available",
+      ],
+      steps: [
+        {
+          title: "Submit Video",
+          description:
+            "Upload your video file for subtitling with format specifications",
+          icon: Upload,
+        },
+        {
+          title: "Timing & Translation",
+          description:
+            "Create perfectly timed Urdu subtitles with cultural adaptation",
+          icon: Clock,
+        },
+        {
+          title: "Quality Check",
+          description: "Review timing, cultural accuracy, and readability",
+          icon: CheckCircle,
+        },
+        {
+          title: "Final Delivery",
+          description:
+            "Receive your subtitled video or subtitle file in multiple formats",
+          icon: Download,
+        },
+      ],
+      useCases: [
+        "YouTube videos",
+        "Films",
+        "Educational content",
+        "Corporate videos",
+        "Social media",
+        "Streaming platforms",
+      ],
+      turnaround: "2-3 days",
+      accuracy: "100%",
+    },
+    {
+      id: "proofreading",
+      title: "Urdu Proofreading",
+      description:
+        "Expert proofreading and editing services for Urdu documents, ensuring perfect grammar, style, and consistency. Ideal for academic, business, and publishing needs.",
+      icon: FileText,
+      features: [
+        "Grammar and spelling correction",
+        "Style and tone improvement",
+        "Consistency checking",
+        "Format optimization",
+        "Cultural accuracy review",
+        "Academic citation formatting",
+      ],
+      steps: [
+        {
+          title: "Submit Document",
+          description:
+            "Upload your Urdu document for proofreading with specific requirements",
+          icon: Upload,
+        },
+        {
+          title: "Expert Review",
+          description:
+            "Native Urdu experts review your content for accuracy and quality",
+          icon: Users,
+        },
+        {
+          title: "Editing & Correction",
+          description:
+            "Professional editing, grammar correction, and style improvement",
+          icon: CheckCircle,
+        },
+        {
+          title: "Final Delivery",
+          description:
+            "Receive your perfectly edited document with tracked changes",
+          icon: Download,
+        },
+      ],
+      useCases: [
+        "Academic papers",
+        "Business documents",
+        "Books",
+        "Articles",
+        "Reports",
+        "Publications",
+      ],
+      turnaround: "1-2 days",
+      accuracy: "100%",
     },
   ];
 
   const pricing = [
     {
-      name: "Standard",
-      price: "$2.50",
-      unit: "per minute",
-      description: "Perfect for basic transcription needs",
+      name: "Basic",
+      description: "Perfect for small projects and quick turnaround needs",
+      price: "Starting at $0.04",
+      unit: "per word",
       features: [
-        "Human transcription",
-        "Basic editing",
-        "48-hour turnaround",
+        "Native Urdu speakers",
+        "Standard turnaround time",
+        "Basic quality check",
         "Email support",
-        "Standard accuracy",
+        "1 revision included",
       ],
+      popular: false,
     },
     {
       name: "Professional",
-      price: "$4.00",
-      unit: "per minute",
-      description: "Ideal for business and professional use",
+      description: "Our most popular choice for business and academic projects",
+      price: "Starting at $0.06",
+      unit: "per word",
       features: [
-        "Expert human transcription",
-        "Professional editing",
-        "24-hour turnaround",
+        "Expert native speakers",
+        "Fast turnaround time",
+        "Comprehensive quality check",
         "Priority support",
-        "High accuracy guarantee",
-        "Multiple format options",
+        "Unlimited revisions",
+        "Cultural accuracy guarantee",
+        "Format optimization",
       ],
       popular: true,
     },
     {
       name: "Premium",
-      price: "$6.00",
-      unit: "per minute",
-      description: "For critical and time-sensitive projects",
+      description:
+        "For critical projects requiring the highest level of expertise",
+      price: "Starting at $0.10",
+      unit: "per word",
       features: [
-        "Senior expert transcription",
+        "Senior expert speakers",
+        "Express turnaround time",
+        "Multi-level quality assurance",
         "Dedicated project manager",
-        "Same-day turnaround",
-        "24/7 support",
-        "Highest accuracy guarantee",
-        "Custom formatting",
+        "Unlimited revisions",
+        "Cultural accuracy guarantee",
+        "Format optimization",
+        "SEO optimization (content)",
+        "Certification available",
       ],
+      popular: false,
+    },
+  ];
+
+  const servicePricing = [
+    {
+      service: "Speech-to-Text",
+      basic: "$0.032/min",
+      professional: "$0.048/min",
+      premium: "$0.072/min",
+      note: "Audio quality affects pricing",
+    },
+    {
+      service: "Translation",
+      basic: "$0.04/word",
+      professional: "$0.06/word",
+      premium: "$0.10/word",
+      note: "Technical content may cost more",
+    },
+    {
+      service: "Transcription",
+      basic: "$0.032/min",
+      professional: "$0.048/min",
+      premium: "$0.072/min",
+      note: "Speaker identification included",
+    },
+    {
+      service: "Content Creation",
+      basic: "$0.06/word",
+      professional: "$0.10/word",
+      premium: "$0.16/word",
+      note: "Research and SEO included",
+    },
+    {
+      service: "Subtitling",
+      basic: "$0.048/min",
+      professional: "$0.072/min",
+      premium: "$0.10/min",
+      note: "Timing and formatting included",
+    },
+    {
+      service: "Proofreading",
+      basic: "$0.02/word",
+      professional: "$0.032/word",
+      premium: "$0.048/word",
+      note: "Style and grammar check",
     },
   ];
 
@@ -301,65 +560,132 @@ export default function GetStartedPage() {
       icon: Users,
       title: "Native Urdu Speakers",
       description:
-        "All our transcriptionists and translators are native Urdu speakers with deep cultural understanding",
+        "All our transcriptionists and translators are native Urdu speakers with deep cultural understanding and linguistic expertise",
     },
     {
       icon: Award,
       title: "Professional Expertise",
       description:
-        "Years of experience in Urdu language services with proven track record",
+        "Years of experience in Urdu language services with proven track record and certified professionals",
     },
     {
       icon: Shield,
       title: "Quality Guarantee",
       description:
-        "100% human review process ensures the highest quality and accuracy",
+        "100% human review process ensures the highest quality and accuracy with satisfaction guarantee",
     },
     {
       icon: Clock,
       title: "Reliable Turnaround",
       description:
-        "Consistent delivery times with clear communication throughout the process",
+        "Consistent delivery times with clear communication throughout the process and deadline guarantees",
     },
   ];
 
-  const trialServices = [
+  const benefits = [
     {
-      service: "Transcription Trial",
-      duration: "1 minute of audio",
-      description: "Free trial transcription of your Urdu audio file",
-      icon: Mic,
-      features: [
-        "Native speaker transcription",
-        "Professional quality",
-        "Quick turnaround",
-        "No obligation",
-      ],
-    },
-    {
-      service: "Translation Trial",
-      duration: "100 words",
+      icon: Target,
+      title: "Cultural Accuracy",
       description:
-        "Free trial translation from any language to Urdu or vice versa",
-      icon: Languages,
-      features: [
-        "Certified translator",
-        "Cultural accuracy",
-        "Professional formatting",
-        "Quality assurance",
-      ],
+        "Native speakers ensure cultural nuances and context are preserved",
     },
     {
-      service: "Voice-Over Trial",
-      duration: "30 seconds",
-      description: "Free trial voice-over recording in Urdu",
-      icon: Headphones,
-      features: [
-        "Professional voice artist",
-        "Studio quality",
-        "Multiple voice options",
-        "Quick delivery",
-      ],
+      icon: TrendingUp,
+      title: "SEO Optimization",
+      description:
+        "Content creation includes keyword optimization for better search rankings",
+    },
+    {
+      icon: Globe,
+      title: "Global Reach",
+      description:
+        "Support for 80+ languages with certified translation services",
+    },
+    {
+      icon: ThumbsUp,
+      title: "Quality Assurance",
+      description:
+        "Multiple review rounds ensure 99%+ accuracy in all services",
+    },
+  ];
+
+  const statistics = [
+    {
+      number: "99%+",
+      label: "Accuracy Rate",
+      description: "Guaranteed accuracy across all services",
+    },
+    {
+      number: "80+",
+      label: "Languages Supported",
+      description: "Comprehensive language coverage",
+    },
+    {
+      number: "24hrs",
+      label: "Fastest Turnaround",
+      description: "Express service available",
+    },
+    {
+      number: "100%",
+      label: "Human Quality",
+      description: "No AI, only human experts",
+    },
+  ];
+
+  const testimonials = [
+    {
+      name: "Dr. Ahmed Khan",
+      role: "Academic Researcher",
+      content:
+        "The Urdu transcription service was exceptional. The accuracy and attention to cultural context made my research much more reliable.",
+      rating: 5,
+    },
+    {
+      name: "Fatima Ali",
+      role: "Marketing Manager",
+      content:
+        "Our Urdu content creation helped us reach a wider audience. The SEO optimization and cultural relevance were spot on.",
+      rating: 5,
+    },
+    {
+      name: "Muhammad Hassan",
+      role: "Business Owner",
+      content:
+        "Professional translation services that helped us expand into new markets. The certified translations were accepted everywhere.",
+      rating: 5,
+    },
+  ];
+
+  const faq = [
+    {
+      question: "How accurate are your Urdu speech-to-text services?",
+      answer:
+        "Our Urdu speech-to-text services achieve 99%+ accuracy through native speakers and multiple quality review rounds. We handle various accents and dialects with cultural context understanding.",
+    },
+    {
+      question: "Do you provide certified translations for legal documents?",
+      answer:
+        "Yes, we provide certified translations for legal and official documents. Our translations are accepted by government agencies, courts, and educational institutions worldwide.",
+    },
+    {
+      question: "What file formats do you support for transcription?",
+      answer:
+        "We support all major audio and video formats including MP3, WAV, M4A, MP4, AVI, MOV, and more. We can also handle large files and multiple speaker identification.",
+    },
+    {
+      question: "How long does content creation take?",
+      answer:
+        "Content creation typically takes 2-5 days depending on the project scope. We offer express services for urgent projects and include SEO optimization and cultural review.",
+    },
+    {
+      question: "Do you offer bulk discounts for large projects?",
+      answer:
+        "Yes, we offer competitive pricing for bulk orders and large projects. Contact us for a custom quote and we'll provide the best rates for your specific needs.",
+    },
+    {
+      question: "Can you handle technical and specialized content?",
+      answer:
+        "Absolutely! We have experts in various fields including medical, legal, technical, academic, and business content. Our translators are subject matter experts in their respective domains.",
     },
   ];
 
@@ -381,11 +707,107 @@ export default function GetStartedPage() {
               Expert <span className="text-blue-600">Human</span> Urdu Services
             </h1>
             <p className="text-lg md:text-xl text-muted-foreground mb-8">
-              Professional native Urdu speakers providing manual transcription,
-              translation, and voice-over services with guaranteed quality and
-              accuracy.
+              Professional native Urdu speakers providing comprehensive language
+              services including speech-to-text, translation, transcription,
+              content creation, subtitling, and proofreading. Experience 99%+
+              accuracy with cultural context preservation and SEO optimization.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+              <Link href="#services">
+                <Button
+                  size="lg"
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg"
+                >
+                  Explore Services
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </Link>
+              <Link href="tel:+923057777911">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="px-8 py-3 text-lg"
+                >
+                  <Phone className="mr-2 h-5 w-5" />
+                  Call Now
+                </Button>
+              </Link>
+            </div>
+          </motion.div>
+
+          {/* Statistics */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-16"
+          >
+            {statistics.map((stat, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
+                className="text-center"
+              >
+                <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm border border-border">
+                  <div className="text-3xl md:text-4xl font-bold text-blue-600 mb-2">
+                    {stat.number}
+                  </div>
+                  <div className="font-semibold text-sm mb-1">{stat.label}</div>
+                  <div className="text-xs text-muted-foreground">
+                    {stat.description}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Benefits Section */}
+      <section className="py-16 bg-secondary/30 dark:bg-muted/10">
+        <div className="container mx-auto px-4">
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Why Choose Our <span className="text-blue-600">Human-Based</span>{" "}
+              Services?
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Experience the difference that human expertise makes in Urdu
+              language services
             </p>
           </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+            {benefits.map((benefit, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+              >
+                <Card className="h-full text-center">
+                  <CardContent className="pt-6">
+                    <div className="flex items-center justify-center w-12 h-12 bg-blue-100 dark:bg-blue-900/50 rounded-lg mb-4 mx-auto">
+                      <benefit.icon className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <h3 className="font-semibold text-lg mb-2">
+                      {benefit.title}
+                    </h3>
+                    <p className="text-muted-foreground text-sm">
+                      {benefit.description}
+                    </p>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -431,104 +853,8 @@ export default function GetStartedPage() {
         </div>
       </section>
 
-      {/* Free Trial Section */}
-      <section className="py-16">
-        <div className="container mx-auto px-4">
-          <motion.div
-            className="text-center mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            <Badge variant="secondary" className="mb-4">
-              Free Trial Available
-            </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Try Our Services Free
-            </h2>
-            <p className="text-lg text-muted-foreground">
-              Experience our quality with free trials - no obligation, no
-              commitment
-            </p>
-          </motion.div>
-
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {trialServices.map((trial, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-              >
-                <Card className="h-full border-2 border-blue-200 dark:border-blue-800">
-                  <CardHeader className="text-center">
-                    <div className="flex items-center justify-center w-16 h-16 bg-green-100 dark:bg-green-900/50 rounded-full mb-4 mx-auto">
-                      <trial.icon className="w-8 h-8 text-green-600" />
-                    </div>
-                    <CardTitle className="text-xl">{trial.service}</CardTitle>
-                    <div className="flex items-center justify-center gap-2">
-                      <Badge
-                        variant="outline"
-                        className="bg-green-50 text-green-700 border-green-200"
-                      >
-                        FREE TRIAL
-                      </Badge>
-                      <Badge variant="secondary">{trial.duration}</Badge>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-muted-foreground text-center mb-4">
-                      {trial.description}
-                    </p>
-                    <ul className="space-y-2 mb-6">
-                      {trial.features.map((feature, featureIndex) => (
-                        <li
-                          key={featureIndex}
-                          className="flex items-center gap-2 text-sm"
-                        >
-                          <CheckCircle className="w-4 h-4 text-green-600" />
-                          <span>{feature}</span>
-                        </li>
-                      ))}
-                    </ul>
-                    <Link href="#contact">
-                      <Button className="w-full bg-green-600 hover:bg-green-700 text-white">
-                        Start Free Trial
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            ))}
-          </div>
-
-          <motion.div
-            className="text-center mt-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-          >
-            <Card className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 border-green-200 dark:border-green-800">
-              <CardContent className="pt-6 pb-6">
-                <div className="flex items-center justify-center gap-2 mb-3">
-                  <Shield className="w-5 h-5 text-green-600" />
-                  <span className="font-semibold text-green-800 dark:text-green-200">
-                    One-Time Free Trial Per Service
-                  </span>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Each customer can avail one free trial per service. No hidden
-                  charges, no commitment required.
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
-      </section>
-
       {/* Services Tabs */}
-      <section className="py-16">
+      <section id="services" className="py-16">
         <div className="container mx-auto px-4">
           <motion.div
             className="text-center mb-12"
@@ -537,7 +863,7 @@ export default function GetStartedPage() {
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              Our Human-Based Services
+              Our <span className="text-blue-600">Human-Based</span> Services
             </h2>
             <p className="text-lg text-muted-foreground">
               Professional services delivered by native Urdu speakers
@@ -545,112 +871,141 @@ export default function GetStartedPage() {
           </motion.div>
 
           <Tabs
-            value={activeTab}
-            onValueChange={setActiveTab}
+            defaultValue="speech-to-text"
             className="w-full"
+            onValueChange={(value) => setActiveTab(value)}
           >
-            <TabsList className="grid w-full grid-cols-3 mb-8">
+            <TabsList className="grid w-full grid-cols-2 md:grid-cols-3 gap-4 mb-8 h-auto">
               {services.map((service) => (
                 <TabsTrigger
                   key={service.id}
                   value={service.id}
-                  className="flex items-center gap-2"
+                  className="py-4 px-2 text-sm md:text-base h-full"
                 >
-                  <service.icon className="w-4 h-4" />
+                  <service.icon className="w-5 h-5 mr-2" />
                   {service.title}
                 </TabsTrigger>
               ))}
             </TabsList>
-
             {services.map((service) => (
-              <TabsContent
-                key={service.id}
-                value={service.id}
-                className="space-y-8"
-              >
+              <TabsContent key={service.id} value={service.id}>
                 <motion.div
-                  className="grid lg:grid-cols-2 gap-8"
+                  key={activeTab}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6 }}
+                  transition={{ duration: 0.5 }}
+                  className="bg-white dark:bg-gray-800/50 p-6 md:p-8 rounded-xl shadow-lg border"
                 >
-                  {/* Service Overview */}
-                  <Card>
-                    <CardHeader>
-                      <div className="flex items-center gap-3 mb-4">
-                        <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/50 rounded-lg flex items-center justify-center">
-                          <service.icon className="w-6 h-6 text-blue-600" />
-                        </div>
+                  <Card className="mb-8 border-0 shadow-none">
+                    <CardContent className="p-0">
+                      <div className="grid md:grid-cols-2 gap-8">
                         <div>
-                          <CardTitle className="text-2xl">
-                            {service.title}
-                          </CardTitle>
-                          <CardDescription>
+                          <h3 className="text-xl font-bold mb-4 flex items-center">
+                            <service.icon className="w-6 h-6 mr-3 text-blue-600" />
+                            Service Overview
+                          </h3>
+                          <p className="text-muted-foreground mb-4">
                             {service.description}
-                          </CardDescription>
+                          </p>
+
+                          <div className="grid grid-cols-2 gap-4 mb-6">
+                            <div className="text-center p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                              <div className="text-lg font-bold text-blue-600">
+                                {service.turnaround}
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                Turnaround Time
+                              </div>
+                            </div>
+                            <div className="text-center p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                              <div className="text-lg font-bold text-green-600">
+                                {service.accuracy}
+                              </div>
+                              <div className="text-xs text-muted-foreground">
+                                Accuracy Rate
+                              </div>
+                            </div>
+                          </div>
+
+                          <h4 className="font-semibold mb-3">Perfect For:</h4>
+                          <div className="flex flex-wrap gap-2">
+                            {service.useCases.map((useCase, useCaseIndex) => (
+                              <Badge
+                                key={useCaseIndex}
+                                variant="secondary"
+                                className="text-xs"
+                              >
+                                {useCase}
+                              </Badge>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div>
+                          <h3 className="text-xl font-bold mb-4">
+                            Key Features
+                          </h3>
+                          <ul className="space-y-3">
+                            {service.features.map((feature, featureIndex) => (
+                              <li
+                                key={featureIndex}
+                                className="flex items-start"
+                              >
+                                <Check className="h-5 w-5 text-green-600 mr-3 mt-0.5 flex-shrink-0" />
+                                <span className="text-sm">{feature}</span>
+                              </li>
+                            ))}
+                          </ul>
                         </div>
                       </div>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        <h4 className="font-semibold text-lg">Key Features:</h4>
-                        <ul className="space-y-2">
-                          {service.features.map((feature, index) => (
-                            <li key={index} className="flex items-center gap-2">
-                              <CheckCircle className="w-4 h-4 text-green-600" />
-                              <span>{feature}</span>
-                            </li>
-                          ))}
-                        </ul>
 
-                        {/* Supported Languages for Translation */}
-                        {service.id === "translation" &&
-                          service.supportedLanguages && (
-                            <div className="mt-6">
-                              <h4 className="font-semibold text-lg mb-3">
-                                Supported Languages (100+ Languages):
-                              </h4>
-                              <p className="text-sm text-muted-foreground mb-3">
-                                We provide professional translation services
-                                from all these languages to Urdu and from Urdu
-                                to all these languages.
+                      {/* Supported Languages for Translation */}
+                      {service.id === "translation" &&
+                        service.supportedLanguages && (
+                          <div className="mt-8 p-6 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                            <h4 className="font-semibold text-lg mb-3">
+                              Supported Languages (80+ Languages):
+                            </h4>
+                            <p className="text-sm text-muted-foreground mb-4">
+                              We provide professional translation services from
+                              all these languages to Urdu and from Urdu to all
+                              these languages.
+                            </p>
+                            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-2 text-sm">
+                              {service.supportedLanguages.map(
+                                (language, index) => (
+                                  <div
+                                    key={index}
+                                    className="flex items-center gap-2 p-2 bg-white dark:bg-gray-800 rounded"
+                                  >
+                                    <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
+                                    <span>{language}</span>
+                                  </div>
+                                )
+                              )}
+                            </div>
+                            <div className="mt-4 p-3 bg-blue-100 dark:bg-blue-800/30 rounded-lg">
+                              <p className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-1">
+                                🔄 Bidirectional Translation Available
                               </p>
-                              <div className="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
-                                {service.supportedLanguages.map(
-                                  (language, index) => (
-                                    <div
-                                      key={index}
-                                      className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-800 rounded"
-                                    >
-                                      <div className="w-2 h-2 bg-blue-600 rounded-full"></div>
-                                      <span>{language}</span>
-                                    </div>
-                                  )
-                                )}
-                              </div>
-                              <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                                <p className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-1">
-                                  🔄 Bidirectional Translation Available
-                                </p>
-                                <p className="text-xs text-blue-700 dark:text-blue-300">
-                                  Any language ↔ Urdu translation with native
-                                  speakers and certified translators
-                                </p>
-                              </div>
-                              <p className="text-xs text-muted-foreground mt-3">
-                                * All translations are performed by native
+                              <p className="text-xs text-blue-700 dark:text-blue-300">
+                                Any language ↔ Urdu translation with native
                                 speakers and certified translators
                               </p>
                             </div>
-                          )}
-                      </div>
+                            <p className="text-xs text-muted-foreground mt-3">
+                              * All translations are performed by native
+                              speakers and certified translators
+                            </p>
+                          </div>
+                        )}
                     </CardContent>
                   </Card>
 
                   {/* Process Steps */}
                   <div className="space-y-6">
                     <h3 className="text-2xl font-bold">Our Human Process</h3>
-                    <div className="space-y-4">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
                       {service.steps.map((step, index) => (
                         <motion.div
                           key={index}
@@ -698,7 +1053,8 @@ export default function GetStartedPage() {
             </p>
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {/* Pricing Plans */}
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
             {pricing.map((plan, index) => (
               <motion.div
                 key={plan.name}
@@ -707,53 +1063,232 @@ export default function GetStartedPage() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
                 <Card
-                  className={`h-full ${
-                    plan.popular ? "ring-2 ring-blue-600" : ""
+                  className={`h-full relative transition-all duration-300 hover:shadow-xl border-2 ${
+                    plan.popular
+                      ? "border-blue-600 shadow-lg scale-105"
+                      : "border-border hover:border-blue-300 dark:hover:border-blue-800"
                   }`}
                 >
                   {plan.popular && (
-                    <div className="bg-blue-600 text-white text-center py-2 rounded-t-lg">
-                      <Badge
-                        variant="secondary"
-                        className="bg-white text-blue-600"
-                      >
+                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                      <Badge className="bg-blue-600 text-white px-4 py-1">
+                        <Star className="h-3 w-3 mr-1" />
                         Most Popular
                       </Badge>
                     </div>
                   )}
-                  <CardHeader className="text-center">
-                    <CardTitle className="text-2xl">{plan.name}</CardTitle>
-                    <div className="flex items-baseline justify-center gap-1">
-                      <span className="text-3xl font-bold">{plan.price}</span>
-                      <span className="text-muted-foreground">
-                        /{plan.unit}
+
+                  <CardHeader className="text-center pb-6">
+                    <CardTitle className="text-2xl font-bold">
+                      {plan.name}
+                    </CardTitle>
+                    <CardDescription className="text-base">
+                      {plan.description}
+                    </CardDescription>
+                    <div className="mt-4">
+                      <span className="text-3xl font-bold text-blue-600">
+                        {plan.price}
+                      </span>
+                      <span className="text-muted-foreground ml-1">
+                        {plan.unit}
                       </span>
                     </div>
-                    <CardDescription>{plan.description}</CardDescription>
                   </CardHeader>
-                  <CardContent>
-                    <ul className="space-y-3 mb-6">
+
+                  <CardContent className="space-y-4">
+                    <ul className="space-y-3">
                       {plan.features.map((feature, featureIndex) => (
-                        <li
-                          key={featureIndex}
-                          className="flex items-center gap-2"
-                        >
-                          <CheckCircle className="w-4 h-4 text-green-600" />
+                        <li key={featureIndex} className="flex items-start">
+                          <Check className="h-5 w-5 text-green-600 mr-3 mt-0.5 flex-shrink-0" />
                           <span className="text-sm">{feature}</span>
                         </li>
                       ))}
                     </ul>
-                    <Link href="#contact">
-                      <Button
-                        className={`w-full ${
-                          plan.popular ? "bg-blue-600 hover:bg-blue-700" : ""
-                        }`}
-                        variant={plan.popular ? "default" : "outline"}
-                      >
-                        Get Started
-                        <ArrowRight className="w-4 h-4 ml-2" />
-                      </Button>
-                    </Link>
+
+                    <div className="pt-4">
+                      <Link href="/contact">
+                        <Button
+                          className={`w-full ${
+                            plan.popular
+                              ? "bg-blue-600 hover:bg-blue-700 text-white"
+                              : "bg-secondary hover:bg-secondary/80"
+                          }`}
+                        >
+                          Get Started
+                          <ArrowRight className="w-4 h-4 ml-2" />
+                        </Button>
+                      </Link>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Service-Specific Pricing Table */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-8"
+          >
+            <h3 className="text-2xl font-bold font-playfair mb-8">
+              Service-Specific <span className="text-blue-600">Pricing</span>
+            </h3>
+          </motion.div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full border-collapse">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="text-left p-4 font-semibold">Service</th>
+                  <th className="text-center p-4 font-semibold">Basic</th>
+                  <th className="text-center p-4 font-semibold">
+                    Professional
+                  </th>
+                  <th className="text-center p-4 font-semibold">Premium</th>
+                  <th className="text-left p-4 font-semibold">Notes</th>
+                </tr>
+              </thead>
+              <tbody>
+                {servicePricing.map((service, index) => (
+                  <tr
+                    key={index}
+                    className="border-b border-border hover:bg-secondary/30 transition-colors"
+                  >
+                    <td className="p-4 font-medium">{service.service}</td>
+                    <td className="p-4 text-center text-blue-600 font-semibold">
+                      {service.basic}
+                    </td>
+                    <td className="p-4 text-center text-blue-600 font-semibold">
+                      {service.professional}
+                    </td>
+                    <td className="p-4 text-center text-blue-600 font-semibold">
+                      {service.premium}
+                    </td>
+                    <td className="p-4 text-sm text-muted-foreground">
+                      {service.note}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          {/* Additional Information */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mt-12 text-center"
+          >
+            <div className="bg-secondary/30 dark:bg-muted/10 rounded-lg p-8 max-w-4xl mx-auto">
+              <h4 className="text-xl font-semibold mb-4">
+                Need a Custom Quote?
+              </h4>
+              <p className="text-muted-foreground mb-6">
+                For large projects, bulk orders, or special requirements, we
+                offer custom pricing. Contact us for a personalized quote.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Link href="/contact">
+                  <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                    Get Custom Quote
+                  </Button>
+                </Link>
+                <Link href="tel:+923057777911">
+                  <Button variant="outline">Call for Pricing</Button>
+                </Link>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-16 bg-white dark:bg-gray-900">
+        <div className="container mx-auto px-4">
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              What Our <span className="text-blue-600">Clients Say</span>
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Real feedback from satisfied customers who trust our human-based
+              services
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {testimonials.map((testimonial, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+              >
+                <Card className="h-full">
+                  <CardContent className="p-6">
+                    <div className="flex items-center mb-4">
+                      {[...Array(testimonial.rating)].map((_, i) => (
+                        <Star
+                          key={i}
+                          className="w-4 h-4 text-yellow-400 fill-current"
+                        />
+                      ))}
+                    </div>
+                    <p className="text-muted-foreground mb-4 italic">
+                      &ldquo;{testimonial.content}&rdquo;
+                    </p>
+                    <div>
+                      <div className="font-semibold">{testimonial.name}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {testimonial.role}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-16 bg-secondary/30 dark:bg-muted/10">
+        <div className="container mx-auto px-4">
+          <motion.div
+            className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Frequently Asked <span className="text-blue-600">Questions</span>
+            </h2>
+            <p className="text-lg text-muted-foreground">
+              Get answers to common questions about our Urdu language services
+            </p>
+          </motion.div>
+
+          <div className="max-w-4xl mx-auto space-y-6">
+            {faq.map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+              >
+                <Card>
+                  <CardContent className="p-6">
+                    <h3 className="font-semibold text-lg mb-3 text-blue-600">
+                      {item.question}
+                    </h3>
+                    <p className="text-muted-foreground">{item.answer}</p>
                   </CardContent>
                 </Card>
               </motion.div>
@@ -793,11 +1328,10 @@ export default function GetStartedPage() {
                       Start Your Project
                     </Button>
                   </Link>
-                  <Link href="#contact">
+                  <Link href="/contact">
                     <Button
                       size="lg"
-                      variant="outline"
-                      className="border-white text-white hover:bg-white/10"
+                      className="bg-blue-600 hover:bg-blue-700 text-white border-white hover:border-blue-700"
                     >
                       Contact Our Team
                     </Button>

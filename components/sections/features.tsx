@@ -1,39 +1,45 @@
 "use client";
 
 import { motion } from "@/lib/motion";
-import { CheckCircle, Users, Clock, Award, Globe, Headphones } from "lucide-react";
+import { Users, CheckCircle, Award, Globe, Heart, Zap } from "lucide-react";
 
 const features = [
   {
-    icon: <CheckCircle className="h-6 w-6" />,
-    title: "High Accuracy",
-    description: "Our advanced AI technology ensures 98%+ accuracy in Urdu speech recognition and transcription."
-  },
-  {
     icon: <Users className="h-6 w-6" />,
-    title: "Native Speakers",
-    description: "All our services are provided by native Urdu speakers with linguistic expertise."
+    title: "100% Human-Powered",
+    description:
+      "Our services are exclusively delivered by native Urdu speakers, ensuring authentic and culturally-aware results that AI cannot replicate.",
   },
   {
-    icon: <Clock className="h-6 w-6" />,
-    title: "Fast Turnaround",
-    description: "Quick delivery times to meet your deadlines without compromising on quality."
+    icon: <CheckCircle className="h-6 w-6" />,
+    title: "99%+ Accuracy Guaranteed",
+    description:
+      "We guarantee the highest level of accuracy through a multi-level quality assurance process conducted by expert human reviewers.",
   },
   {
     icon: <Award className="h-6 w-6" />,
-    title: "Certified Quality",
-    description: "Our services meet international quality standards for language processing."
+    title: "Certified Professional Quality",
+    description:
+      "Our team consists of certified professionals with years of experience in their respective fields, from translation to content creation.",
   },
   {
     icon: <Globe className="h-6 w-6" />,
-    title: "Regional Dialects",
-    description: "Support for various Urdu dialects and regional variations."
+    title: "Comprehensive Dialect Support",
+    description:
+      "We understand the nuances of the Urdu language, providing full support for regional dialects and local variations.",
   },
   {
-    icon: <Headphones className="h-6 w-6" />,
-    title: "Dedicated Support",
-    description: "24/7 customer support to assist you with any queries or requirements."
-  }
+    icon: <Heart className="h-6 w-6" />,
+    title: "Cultural Context Preservation",
+    description:
+      "Our human experts ensure that all content is not just translated, but also culturally adapted to resonate with your target audience.",
+  },
+  {
+    icon: <Zap className="h-6 w-6" />,
+    title: "Fast & Reliable Turnaround",
+    description:
+      "Get your projects delivered on time, every time, with efficient workflows and dedicated project management.",
+  },
 ];
 
 export default function Features() {
@@ -48,10 +54,12 @@ export default function Features() {
             transition={{ duration: 0.6 }}
           >
             <h2 className="text-3xl md:text-4xl font-bold font-playfair mb-4">
-              Why Choose <span className="text-blue-600">Urdu</span>Speech?
+              Why Choose Our <span className="text-blue-600">Human-Based</span>{" "}
+              Services?
             </h2>
             <p className="text-muted-foreground text-lg">
-              Our commitment to excellence and specialized Urdu language expertise sets us apart
+              Our commitment to human expertise ensures unparalleled quality,
+              accuracy, and cultural relevance.
             </p>
           </motion.div>
         </div>

@@ -2,7 +2,19 @@
 
 import Link from "next/link";
 import { motion } from "@/lib/motion";
-import { Phone, Mail, MapPin, Mic, ChevronRight, Facebook, Twitter, Instagram, Linkedin, Moon, Sun } from "lucide-react";
+import {
+  Phone,
+  Mail,
+  MapPin,
+  Mic,
+  ChevronRight,
+  Facebook,
+  Twitter,
+  Instagram,
+  Linkedin,
+  Moon,
+  Sun,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
@@ -37,19 +49,36 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-muted-foreground mb-6">
-              Professional Urdu language services including speech-to-text, translation, transcription, and more.
+              Professional Urdu language services including speech-to-text,
+              translation, transcription, and more.
             </p>
             <div className="flex space-x-4">
-              <Button variant="outline" size="icon" className="rounded-full border-blue-200 dark:border-blue-800 text-blue-600">
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-full border-blue-200 dark:border-blue-800 text-blue-600"
+              >
                 <Facebook className="h-4 w-4" />
               </Button>
-              <Button variant="outline" size="icon" className="rounded-full border-blue-200 dark:border-blue-800 text-blue-600">
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-full border-blue-200 dark:border-blue-800 text-blue-600"
+              >
                 <Twitter className="h-4 w-4" />
               </Button>
-              <Button variant="outline" size="icon" className="rounded-full border-blue-200 dark:border-blue-800 text-blue-600">
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-full border-blue-200 dark:border-blue-800 text-blue-600"
+              >
                 <Instagram className="h-4 w-4" />
               </Button>
-              <Button variant="outline" size="icon" className="rounded-full border-blue-200 dark:border-blue-800 text-blue-600">
+              <Button
+                variant="outline"
+                size="icon"
+                className="rounded-full border-blue-200 dark:border-blue-800 text-blue-600"
+              >
                 <Linkedin className="h-4 w-4" />
               </Button>
             </div>
@@ -64,15 +93,15 @@ export default function Footer() {
             <h4 className="text-lg font-bold mb-6">Services</h4>
             <ul className="space-y-3">
               {[
-                { label: "Urdu Speech-to-Text", href: "#services" },
-                { label: "Urdu Translation", href: "#services" },
-                { label: "Urdu Transcription", href: "#services" },
-                { label: "Urdu Content Creation", href: "#services" },
-                { label: "Urdu Subtitling", href: "#services" },
+                { label: "Urdu Speech-to-Text", href: "/services" },
+                { label: "Urdu Translation", href: "/services" },
+                { label: "Urdu Transcription", href: "/services" },
+                { label: "Urdu Content Creation", href: "/services" },
+                { label: "Urdu Subtitling", href: "/services" },
               ].map((link, index) => (
                 <li key={index}>
-                  <Link 
-                    href={link.href} 
+                  <Link
+                    href={link.href}
                     className="flex items-center text-muted-foreground hover:text-blue-600 transition-colors"
                   >
                     <ChevronRight className="mr-2 h-4 w-4" />
@@ -93,14 +122,16 @@ export default function Footer() {
             <ul className="space-y-3">
               {[
                 { label: "Home", href: "/" },
-                { label: "About Us", href: "#features" },
-                { label: "Testimonials", href: "#testimonials" },
-                { label: "FAQ", href: "#faq" },
-                { label: "Contact", href: "#contact" },
+                { label: "Services", href: "/services" },
+                { label: "Why Us", href: "/why-us" },
+                { label: "Testimonials", href: "/testimonials" },
+                { label: "FAQ", href: "/faq" },
+                { label: "Contact", href: "/contact" },
+                { label: "Get Started", href: "/get-started" },
               ].map((link, index) => (
                 <li key={index}>
-                  <Link 
-                    href={link.href} 
+                  <Link
+                    href={link.href}
                     className="flex items-center text-muted-foreground hover:text-blue-600 transition-colors"
                   >
                     <ChevronRight className="mr-2 h-4 w-4" />
@@ -120,7 +151,10 @@ export default function Footer() {
             <h4 className="text-lg font-bold mb-6">Contact Us</h4>
             <ul className="space-y-4">
               <li>
-                <Link href="tel:+923057777911" className="flex items-start space-x-3 text-muted-foreground hover:text-blue-600 transition-colors">
+                <Link
+                  href="tel:+923057777911"
+                  className="flex items-start space-x-3 text-muted-foreground hover:text-blue-600 transition-colors"
+                >
                   <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600">
                     <Phone className="h-4 w-4" />
                   </div>
@@ -128,7 +162,10 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="mailto:contact@urduspeech.com" className="flex items-start space-x-3 text-muted-foreground hover:text-blue-600 transition-colors">
+                <Link
+                  href="mailto:contact@urduspeech.com"
+                  className="flex items-start space-x-3 text-muted-foreground hover:text-blue-600 transition-colors"
+                >
                   <div className="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600">
                     <Mail className="h-4 w-4" />
                   </div>

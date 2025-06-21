@@ -7,33 +7,10 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { faqs } from "@/lib/data";
 
-const faqs = [
-  {
-    question: "What services does UrduSpeech provide?",
-    answer: "UrduSpeech offers a comprehensive range of Urdu language services including speech-to-text conversion, translation, transcription, content creation, subtitling, and proofreading services."
-  },
-  {
-    question: "How accurate is your Urdu speech-to-text service?",
-    answer: "Our Urdu speech-to-text service achieves over 98% accuracy through a combination of advanced AI technology and human verification by native Urdu speakers."
-  },
-  {
-    question: "What file formats do you accept for Urdu transcription?",
-    answer: "We accept a wide range of audio and video formats including MP3, WAV, MP4, AVI, and more. If you have a specific format, please contact us to confirm compatibility."
-  },
-  {
-    question: "How quickly can you deliver Urdu translation services?",
-    answer: "Our turnaround times depend on the project size and complexity. For standard projects, we typically deliver within 24-48 hours. Rush services are available for urgent needs."
-  },
-  {
-    question: "Do you support regional Urdu dialects?",
-    answer: "Yes, our team includes experts in various regional Urdu dialects and can accommodate specific regional language requirements in all our services."
-  },
-  {
-    question: "How do I get started with your services?",
-    answer: "Simply contact us via phone at +923057777911 to discuss your specific needs. We'll provide you with a tailored solution and quote based on your requirements."
-  }
-];
+// Flatten all questions for the homepage FAQ section
+const allQuestions = faqs.flatMap((category) => category.questions);
 
 export default function FAQ() {
   return (
@@ -57,7 +34,7 @@ export default function FAQ() {
 
         <div className="max-w-3xl mx-auto">
           <Accordion type="single" collapsible className="w-full">
-            {faqs.map((faq, index) => (
+            {allQuestions.slice(0, 6).map((faq, index) => (
               <motion.div
                 key={index}
                 initial={{ opacity: 0, y: 10 }}

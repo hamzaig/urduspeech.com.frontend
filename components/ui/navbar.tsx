@@ -10,10 +10,10 @@ import { motion } from "@/lib/motion";
 
 const navLinks = [
   { href: "/services", label: "Services" },
-  { href: "#features", label: "Why Us" },
-  { href: "#testimonials", label: "Testimonials" },
-  { href: "#faq", label: "FAQ" },
-  { href: "#contact", label: "Contact" },
+  { href: "/why-us", label: "Why Us" },
+  { href: "/testimonials", label: "Testimonials" },
+  { href: "/faq", label: "FAQ" },
+  { href: "/contact", label: "Contact" },
 ];
 
 export default function Navbar() {

@@ -18,7 +18,7 @@ const pricingPlans = [
   {
     name: "Basic",
     description: "Perfect for small projects and quick turnaround needs",
-    price: "Starting at $0.10",
+    price: "Starting at $0.04",
     unit: "per word",
     features: [
       "Native Urdu speakers",
@@ -33,7 +33,7 @@ const pricingPlans = [
   {
     name: "Professional",
     description: "Our most popular choice for business and academic projects",
-    price: "Starting at $0.15",
+    price: "Starting at $0.06",
     unit: "per word",
     features: [
       "Expert native speakers",
@@ -51,7 +51,7 @@ const pricingPlans = [
     name: "Premium",
     description:
       "For critical projects requiring the highest level of expertise",
-    price: "Starting at $0.25",
+    price: "Starting at $0.10",
     unit: "per word",
     features: [
       "Senior expert speakers",
@@ -72,44 +72,44 @@ const pricingPlans = [
 const servicePricing = [
   {
     service: "Speech-to-Text",
-    basic: "$0.08/min",
-    professional: "$0.12/min",
-    premium: "$0.18/min",
+    basic: "$0.032/min",
+    professional: "$0.048/min",
+    premium: "$0.072/min",
     note: "Audio quality affects pricing",
   },
   {
     service: "Translation",
-    basic: "$0.10/word",
-    professional: "$0.15/word",
-    premium: "$0.25/word",
+    basic: "$0.04/word",
+    professional: "$0.06/word",
+    premium: "$0.10/word",
     note: "Technical content may cost more",
   },
   {
     service: "Transcription",
-    basic: "$0.08/min",
-    professional: "$0.12/min",
-    premium: "$0.18/min",
+    basic: "$0.032/min",
+    professional: "$0.048/min",
+    premium: "$0.072/min",
     note: "Speaker identification included",
   },
   {
     service: "Content Creation",
-    basic: "$0.15/word",
-    professional: "$0.25/word",
-    premium: "$0.40/word",
+    basic: "$0.06/word",
+    professional: "$0.10/word",
+    premium: "$0.16/word",
     note: "Research and SEO included",
   },
   {
     service: "Subtitling",
-    basic: "$0.12/min",
-    professional: "$0.18/min",
-    premium: "$0.25/min",
+    basic: "$0.048/min",
+    professional: "$0.072/min",
+    premium: "$0.10/min",
     note: "Timing and formatting included",
   },
   {
     service: "Proofreading",
-    basic: "$0.05/word",
-    professional: "$0.08/word",
-    premium: "$0.12/word",
+    basic: "$0.02/word",
+    professional: "$0.032/word",
+    premium: "$0.048/word",
     note: "Style and grammar check",
   },
 ];
