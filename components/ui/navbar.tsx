@@ -4,16 +4,12 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Moon, Sun, Menu, Mic, X, Phone } from "lucide-react";
 import { motion } from "@/lib/motion";
 
 const navLinks = [
-  { href: "#services", label: "Services" },
+  { href: "/services", label: "Services" },
   { href: "#features", label: "Why Us" },
   { href: "#testimonials", label: "Testimonials" },
   { href: "#faq", label: "FAQ" },
@@ -81,16 +77,16 @@ export default function Navbar() {
                 {link.label}
               </Link>
             ))}
-            
+
             <div className="ml-4 flex items-center space-x-3">
-              <Link 
+              <Link
                 href="tel:+923057777911"
                 className="flex items-center text-sm font-medium px-4 py-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600 hover:bg-blue-200 dark:hover:bg-blue-800/30 transition-colors"
               >
                 <Phone className="mr-2 h-4 w-4" />
                 +923057777911
               </Link>
-              
+
               <Button
                 variant="ghost"
                 size="icon"
@@ -103,18 +99,24 @@ export default function Navbar() {
                   <Moon className="h-5 w-5" />
                 )}
               </Button>
+
+              <Link href="/get-started">
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                  Get Started
+                </Button>
+              </Link>
             </div>
           </nav>
 
           {/* Mobile Navigation */}
           <div className="flex items-center md:hidden space-x-2">
-            <Link 
+            <Link
               href="tel:+923057777911"
               className="flex items-center mr-2 text-sm font-medium p-2 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-600"
             >
               <Phone className="h-4 w-4" />
             </Link>
-            
+
             <Button
               variant="ghost"
               size="icon"
@@ -127,7 +129,7 @@ export default function Navbar() {
                 <Moon className="h-5 w-5" />
               )}
             </Button>
-            
+
             <Sheet open={isOpen} onOpenChange={setIsOpen}>
               <SheetTrigger asChild>
                 <Button variant="ghost" size="icon">
@@ -145,15 +147,15 @@ export default function Navbar() {
                         <span className="text-blue-600">Urdu</span>Speech
                       </span>
                     </div>
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       onClick={() => setIsOpen(false)}
                     >
                       <X className="h-5 w-5" />
                     </Button>
                   </div>
-                  
+
                   <nav className="flex flex-col space-y-4">
                     {navLinks.map((link) => (
                       <Link
@@ -166,11 +168,18 @@ export default function Navbar() {
                       </Link>
                     ))}
                   </nav>
-                  
-                  <div className="mt-auto pt-6 border-t">
-                    <Link 
-                      href="tel:+923057777911"
+
+                  <div className="mt-auto pt-6 border-t space-y-3">
+                    <Link
+                      href="/get-started"
                       className="flex items-center justify-center w-full text-base font-medium p-3 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      Get Started
+                    </Link>
+                    <Link
+                      href="tel:+923057777911"
+                      className="flex items-center justify-center w-full text-base font-medium p-3 rounded-md bg-blue-100 dark:bg-blue-900/30 text-blue-600 hover:bg-blue-200 dark:hover:bg-blue-800/30 transition-colors"
                       onClick={() => setIsOpen(false)}
                     >
                       <Phone className="mr-2 h-5 w-5" />
