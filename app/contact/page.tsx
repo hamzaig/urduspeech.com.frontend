@@ -1,7 +1,7 @@
 import { Metadata } from "next";
-import ContactHero from "@/components/sections/contact-hero";
-import EnhancedContactForm from "@/components/sections/enhanced-contact-form";
-import ContactInfo from "@/components/sections/contact-info";
+import ContactHero from "@/components/sections/contact/contact-hero";
+import EnhancedContactForm from "@/components/sections/contact/enhanced-contact-form";
+import ContactInfo from "@/components/sections/contact/contact-info";
 import JsonLd from "@/lib/json-ld";
 
 export const metadata: Metadata = {

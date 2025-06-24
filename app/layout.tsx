@@ -1,33 +1,38 @@
-import './globals.css';
-import type { Metadata } from 'next';
-import { Inter, Playfair_Display } from 'next/font/google';
-import { ThemeProvider } from '@/components/theme-provider';
-import Navbar from '@/components/ui/navbar';
-import Footer from '@/components/ui/footer';
+import "./globals.css";
+import type { Metadata } from "next";
+import { Inter, Playfair_Display } from "next/font/google";
+import { ThemeProvider } from "@/components/theme-provider";
+import { AuthProvider } from "@/lib/auth-context";
+import Navbar from "@/components/ui/navbar";
+import Footer from "@/components/ui/footer";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
-const inter = Inter({ 
-  subsets: ['latin'],
-  variable: '--font-inter',
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
 });
 
-const playfair = Playfair_Display({ 
-  subsets: ['latin'],
-  variable: '--font-playfair',
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-playfair",
 });
 
 export const metadata: Metadata = {
-  title: 'UrduSpeech - Professional Urdu Speech-to-Text & Translation Services',
-  description: 'Professional Urdu speech-to-text, translation, and language services. Contact us for high-quality Urdu language solutions.',
-  keywords: 'Urdu speech to text, Urdu translation, Urdu language services, Urdu transcription',
-  authors: [{ name: 'UrduSpeech' }],
+  title: "UrduSpeech - Professional Urdu Speech-to-Text & Translation Services",
+  description:
+    "Professional Urdu speech-to-text, translation, and language services. Contact us for high-quality Urdu language solutions.",
+  keywords:
+    "Urdu speech to text, Urdu translation, Urdu language services, Urdu transcription",
+  authors: [{ name: "UrduSpeech" }],
   openGraph: {
-    title: 'UrduSpeech - Professional Urdu Speech-to-Text & Translation Services',
-    description: 'Professional Urdu speech-to-text, translation, and language services. Contact us for high-quality Urdu language solutions.',
-    url: 'https://urduspeech.com',
-    siteName: 'UrduSpeech',
-    locale: 'en_US',
-    type: 'website',
+    title:
+      "UrduSpeech - Professional Urdu Speech-to-Text & Translation Services",
+    description:
+      "Professional Urdu speech-to-text, translation, and language services. Contact us for high-quality Urdu language solutions.",
+    url: "https://urduspeech.com",
+    siteName: "UrduSpeech",
+    locale: "en_US",
+    type: "website",
   },
 };
 
@@ -45,10 +50,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <Navbar />
-          <main className="min-h-screen">{children}</main>
-          <GoogleAnalytics gaId="G-W9GLHNQCGG" />
-          <Footer />
+          <AuthProvider>
+            <Navbar />
+            <main className="min-h-screen">{children}</main>
+            <GoogleAnalytics gaId="G-W9GLHNQCGG" />
+            <Footer />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>

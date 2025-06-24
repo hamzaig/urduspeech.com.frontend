@@ -1,7 +1,7 @@
 import { Metadata } from "next";
-import TestimonialsHero from "@/components/sections/testimonials-hero";
-import AllTestimonials from "@/components/sections/all-testimonials";
-import Contact from "@/components/sections/contact";
+import TestimonialsHero from "@/components/sections/testimonials/testimonials-hero";
+import AllTestimonials from "@/components/sections/testimonials/all-testimonials";
+import Contact from "@/components/sections/contact/contact";
 import JsonLd from "@/lib/json-ld";
 
 export const metadata: Metadata = {

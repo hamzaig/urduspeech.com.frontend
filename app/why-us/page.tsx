@@ -1,10 +1,10 @@
 import { Metadata } from "next";
-import WhyUsHero from "@/components/sections/why-us-hero";
-import CoreDifferentiators from "@/components/sections/core-differentiators";
-import QualityCommitment from "@/components/sections/quality-commitment";
-import MeetTheExperts from "@/components/sections/meet-the-experts";
-import TechnologySynergy from "@/components/sections/technology-synergy";
-import ServicesCTA from "@/components/sections/services-cta";
+import WhyUsHero from "@/components/sections/why-us/why-us-hero";
+import CoreDifferentiators from "@/components/sections/why-us/core-differentiators";
+import QualityCommitment from "@/components/sections/why-us/quality-commitment";
+import MeetTheExperts from "@/components/sections/why-us/meet-the-experts";
+import TechnologySynergy from "@/components/sections/why-us/technology-synergy";
+import ServicesCTA from "@/components/sections/services/services-cta";
 
 export const metadata: Metadata = {
   title: "Why Choose UrduSpeech | Human-Powered Accuracy & Quality",

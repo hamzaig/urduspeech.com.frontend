@@ -1,7 +1,7 @@
 import { Metadata } from "next";
-import FAQHero from "@/components/sections/faq-hero";
-import CategorizedFAQ from "@/components/sections/categorized-faq";
-import Contact from "@/components/sections/contact";
+import FAQHero from "@/components/sections/faq/faq-hero";
+import CategorizedFAQ from "@/components/sections/faq/categorized-faq";
+import Contact from "@/components/sections/contact/contact";
 import JsonLd from "@/lib/json-ld";
 
 export const metadata: Metadata = {

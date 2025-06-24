@@ -1,9 +1,9 @@
 import { Metadata } from "next";
-import ServicesHero from "@/components/sections/services-hero";
-import ServicesList from "@/components/sections/services-list";
-import ServicesPricing from "@/components/sections/services-pricing";
-import ServicesProcess from "@/components/sections/services-process";
-import ServicesCTA from "@/components/sections/services-cta";
+import ServicesHero from "@/components/sections/services/services-hero";
+import ServicesList from "@/components/sections/services/services-list";
+import ServicesPricing from "@/components/sections/services/services-pricing";
+import ServicesProcess from "@/components/sections/services/services-process";
+import ServicesCTA from "@/components/sections/services/services-cta";
 
 export const metadata: Metadata = {
   title:

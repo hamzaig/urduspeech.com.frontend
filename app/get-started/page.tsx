@@ -43,11 +43,69 @@ import {
   ThumbsUp,
   Eye,
   Heart,
+  UserPlus,
+  Lock,
+  CheckCircle2,
 } from "lucide-react";
 import Link from "next/link";
+import { useAuth } from "@/lib/auth-context";
+import { useRouter } from "next/navigation";
 
 export default function GetStartedPage() {
   const [activeTab, setActiveTab] = useState("speech-to-text");
+  const [showSignup, setShowSignup] = useState(false);
+  const [signupData, setSignupData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [signupLoading, setSignupLoading] = useState(false);
+  const [signupError, setSignupError] = useState("");
+  const { login } = useAuth();
+  const router = useRouter();
+
+  const handleSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSignupLoading(true);
+    setSignupError("");
+
+    if (signupData.password !== signupData.confirmPassword) {
+      setSignupError("Passwords don't match");
+      setSignupLoading(false);
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: signupData.name,
+          email: signupData.email,
+          password: signupData.password,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || "Registration failed");
+      }
+
+      // Use the auth context to login
+      login(result.token, result.user);
+
+      // Redirect to dashboard
+      router.push("/dashboard");
+    } catch (err) {
+      setSignupError(err instanceof Error ? err.message : "An error occurred");
+    } finally {
+      setSignupLoading(false);
+    }
+  };
 
   const services = [
     {
@@ -761,6 +819,243 @@ export default function GetStartedPage() {
                 </div>
               </motion.div>
             ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Signup Section */}
+      <section className="py-16 bg-gradient-to-br from-purple-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
+        <div className="container mx-auto px-4">
+          <motion.div
+            className="text-center max-w-4xl mx-auto"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full mb-6 mx-auto">
+              <UserPlus className="w-8 h-8 text-white" />
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">
+              Get Started with{" "}
+              <span className="text-blue-600">Human-Powered</span> Services
+            </h2>
+            <p className="text-lg text-muted-foreground mb-8">
+              Create your account to access our professional Urdu language
+              services. Get started in minutes and experience the difference
+              human expertise makes.
+            </p>
+
+            <div className="grid lg:grid-cols-2 gap-8 items-start">
+              {/* Signup Form */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
+                <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border-2 border-blue-200 dark:border-blue-800">
+                  <CardHeader>
+                    <CardTitle className="text-2xl font-bold text-center text-blue-600">
+                      Create Your Account
+                    </CardTitle>
+                    <CardDescription className="text-center">
+                      Join thousands of satisfied customers
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <form onSubmit={handleSignup} className="space-y-4">
+                      {signupError && (
+                        <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-md">
+                          <p className="text-red-600 dark:text-red-400 text-sm">
+                            {signupError}
+                          </p>
+                        </div>
+                      )}
+
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Full Name</label>
+                        <input
+                          type="text"
+                          value={signupData.name}
+                          onChange={(e) =>
+                            setSignupData({
+                              ...signupData,
+                              name: e.target.value,
+                            })
+                          }
+                          className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          placeholder="Enter your full name"
+                          required
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">
+                          Email Address
+                        </label>
+                        <input
+                          type="email"
+                          value={signupData.email}
+                          onChange={(e) =>
+                            setSignupData({
+                              ...signupData,
+                              email: e.target.value,
+                            })
+                          }
+                          className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          placeholder="Enter your email"
+                          required
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">Password</label>
+                        <input
+                          type="password"
+                          value={signupData.password}
+                          onChange={(e) =>
+                            setSignupData({
+                              ...signupData,
+                              password: e.target.value,
+                            })
+                          }
+                          className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          placeholder="Create a strong password"
+                          required
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium">
+                          Confirm Password
+                        </label>
+                        <input
+                          type="password"
+                          value={signupData.confirmPassword}
+                          onChange={(e) =>
+                            setSignupData({
+                              ...signupData,
+                              confirmPassword: e.target.value,
+                            })
+                          }
+                          className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          placeholder="Confirm your password"
+                          required
+                        />
+                      </div>
+
+                      <Button
+                        type="submit"
+                        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white py-3 text-lg font-semibold"
+                        disabled={signupLoading}
+                      >
+                        {signupLoading ? (
+                          <div className="flex items-center">
+                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                            Creating Account...
+                          </div>
+                        ) : (
+                          "Create Account"
+                        )}
+                      </Button>
+
+                      <p className="text-sm text-center text-muted-foreground">
+                        Already have an account?{" "}
+                        <Link
+                          href="/login"
+                          className="text-blue-600 hover:underline font-medium"
+                        >
+                          Sign in here
+                        </Link>
+                      </p>
+                    </form>
+                  </CardContent>
+                </Card>
+              </motion.div>
+
+              {/* Benefits */}
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="space-y-6"
+              >
+                <div className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-sm rounded-lg p-6 border border-blue-200 dark:border-blue-800">
+                  <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+                    Why Create an Account?
+                  </h3>
+                  <div className="space-y-4">
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0 w-6 h-6 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+                        <CheckCircle2 className="w-4 h-4 text-green-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900 dark:text-white">
+                          Track Your Projects
+                        </h4>
+                        <p className="text-sm text-muted-foreground">
+                          Monitor progress and access completed work
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0 w-6 h-6 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+                        <CheckCircle2 className="w-4 h-4 text-green-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900 dark:text-white">
+                          Priority Support
+                        </h4>
+                        <p className="text-sm text-muted-foreground">
+                          Get faster responses and dedicated assistance
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0 w-6 h-6 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+                        <CheckCircle2 className="w-4 h-4 text-green-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900 dark:text-white">
+                          Special Pricing
+                        </h4>
+                        <p className="text-sm text-muted-foreground">
+                          Access member-only discounts and bulk rates
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-3">
+                      <div className="flex-shrink-0 w-6 h-6 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center">
+                        <CheckCircle2 className="w-4 h-4 text-green-600" />
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-900 dark:text-white">
+                          Secure & Private
+                        </h4>
+                        <p className="text-sm text-muted-foreground">
+                          Your data is protected with enterprise-grade security
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg p-6 border border-blue-200 dark:border-blue-800">
+                  <div className="flex items-center space-x-3 mb-4">
+                    <Lock className="w-6 h-6 text-blue-600" />
+                    <h4 className="font-semibold text-gray-900 dark:text-white">
+                      100% Secure
+                    </h4>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Your information is encrypted and protected. We never share
+                    your data with third parties.
+                  </p>
+                </div>
+              </motion.div>
+            </div>
           </motion.div>
         </div>
       </section>

@@ -1,11 +1,11 @@
-import Hero from "@/components/sections/hero";
-import Services from "@/components/sections/services";
-import Features from "@/components/sections/features";
-import Testimonials from "@/components/sections/testimonials";
-import Contact from "@/components/sections/contact";
-import FAQ from "@/components/sections/faq";
+import Hero from "@/components/sections/main/hero";
+import Services from "@/components/sections/services/services";
+import Features from "@/components/sections/main/features";
+import Testimonials from "@/components/sections/testimonials/testimonials";
+import Contact from "@/components/sections/contact/contact";
+import FAQ from "@/components/sections/faq/faq";
 import { Metadata } from "next";
-import HowItWorks from "@/components/sections/how-it-works";
+import HowItWorks from "@/components/sections/main/how-it-works";
 import JsonLd from "@/lib/json-ld";
 
 export const metadata: Metadata = {
