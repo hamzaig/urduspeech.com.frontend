@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth-context";
 import { motion } from "@/lib/motion";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -31,26 +33,43 @@ const benefits = [
   },
 ];
 
-const contactMethods = [
-  {
-    icon: <Phone className="h-5 w-5" />,
-    title: "Call Us",
-    description: "Speak directly with our team",
-    action: "+923057777911",
-    href: "tel:+923057777911",
-    primary: true,
-  },
-  {
-    icon: <MessageSquare className="h-5 w-5" />,
-    title: "Get Started",
-    description: "Submit your project online",
-    action: "Start Project",
-    href: "/get-started",
-    primary: false,
-  },
-];
-
 export default function ServicesCTA() {
+  const { isAuthenticated, loading } = useAuth();
+  const router = useRouter();
+
+  const handleGetStarted = () => {
+    if (loading) return;
+    
+    if (isAuthenticated) {
+      // If user is authenticated, redirect to submit service page
+      router.push("/submit-service");
+    } else {
+      // If user is not authenticated, redirect to login with return URL
+      router.push("/login?redirect=/submit-service");
+    }
+  };
+
+  const contactMethods = [
+    {
+      icon: <Phone className="h-5 w-5" />,
+      title: "Call Us",
+      description: "Speak directly with our team",
+      action: "+923057777911",
+      href: "tel:+923057777911",
+      primary: true,
+      onClick: null,
+    },
+    {
+      icon: <MessageSquare className="h-5 w-5" />,
+      title: "Get Started",
+      description: "Submit your project online",
+      action: loading ? "Loading..." : isAuthenticated ? "Start Project" : "Sign Up to Start",
+      href: "#",
+      primary: false,
+      onClick: handleGetStarted,
+    },
+  ];
+
   return (
     <section className="py-20 bg-gradient-to-br from-blue-600 via-blue-700 to-purple-700 text-white">
       <div className="container mx-auto px-4">
@@ -121,13 +140,14 @@ export default function ServicesCTA() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: 0.5 + index * 0.1 }}
               >
-                <Link href={method.href}>
+                {method.onClick ? (
                   <Card
                     className={`h-full transition-all duration-300 hover:scale-105 cursor-pointer ${
                       method.primary
                         ? "bg-white text-blue-600 hover:bg-gray-50"
                         : "bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20"
                     }`}
+                    onClick={method.onClick}
                   >
                     <CardContent className="p-8 text-center">
                       <div className="flex justify-center mb-4">
@@ -157,13 +177,58 @@ export default function ServicesCTA() {
                             ? "bg-blue-600 hover:bg-blue-700 text-white"
                             : "bg-white text-blue-600 hover:bg-gray-50"
                         }`}
+                        disabled={loading}
                       >
                         {method.action}
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Button>
                     </CardContent>
                   </Card>
-                </Link>
+                ) : (
+                  <Link href={method.href}>
+                    <Card
+                      className={`h-full transition-all duration-300 hover:scale-105 cursor-pointer ${
+                        method.primary
+                          ? "bg-white text-blue-600 hover:bg-gray-50"
+                          : "bg-white/10 backdrop-blur-sm border-white/20 text-white hover:bg-white/20"
+                      }`}
+                    >
+                      <CardContent className="p-8 text-center">
+                        <div className="flex justify-center mb-4">
+                          <div
+                            className={`w-16 h-16 rounded-full flex items-center justify-center ${
+                              method.primary
+                                ? "bg-blue-600 text-white"
+                                : "bg-white/20 text-white"
+                            }`}
+                          >
+                            {method.icon}
+                          </div>
+                        </div>
+                        <h3 className="font-semibold text-xl mb-2">
+                          {method.title}
+                        </h3>
+                        <p
+                          className={`mb-4 ${
+                            method.primary ? "text-gray-600" : "text-blue-100"
+                          }`}
+                        >
+                          {method.description}
+                        </p>
+                        <Button
+                          className={`w-full ${
+                            method.primary
+                              ? "bg-blue-600 hover:bg-blue-700 text-white"
+                              : "bg-white text-blue-600 hover:bg-gray-50"
+                          }`}
+                        >
+                          {method.action}
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  </Link>
+                )}
               </motion.div>
             ))}
           </motion.div>
@@ -193,15 +258,15 @@ export default function ServicesCTA() {
                     Call Now
                   </Button>
                 </Link>
-                <Link href="/get-started">
-                  <Button
-                    size="lg"
-                    className="bg-blue-600 hover:bg-blue-700 text-white border-white hover:border-blue-700"
-                  >
-                    Start Free Consultation
-                    <ArrowRight className="ml-2 h-5 w-5" />
-                  </Button>
-                </Link>
+                <Button
+                  size="lg"
+                  className="bg-blue-600 hover:bg-blue-700 text-white border-white hover:border-blue-700"
+                  onClick={handleGetStarted}
+                  disabled={loading}
+                >
+                  {loading ? "Loading..." : isAuthenticated ? "Start Your Project" : "Sign Up to Start"}
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
               </div>
             </div>
           </motion.div>

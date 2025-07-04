@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { db, initializeDB } from "@/lib/db";
+import connectDB from "@/lib/mongodb";
+import { User } from "@/models/User";
 import { hashPassword, validatePassword } from "@/lib/auth";
 
 export async function POST(request: NextRequest) {
   try {
-    // Initialize database
-    await initializeDB();
+    await connectDB();
 
     const body = await request.json();
     const { token, newPassword } = body;
@@ -30,8 +30,12 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Find user by reset token
-    const user = await db.findUserByResetToken(token);
+    // Find user by reset token and check if it's not expired
+    const user = await User.findOne({
+      resetToken: token,
+      resetTokenExpiry: { $gt: new Date() },
+    });
+
     if (!user) {
       return NextResponse.json(
         { error: "Invalid or expired reset token" },
@@ -42,10 +46,16 @@ export async function POST(request: NextRequest) {
     // Hash new password
     const hashedPassword = await hashPassword(newPassword);
 
-    // Update user password
-    const updatedUser = await db.updateUser(user.id, {
-      password: hashedPassword,
-    });
+    // Update user password and clear reset token
+    const updatedUser = await User.findByIdAndUpdate(
+      user._id,
+      {
+        password: hashedPassword,
+        resetToken: null,
+        resetTokenExpiry: null,
+      },
+      { new: true }
+    );
 
     if (!updatedUser) {
       return NextResponse.json(
@@ -53,9 +63,6 @@ export async function POST(request: NextRequest) {
         { status: 500 }
       );
     }
-
-    // Clear reset token
-    await db.clearResetToken(user.email);
 
     return NextResponse.json(
       { message: "Password reset successfully" },

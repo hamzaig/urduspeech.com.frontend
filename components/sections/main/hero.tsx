@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth-context";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Mic, Headphones, Languages, Check, Star } from "lucide-react";
@@ -9,10 +11,24 @@ import { Badge } from "@/components/ui/badge";
 
 export default function Hero() {
   const [mounted, setMounted] = useState(false);
+  const { isAuthenticated, loading } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const handleGetStarted = () => {
+    if (loading) return;
+    
+    if (isAuthenticated) {
+      // If user is authenticated, redirect to submit service page
+      router.push("/submit-service");
+    } else {
+      // If user is not authenticated, redirect to login with return URL
+      router.push("/login?redirect=/submit-service");
+    }
+  };
 
   if (!mounted) return null;
 
@@ -42,14 +58,14 @@ export default function Hero() {
               human experts.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/get-started">
-                <Button
-                  size="lg"
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg"
-                >
-                  Get Started
-                </Button>
-              </Link>
+              <Button
+                size="lg"
+                className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 text-lg"
+                onClick={handleGetStarted}
+                disabled={loading}
+              >
+                {loading ? "Loading..." : isAuthenticated ? "Get Started" : "Sign Up to Start"}
+              </Button>
               <Link href="/services">
                 <Button
                   size="lg"

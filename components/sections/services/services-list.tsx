@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/lib/auth-context";
 import { motion } from "@/lib/motion";
+import Link from "next/link";
 import {
   Card,
   CardContent,
@@ -10,6 +13,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Mic,
   Languages,
@@ -21,6 +25,7 @@ import {
   Clock,
   Users,
   Star,
+  ArrowRight,
 } from "lucide-react";
 
 const services = [
@@ -39,6 +44,7 @@ const services = [
     turnaround: "2-24 hours",
     accuracy: "99%+",
     badge: "Most Popular",
+    serviceType: "speech-to-text",
   },
   {
     icon: <Languages size={28} />,
@@ -55,6 +61,7 @@ const services = [
     turnaround: "1-3 days",
     accuracy: "100%",
     badge: "Certified",
+    serviceType: "translation",
   },
   {
     icon: <FileText size={28} />,
@@ -71,6 +78,7 @@ const services = [
     turnaround: "1-2 days",
     accuracy: "99%+",
     badge: "Fast Delivery",
+    serviceType: "transcription",
   },
   {
     icon: <BookOpen size={28} />,
@@ -92,6 +100,7 @@ const services = [
     turnaround: "2-5 days",
     accuracy: "100%",
     badge: "Creative",
+    serviceType: "content-creation",
   },
   {
     icon: <VideoIcon size={28} />,
@@ -113,6 +122,7 @@ const services = [
     turnaround: "2-3 days",
     accuracy: "100%",
     badge: "Precise",
+    serviceType: "subtitling",
   },
   {
     icon: <FileEdit size={28} />,
@@ -129,11 +139,26 @@ const services = [
     turnaround: "1-2 days",
     accuracy: "100%",
     badge: "Expert",
+    serviceType: "proofreading",
   },
 ];
 
 export default function ServicesList() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const { isAuthenticated, loading } = useAuth();
+  const router = useRouter();
+
+  const handleServiceClick = (serviceType: string) => {
+    if (loading) return;
+    
+    if (isAuthenticated) {
+      // If user is authenticated, redirect to submit service page
+      router.push(`/submit-service?service=${serviceType}`);
+    } else {
+      // If user is not authenticated, redirect to login with return URL
+      router.push(`/login?redirect=/submit-service?service=${serviceType}`);
+    }
+  };
 
   return (
     <section className="py-20 bg-white dark:bg-gray-900">
@@ -238,6 +263,18 @@ export default function ServicesList() {
                         </Badge>
                       ))}
                     </div>
+                  </div>
+
+                  {/* Action Button */}
+                  <div className="pt-4">
+                    <Button 
+                      onClick={() => handleServiceClick(service.serviceType)}
+                      disabled={loading}
+                      className="w-full transition-all duration-300 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white"
+                    >
+                      {loading ? "Loading..." : isAuthenticated ? "Get Started" : "Sign Up to Start"}
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </Button>
                   </div>
                 </CardContent>
               </Card>

@@ -31,6 +31,7 @@ const navLinks = [
   { href: "/why-us", label: "Why Us" },
   { href: "/testimonials", label: "Testimonials" },
   { href: "/faq", label: "FAQ" },
+  { href: "/pricing", label: "Pricing" },
   { href: "/contact", label: "Contact" },
 ];
 
@@ -176,35 +177,28 @@ export default function Navbar() {
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
-                  <Link href="/get-started">
-                    <Button className="bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 ml-2">
-                      Get Started
-                    </Button>
-                  </Link>
                 </>
               ) : (
                 <>
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center space-x-3">
                     <Link href="/login">
                       <Button
-                        variant="ghost"
-                        size="sm"
-                        className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                        variant="outline"
+                        size="default"
+                        className="h-10 px-6 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-400 dark:hover:text-white transition-all duration-200 font-medium"
                       >
                         Sign In
                       </Button>
                     </Link>
                     <Link href="/register">
-                      <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-200">
+                      <Button 
+                        size="default"
+                        className="h-10 px-6 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 font-medium"
+                      >
                         Sign Up
                       </Button>
                     </Link>
                   </div>
-                  <Link href="/get-started">
-                    <Button className="bg-green-600 hover:bg-green-700 text-white shadow-lg hover:shadow-xl transition-all duration-200 ml-2">
-                      Get Started
-                    </Button>
-                  </Link>
                 </>
               )}
             </div>
@@ -305,14 +299,14 @@ export default function Navbar() {
                       <>
                         <Link
                           href="/login"
-                          className="flex items-center justify-center w-full text-base font-medium p-3 rounded-md bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                          className="flex items-center justify-center w-full text-base font-medium p-4 rounded-md border-2 border-blue-600 text-blue-600 hover:bg-blue-600 hover:text-white dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-400 dark:hover:text-white transition-all duration-200 h-12"
                           onClick={() => setIsOpen(false)}
                         >
                           Sign In
                         </Link>
                         <Link
                           href="/register"
-                          className="flex items-center justify-center w-full text-base font-medium p-3 rounded-md bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg"
+                          className="flex items-center justify-center w-full text-base font-medium p-4 rounded-md bg-gradient-to-r from-purple-600 to-blue-600 text-white hover:from-purple-700 hover:to-blue-700 transition-all duration-200 shadow-lg h-12"
                           onClick={() => setIsOpen(false)}
                         >
                           Sign Up
@@ -320,13 +314,6 @@ export default function Navbar() {
                       </>
                     )}
 
-                    <Link
-                      href="/get-started"
-                      className="flex items-center justify-center w-full text-base font-medium p-3 rounded-md bg-green-600 text-white hover:bg-green-700 transition-all duration-200 shadow-lg"
-                      onClick={() => setIsOpen(false)}
-                    >
-                      Get Started
-                    </Link>
                     <Link
                       href="tel:+923057777911"
                       className="flex items-center justify-center w-full text-base font-medium p-3 rounded-md bg-blue-100 dark:bg-blue-900/30 text-blue-600 hover:bg-blue-200 dark:hover:bg-blue-800/30 transition-colors"

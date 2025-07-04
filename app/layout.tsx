@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider } from "@/lib/auth-context";
-import Navbar from "@/components/ui/navbar";
-import Footer from "@/components/ui/footer";
+import ConditionalNavbar from "@/components/conditional-navbar";
+import ConditionalFooter from "@/components/conditional-footer";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
 const inter = Inter({
@@ -51,10 +51,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <AuthProvider>
-            <Navbar />
+            <ConditionalNavbar />
             <main className="min-h-screen">{children}</main>
             <GoogleAnalytics gaId="G-W9GLHNQCGG" />
-            <Footer />
+            <ConditionalFooter />
           </AuthProvider>
         </ThemeProvider>
       </body>

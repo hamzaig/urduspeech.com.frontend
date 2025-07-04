@@ -8,6 +8,7 @@ interface AuthContextType {
   loading: boolean;
   login: (token: string, user: UserWithoutPassword) => void;
   logout: () => void;
+  updateUser: (updatedUser: UserWithoutPassword) => void;
   isAuthenticated: boolean;
 }
 
@@ -48,11 +49,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   };
 
+  const updateUser = (updatedUser: UserWithoutPassword) => {
+    setUser(updatedUser);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+  };
+
   const value = {
     user,
     loading,
     login,
     logout,
+    updateUser,
     isAuthenticated: !!user,
   };
 
