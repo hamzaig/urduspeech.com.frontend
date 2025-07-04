@@ -6,18 +6,50 @@ const JWT_SECRET =
 const JWT_EXPIRES_IN = "7d";
 
 export interface User {
-  id: string;
+  _id: string;
   email: string;
   name: string;
   password: string;
+  phone?: string;
+  location?: string;
+  bio?: string;
+  language?: string;
+  timezone?: string;
+  profileVisibility?: string;
+  showEmail?: boolean;
+  showPhone?: boolean;
+  allowContact?: boolean;
+  emailNotifications?: boolean;
+  smsNotifications?: boolean;
+  projectUpdates?: boolean;
+  marketingEmails?: boolean;
+  securityAlerts?: boolean;
+  themeMode?: string;
+  accentColor?: string;
   createdAt: Date;
   updatedAt: Date;
 }
 
 export interface UserWithoutPassword {
-  id: string;
+  _id: string;
   email: string;
   name: string;
+  phone?: string;
+  location?: string;
+  bio?: string;
+  language?: string;
+  timezone?: string;
+  profileVisibility?: string;
+  showEmail?: boolean;
+  showPhone?: boolean;
+  allowContact?: boolean;
+  emailNotifications?: boolean;
+  smsNotifications?: boolean;
+  projectUpdates?: boolean;
+  marketingEmails?: boolean;
+  securityAlerts?: boolean;
+  themeMode?: string;
+  accentColor?: string;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -59,7 +91,7 @@ export function verifyToken(token: string): JWTPayload | null {
 // Remove password from user object
 export function removePassword(user: User): UserWithoutPassword {
   const { password, ...userWithoutPassword } = user;
-  return userWithoutPassword;
+  return userWithoutPassword as UserWithoutPassword;
 }
 
 // Email validation

@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { connectToDatabase } from "@/lib/mongodb";
+import connectDB from "@/lib/mongodb";
 import { User } from "@/models/User";
 import bcrypt from "bcryptjs";
 
 export async function PUT(request: NextRequest) {
   try {
-    await connectToDatabase();
+    await connectDB();
 
     const body = await request.json();
     const { 

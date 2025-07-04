@@ -4,7 +4,7 @@ import { User as UserType } from "./auth";
 
 export class MongoDBService {
   async createUser(
-    userData: Omit<UserType, "id" | "createdAt" | "updatedAt">
+    userData: Omit<UserType, "_id" | "createdAt" | "updatedAt">
   ): Promise<UserType> {
     await connectDB();
 
@@ -17,10 +17,26 @@ export class MongoDBService {
     const savedUser = await user.save();
 
     return {
-      id: savedUser._id.toString(),
+      _id: savedUser._id.toString(),
       name: savedUser.name,
       email: savedUser.email,
       password: savedUser.password,
+      phone: savedUser.phone,
+      location: savedUser.location,
+      bio: savedUser.bio,
+      language: savedUser.language,
+      timezone: savedUser.timezone,
+      profileVisibility: savedUser.profileVisibility,
+      showEmail: savedUser.showEmail,
+      showPhone: savedUser.showPhone,
+      allowContact: savedUser.allowContact,
+      emailNotifications: savedUser.emailNotifications,
+      smsNotifications: savedUser.smsNotifications,
+      projectUpdates: savedUser.projectUpdates,
+      marketingEmails: savedUser.marketingEmails,
+      securityAlerts: savedUser.securityAlerts,
+      themeMode: savedUser.themeMode,
+      accentColor: savedUser.accentColor,
       createdAt: savedUser.createdAt,
       updatedAt: savedUser.updatedAt,
     };
@@ -33,10 +49,26 @@ export class MongoDBService {
     if (!user) return null;
 
     return {
-      id: user._id.toString(),
+      _id: user._id.toString(),
       name: user.name,
       email: user.email,
       password: user.password,
+      phone: user.phone,
+      location: user.location,
+      bio: user.bio,
+      language: user.language,
+      timezone: user.timezone,
+      profileVisibility: user.profileVisibility,
+      showEmail: user.showEmail,
+      showPhone: user.showPhone,
+      allowContact: user.allowContact,
+      emailNotifications: user.emailNotifications,
+      smsNotifications: user.smsNotifications,
+      projectUpdates: user.projectUpdates,
+      marketingEmails: user.marketingEmails,
+      securityAlerts: user.securityAlerts,
+      themeMode: user.themeMode,
+      accentColor: user.accentColor,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
@@ -49,10 +81,26 @@ export class MongoDBService {
     if (!user) return null;
 
     return {
-      id: user._id.toString(),
+      _id: user._id.toString(),
       name: user.name,
       email: user.email,
       password: user.password,
+      phone: user.phone,
+      location: user.location,
+      bio: user.bio,
+      language: user.language,
+      timezone: user.timezone,
+      profileVisibility: user.profileVisibility,
+      showEmail: user.showEmail,
+      showPhone: user.showPhone,
+      allowContact: user.allowContact,
+      emailNotifications: user.emailNotifications,
+      smsNotifications: user.smsNotifications,
+      projectUpdates: user.projectUpdates,
+      marketingEmails: user.marketingEmails,
+      securityAlerts: user.securityAlerts,
+      themeMode: user.themeMode,
+      accentColor: user.accentColor,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
@@ -60,7 +108,7 @@ export class MongoDBService {
 
   async updateUser(
     id: string,
-    updates: Partial<Omit<UserType, "id" | "createdAt">>
+    updates: Partial<Omit<UserType, "_id" | "createdAt">>
   ): Promise<UserType | null> {
     await connectDB();
 
@@ -73,10 +121,26 @@ export class MongoDBService {
     if (!user) return null;
 
     return {
-      id: user._id.toString(),
+      _id: user._id.toString(),
       name: user.name,
       email: user.email,
       password: user.password,
+      phone: user.phone,
+      location: user.location,
+      bio: user.bio,
+      language: user.language,
+      timezone: user.timezone,
+      profileVisibility: user.profileVisibility,
+      showEmail: user.showEmail,
+      showPhone: user.showPhone,
+      allowContact: user.allowContact,
+      emailNotifications: user.emailNotifications,
+      smsNotifications: user.smsNotifications,
+      projectUpdates: user.projectUpdates,
+      marketingEmails: user.marketingEmails,
+      securityAlerts: user.securityAlerts,
+      themeMode: user.themeMode,
+      accentColor: user.accentColor,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
@@ -94,10 +158,26 @@ export class MongoDBService {
 
     const users = await User.find({});
     return users.map((user) => ({
-      id: user._id.toString(),
+      _id: user._id.toString(),
       name: user.name,
       email: user.email,
       password: user.password,
+      phone: user.phone,
+      location: user.location,
+      bio: user.bio,
+      language: user.language,
+      timezone: user.timezone,
+      profileVisibility: user.profileVisibility,
+      showEmail: user.showEmail,
+      showPhone: user.showPhone,
+      allowContact: user.allowContact,
+      emailNotifications: user.emailNotifications,
+      smsNotifications: user.smsNotifications,
+      projectUpdates: user.projectUpdates,
+      marketingEmails: user.marketingEmails,
+      securityAlerts: user.securityAlerts,
+      themeMode: user.themeMode,
+      accentColor: user.accentColor,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     }));
@@ -136,10 +216,26 @@ export class MongoDBService {
     if (!user) return null;
 
     return {
-      id: user._id.toString(),
+      _id: user._id.toString(),
       name: user.name,
       email: user.email,
       password: user.password,
+      phone: user.phone,
+      location: user.location,
+      bio: user.bio,
+      language: user.language,
+      timezone: user.timezone,
+      profileVisibility: user.profileVisibility,
+      showEmail: user.showEmail,
+      showPhone: user.showPhone,
+      allowContact: user.allowContact,
+      emailNotifications: user.emailNotifications,
+      smsNotifications: user.smsNotifications,
+      projectUpdates: user.projectUpdates,
+      marketingEmails: user.marketingEmails,
+      securityAlerts: user.securityAlerts,
+      themeMode: user.themeMode,
+      accentColor: user.accentColor,
       createdAt: user.createdAt,
       updatedAt: user.updatedAt,
     };
