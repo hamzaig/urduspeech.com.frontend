@@ -9,3 +9,5 @@ The UI has real loading, empty and API error states. Caption examples are labell
 Still required before release: owner admin storage/TLS setup; Zoho email adapter; authenticated integration E2E; actual Urdu media benchmark; mobile/desktop visual review; Vercel preview/production environment checks; large streamed MP4 download tests; durable upload-resume and cross-session job/render discovery. Preview origins are intentionally rejected for unsafe operations when APP_ORIGIN is the production domain. Configure an isolated preview environment before testing mutations there.
 
 Saved Vercel credential returned HTTP403. No production alias or existing Vercel project configuration was changed. Original legacy worktree edits remain untouched.
+
+Remote main had one later legacy MongoDB/prototype fix commit (7eba35e). The new app branch was rebased onto it; the resulting application tree is identical to the reviewed replacement tree. The original local main worktree remains untouched. Historical GitHub deployment records show a successful Vercel deployment; a new branch push will verify whether the integration remains active.
