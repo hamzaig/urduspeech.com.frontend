@@ -204,8 +204,12 @@ export default function ProjectEditor({
           c.endMs <= c.startMs ||
           c.endMs > track.content.mediaDurationMs ||
           (i > 0 && c.startMs < cues[i - 1].endMs)
-        )
-          throw Error("Invalid caption timing");
+        ) {
+          setError(
+            "Each caption needs text and a start/end time within the media duration. Captions cannot overlap.",
+          );
+          return;
+        }
       }
       const t = await api<Track>("/v1/caption-tracks/" + track.id, {
         ...mutation("PATCH", { cues }),
