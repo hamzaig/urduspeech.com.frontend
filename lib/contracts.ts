@@ -420,6 +420,7 @@ export type ComputeAccounts = {
       appName: string;
       environment: string;
       imageId: string;
+      alignmentImageId?: string;
       timeoutMs: number;
       cpu: number;
       memoryMiB: number;
@@ -438,6 +439,7 @@ export type ComputeAccountInput = {
     appName: string;
     environment: string;
     imageId: string;
+    alignmentImageId?: string;
     timeoutMs: number;
     cpu: number;
     memoryMiB: number;
@@ -456,6 +458,7 @@ export type ComputeAccountPatch = {
     appName: string;
     environment: string;
     imageId: string;
+    alignmentImageId?: string;
     timeoutMs: number;
     cpu: number;
     memoryMiB: number;

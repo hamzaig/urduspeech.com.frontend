@@ -326,6 +326,11 @@ function ModalAccounts({ fresh }: { fresh: boolean }) {
                 {account.config.appName} / {account.config.environment} ·{" "}
                 {account.config.imageId}
               </small>
+              {account.config.alignmentImageId && (
+                <small>
+                  Alignment image: {account.config.alignmentImageId}
+                </small>
+              )}
               {account.lastError && (
                 <p>
                   Last issue: {account.lastError}.{" "}
@@ -402,6 +407,9 @@ function AccountEditor({
             appName: value("appName"),
             environment: value("environment"),
             imageId: value("imageId"),
+            ...(value("alignmentImageId").trim()
+              ? { alignmentImageId: value("alignmentImageId").trim() }
+              : {}),
             cpu: Number(value("cpu")),
             memoryMiB: Number(value("memoryMiB")),
             timeoutMs: Number(value("timeoutMs")),
@@ -543,6 +551,18 @@ function AccountEditor({
                   required
                   placeholder="im-…"
                 />
+              </label>
+              <label className="field">
+                Acoustic alignment image ID (optional)
+                <input
+                  name="alignmentImageId"
+                  defaultValue={account?.config.alignmentImageId ?? ""}
+                  placeholder="im-…"
+                  pattern="im-[A-Za-z0-9]+"
+                />
+                <small>
+                  Use the pinned GPU model image built in this Modal account.
+                </small>
               </label>
               <label className="field">
                 CPU
