@@ -164,8 +164,12 @@ export default function Auth({
           <Link href="/auth/forgot-password">Forgot password?</Link>
         )}
       </div>
-      <Link className="auth-back" href="/studio">
-        Back to the studio
+      <p className="auth-policy-links">
+        <Link href="/terms">Terms</Link> · <Link href="/privacy">Privacy</Link>{" "}
+        · <Link href="/refunds">Payments & refunds</Link>
+      </p>
+      <Link className="auth-back" href="/">
+        Back to UrduSpeech
       </Link>
     </main>
   );

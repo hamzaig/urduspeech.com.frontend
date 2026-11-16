@@ -174,7 +174,7 @@ export default function NewProject() {
               className="visually-hidden"
               type="file"
               aria-label="Choose audio or video"
-              accept="audio/*,video/*,.mkv,.m4a"
+              accept=".wav,.flac,.mp3,.m4a,.mp4,.mov,audio/wav,audio/flac,audio/mpeg,audio/mp4,video/mp4,video/quicktime"
               onChange={(e) => choose(e.target.files?.[0])}
             />
             {cap && (

@@ -1577,3 +1577,299 @@ progress {
     flex-direction: column;
   }
 }
+/* Public pages share the studio's Public Sans, ocean ink and amber caption plate. */
+.public-site {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+.public-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 28px clamp(22px, 5vw, 76px);
+}
+.public-header nav {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 24px;
+  font-size: 14px;
+}
+.public-header nav a:last-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.public-hero {
+  padding: 65px clamp(22px, 5vw, 76px) 90px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 0.8fr);
+  align-items: center;
+  gap: clamp(36px, 6vw, 100px);
+}
+.hero-note {
+  color: var(--blue);
+  font-size: 14px;
+  font-weight: 650;
+  margin-bottom: 20px;
+}
+.public-hero h1 {
+  font-size: clamp(40px, 5.3vw, 74px);
+  line-height: 1.08;
+  letter-spacing: -2.5px;
+}
+.public-hero h1 span {
+  color: var(--blue);
+}
+.hero-description {
+  margin: 26px 0 30px;
+  color: var(--muted);
+  font-size: 18px;
+  max-width: 48ch;
+}
+.hero-fineprint {
+  margin-top: 12px;
+  font-size: 13px;
+  color: var(--muted);
+}
+.public-hero .example-wrap {
+  max-width: 330px;
+  width: 100%;
+  justify-self: center;
+}
+.public-section {
+  padding: 70px clamp(22px, 5vw, 76px);
+  background: var(--surface);
+  border-top: 1px solid var(--line);
+}
+.section-intro {
+  max-width: 72ch;
+  margin-bottom: 35px;
+}
+.section-intro h2 {
+  font-size: clamp(25px, 3vw, 37px);
+  line-height: 1.25;
+  letter-spacing: -1px;
+}
+.section-intro > p:last-child:not(.hero-note) {
+  margin-top: 18px;
+  color: var(--muted);
+}
+.public-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 28px;
+}
+.public-steps li {
+  border-top: 2px solid var(--line);
+  padding-top: 18px;
+}
+.public-steps span {
+  font-size: 13px;
+  color: var(--blue);
+}
+.public-steps h3 {
+  margin: 22px 0 12px;
+  font-size: 18px;
+}
+.public-steps p {
+  color: var(--muted);
+  font-size: 14px;
+}
+.pricing-scroll {
+  max-width: 100%;
+  overflow-x: auto;
+}
+.public-pricing {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+}
+.public-pricing th,
+.public-pricing td {
+  padding: 20px 18px;
+  border-bottom: 1px solid var(--line);
+  white-space: nowrap;
+}
+.public-pricing th:first-child {
+  padding-left: 0;
+}
+.public-pricing thead th {
+  color: var(--muted);
+  font-weight: 500;
+}
+.public-pricing tbody th {
+  font-weight: 650;
+  font-size: 18px;
+}
+.public-pricing .public-price {
+  font-size: 23px;
+  font-weight: 650;
+  letter-spacing: -0.7px;
+}
+.public-price small {
+  font-weight: 400;
+  letter-spacing: 0;
+}
+.public-footnote {
+  margin: 25px 0;
+  color: var(--muted);
+  font-size: 14px;
+}
+.public-closing {
+  display: flex;
+  gap: 25px;
+  align-items: flex-start;
+  padding: 55px clamp(22px, 5vw, 76px);
+}
+.public-closing > svg {
+  flex-shrink: 0;
+  color: var(--green);
+}
+.public-closing h2 {
+  margin-bottom: 12px;
+}
+.public-closing p {
+  color: var(--muted);
+  font-size: 14px;
+}
+.public-closing .text-button {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+.public-footer {
+  padding: 35px clamp(22px, 5vw, 76px);
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 24px;
+}
+.public-footer > div > a {
+  color: var(--ink);
+  font-weight: 700;
+}
+.public-footer p {
+  font-size: 13px;
+  margin-top: 8px;
+  color: var(--muted);
+}
+.public-footer nav {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+  font-size: 13px;
+}
+.public-footer > small {
+  flex-basis: 100%;
+}
+.policy-page {
+  max-width: 950px;
+  padding: 65px clamp(22px, 5vw, 76px) 85px;
+  margin: 0 auto;
+}
+.policy-date {
+  font-size: 13px;
+  color: var(--muted);
+  margin-bottom: 22px;
+}
+.policy-intro {
+  color: var(--muted);
+  font-size: 18px;
+  margin-top: 22px;
+}
+.policy-content {
+  margin-top: 45px;
+}
+.policy-content section {
+  margin-top: 32px;
+}
+.policy-content h2 {
+  margin-bottom: 15px;
+}
+.policy-content p {
+  color: var(--muted);
+  margin: 14px 0;
+}
+.auth-policy-links {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 28px;
+}
+@media (max-width: 900px) {
+  .public-hero {
+    gap: 30px;
+  }
+  .public-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .public-closing {
+    flex-wrap: wrap;
+  }
+  .public-closing .text-button {
+    margin-left: 53px;
+  }
+}
+@media (max-width: 640px) {
+  .public-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 22px;
+  }
+  .public-header nav {
+    gap: 18px;
+    font-size: 13px;
+  }
+  .public-hero {
+    grid-template-columns: minmax(0, 1fr);
+    padding-top: 30px;
+    padding-bottom: 48px;
+  }
+  .public-hero h1 {
+    letter-spacing: -1.8px;
+  }
+  .public-hero .example-wrap {
+    max-width: 280px;
+    margin-top: 12px;
+  }
+  .public-section {
+    padding-top: 45px;
+    padding-bottom: 45px;
+  }
+  .public-steps {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 28px;
+  }
+  .public-steps h3 {
+    margin-top: 12px;
+  }
+  .public-closing {
+    gap: 16px;
+  }
+  .public-closing > div {
+    flex: 1;
+    min-width: 0;
+  }
+  .public-closing .text-button {
+    margin-left: 44px;
+  }
+  .policy-page {
+    padding-top: 35px;
+  }
+}

@@ -130,7 +130,12 @@ export function Shell({ children }: { children: React.ReactNode }) {
         <main id="main">{children}</main>
         <footer className="studio-footer">
           <span>Made for Urdu-speaking creators.</span>
-          <span>Audio and video use the same minute allowance.</span>
+          <span>
+            <Link href="/privacy">Privacy</Link> ·{" "}
+            <Link href="/terms">Terms</Link> ·{" "}
+            <Link href="/refunds">Payments</Link> ·{" "}
+            <Link href="/supported-formats">Formats</Link>
+          </span>
         </footer>
       </div>
     </div>
