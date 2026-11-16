@@ -8,6 +8,56 @@ const env = {
 function request(path = "/v1/session", init: RequestInit = {}) {
   return new Request("https://urduspeech.com/api/backend" + path, init);
 }
+test("download metadata binds the native POST action to the fixed backend and excludes the file stream route", async () => {
+  const id = "01000000-0000-4000-8000-000000000001",
+    ticket = "a".repeat(43),
+    path = `/v1/renders/${id}/download-ticket`;
+  const response = await bridge(
+    request(path, {
+      method: "POST",
+      headers: { origin: env.APP_ORIGIN, "content-type": "application/json" },
+      body: "{}",
+    }),
+    ["v1", "renders", id, "download-ticket"],
+    env,
+    async () =>
+      Response.json({
+        ticket,
+        expiresIn: 60,
+        action: "https://foreign.test/steal",
+      }),
+  );
+  assert.equal(response.status, 200);
+  assert.deepEqual(await response.json(), {
+    ticket,
+    expiresIn: 60,
+    action: env.BACKEND_ORIGIN + "/v1/downloads/stream",
+  });
+  assert.equal(allowedRoute("/v1/downloads/stream", "POST"), false);
+  assert.equal(response.headers.get("cache-control"), "private, no-store");
+});
+test("malformed and oversized download grants fail before a native action is returned", async () => {
+  const id = "01000000-0000-4000-8000-000000000001",
+    path = `/v1/exports/${id}/download-ticket`;
+  for (const payload of [
+    { ticket: "bad", expiresIn: 60 },
+    { ticket: "a".repeat(43), expiresIn: 600 },
+    { ticket: "a".repeat(2000), expiresIn: 60 },
+  ]) {
+    const response = await bridge(
+      request(path, {
+        method: "POST",
+        headers: { origin: env.APP_ORIGIN, "content-type": "application/json" },
+        body: "{}",
+      }),
+      ["v1", "exports", id, "download-ticket"],
+      env,
+      async () => Response.json(payload),
+    );
+    assert.equal(response.status, 502);
+    assert.equal((await response.json()).action, undefined);
+  }
+});
 test("only known public product paths are bridged", () => {
   for (const p of [
     "/health/ready",

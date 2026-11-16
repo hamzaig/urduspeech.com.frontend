@@ -2,7 +2,8 @@
 import { use, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Play, Save, Download, RefreshCw } from "lucide-react";
-import { api, mutation, explain, downloadPath } from "@/lib/api";
+import { api, mutation, explain } from "@/lib/api";
+import { startDownload } from "@/lib/download";
 import type {
   Project,
   Track,
@@ -675,13 +676,15 @@ export default function ProjectEditor({
               {files.map((f) => (
                 <div key={f.id} className="actions">
                   {f.state === "ready" && f.downloadPath ? (
-                    <a
+                    <button
                       className="button secondary"
-                      href={downloadPath(f.downloadPath)}
-                      download
+                      disabled={busy || dirty}
+                      onClick={() =>
+                        action(() => startDownload(f.downloadPath!))
+                      }
                     >
                       Download {f.format.toUpperCase()} ({f.variant})
-                    </a>
+                    </button>
                   ) : (
                     <span className="caption-note">
                       {f.format.toUpperCase()}: {f.state}
@@ -694,15 +697,19 @@ export default function ProjectEditor({
                 <div className="notice">
                   <p>Video render: {render.state}</p>
                   {render.state === "completed" ? (
-                    <a
+                    <button
                       className="button secondary"
-                      href={downloadPath(
-                        "/v1/renders/" + render.id + "/download",
-                      )}
-                      download
+                      disabled={busy || dirty}
+                      onClick={() =>
+                        action(() =>
+                          startDownload(
+                            "/v1/renders/" + render.id + "/download",
+                          ),
+                        )
+                      }
                     >
                       Download MP4
-                    </a>
+                    </button>
                   ) : (
                     !terminal.includes(render.state) && (
                       <button

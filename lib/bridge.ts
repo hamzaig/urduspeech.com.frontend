@@ -152,6 +152,51 @@ export async function bridge(
       )
         out.append("set-cookie", value);
     }
+    if (
+      request.method === "POST" &&
+      response.ok &&
+      /^\/v1\/(assets|renders|exports)\/[a-f0-9-]{36}\/download-ticket$/.test(
+        path,
+      )
+    ) {
+      // Only a small grant passes through Vercel. The file itself is a native
+      // POST to the fixed backend, with its one-time bearer kept out of URLs.
+      const reader = response.body?.getReader();
+      if (!reader) return problem(502, "UNEXPECTED_RESPONSE");
+      let size = 0;
+      const chunks: Uint8Array[] = [];
+      for (;;) {
+        const part = await reader.read();
+        if (part.done) break;
+        size += part.value.length;
+        if (size > 1024) {
+          await reader.cancel();
+          return problem(502, "UNEXPECTED_RESPONSE");
+        }
+        chunks.push(part.value);
+      }
+      const bytes = new Uint8Array(size);
+      let offset = 0;
+      for (const chunk of chunks) {
+        bytes.set(chunk, offset);
+        offset += chunk.length;
+      }
+      const grant = JSON.parse(new TextDecoder().decode(bytes));
+      if (
+        typeof grant.ticket !== "string" ||
+        !/^[A-Za-z0-9_-]{43}$/.test(grant.ticket) ||
+        grant.expiresIn !== 60
+      )
+        return problem(502, "UNEXPECTED_RESPONSE");
+      return Response.json(
+        {
+          ticket: grant.ticket,
+          expiresIn: 60,
+          action: new URL("/v1/downloads/stream", upstream.origin).href,
+        },
+        { headers: out },
+      );
+    }
     return new Response(response.body, {
       status: response.status,
       headers: out,

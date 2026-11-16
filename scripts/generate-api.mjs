@@ -109,6 +109,7 @@ const routes = Object.entries(document.paths)
     ([path]) =>
       path.startsWith("/v1/") &&
       !path.startsWith("/v1/webhooks/") &&
+      path !== "/v1/downloads/stream" &&
       (!path.startsWith("/v1/admin/") || admin.has(path)),
   )
   .flatMap(([path, methods]) =>
