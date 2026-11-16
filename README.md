@@ -6,7 +6,7 @@ New AI creator application, isolated from the legacy human-service website on `f
 
 Node 22 or newer. `npm ci`, then `npm run dev`. Copy `.env.example` to `.env.local` only when connecting a deployed backend. Provider, Stripe, AWS and email credentials do not belong in this project.
 
-`npm run typecheck`, `npm test`, `npm run build` verify the app. Tests cover the fixed-origin session bridge, CSRF origin checks, cookie handling, metadata limits and multipart upload failure boundaries.
+`npm run typecheck`, `npm test`, `npm run build` verify the app. Tests cover the fixed-origin session bridge, CSRF origin checks, cookie handling, metadata limits, byte-verified multipart recovery, private deletion receipts and direct-download grants.
 
 ## Application
 
@@ -15,14 +15,18 @@ Node 22 or newer. `npm ci`, then `npm run dev`. Copy `.env.example` to `.env.loc
 - `/studio/projects/:id`: processing, versioned cue text/timing changes, correction review, text/subtitle exports, video renders, local media timing preview, deletion.
 - `/studio/settings`: saved output/correction/render defaults and account deletion.
 - `/studio/billing`: live PKR plan catalog and provider-gated card/manual payment flows.
+- `/studio/admin`: verified owner access to encrypted service settings, Modal account management/tests and manual-payment review.
+- `/deletion-status`: private deletion receipt checks and account-bound retries after sign-out.
 - `/auth/:mode`: register, sign in, email verification, password recovery/reset. Root `/verify-email` and `/reset-password` routes match backend email URLs.
 
-The same-origin API bridge fixes the upstream origin and only exposes methods/paths in the backend public OpenAPI contract. Admin, webhook, internal-auth and health paths are excluded. Browser sessions use the backend's Secure HttpOnly opaque cookie. Unsafe requests require the canonical APP_ORIGIN. Production previews on another origin intentionally cannot mutate sessions/accounts until configured as a separate environment; do not weaken this guard to a wildcard.
+The same-origin API bridge fixes the upstream origin and exposes reviewed methods/paths generated from the backend OpenAPI contract, including an explicit allowlist of owner admin endpoints. Webhooks, internal auth, health, unreviewed admin endpoints and the direct file stream are excluded. Browser sessions use the backend's Secure HttpOnly opaque cookie. Unsafe requests require the canonical APP_ORIGIN. Previews on another origin intentionally cannot mutate production sessions/accounts; use a separate environment when testing a different origin.
+
+Large downloads mint a short-lived one-time grant through the bridge, then submit a native form POST directly to the fixed backend. Its bearer stays in the POST body and file bytes bypass Vercel. The backend retains authority over session validity, ownership and deletion during streaming. Upload recovery reuses a completed part only when local byte hashes, stored receipts and remote part identity agree; another device safely reuploads parts it cannot verify.
 
 ## Current release gates
 
-This is an initial implementation, not a released commercial product. Backend TLS and host storage are pending owner-run admin steps. Email delivery is deferred until Zoho integration; do not use a placeholder Resend key. Vercel CLI credentials currently return HTTP 403 and need owner login. Production-domain routing must be reviewed against the existing Vercel project before changing it.
+The application is implemented and has passing tests, TypeScript, production build and protected Vercel preview CI. Production is not promoted. Backend TLS and host storage still require the owner-run admin steps. Zoho is configured privately in the backend; Vercel access is available through the authorized project API/Git integration. Review production-domain routing against the existing project during the verified cutover.
 
-Still pending: real authenticated browser E2E, visual/mobile browser review, true Urdu media quality evaluation, resilient upload resumption across reloads, restored job/render discovery after a new browser session, and deployment testing of large streamed MP4 downloads. Upload retries deliberately do not fabricate a completed project or start processing after failure. The server retains authority over timing QA, retention, availability, minutes and payment activation. No demo projects, fake balances or simulated transcription are used.
+Release checks still include deployed authenticated E2E, visual/mobile browser review, representative Urdu quality and large-download behavior through production ingress. Multipart recovery and owned job/render/export discovery are implemented and covered by code-level tests; deployed browser parity remains a separate check. The server retains authority over timing QA, retention, availability, minutes and payment activation. No demo projects, fake balances or simulated transcription are used in the application.
 
 Caption style examples are approximate. Video rendering remains the authority for exact font/layout. Urdu font is copied with its SIL OFL license in `public/fonts`.
