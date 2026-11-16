@@ -169,8 +169,8 @@ export default function Billing() {
         </p>
       )}
       <p className="billing-note">
-        Monthly card subscriptions renew automatically. Manual JazzCash,
-        Easypaisa and bank-transfer payments cover one term and are activated
+        Monthly card subscriptions renew automatically. Manual Easypaisa, bank
+        transfer, SadaPay and NayaPay payments cover one term and are activated
         after payment verification. Unused minutes do not roll over.
       </p>
       {catalog && !catalog.providers.manual.checkoutAvailable && (
@@ -209,6 +209,8 @@ function ManualPayment({ catalog }: { catalog: PlanCatalog }) {
     jazzcash: "JazzCash",
     easypaisa: "Easypaisa",
     bank_transfer: "Bank transfer",
+    sadapay: "SadaPay",
+    nayapay: "NayaPay",
   };
   async function create() {
     setBusy(true);

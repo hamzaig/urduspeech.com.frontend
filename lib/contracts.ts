@@ -1,4 +1,4 @@
-// Generated from backend openapi/urduspeech.v1.json. Do not hand-edit.
+// Generated from reviewed backend OpenAPI; run scripts/generate-api.mjs.
 export type HealthV1 = {
   schemaVersion: "1";
   service: "urduspeech-api";
@@ -11,7 +11,7 @@ export type ApiErrorV1 = {
   code: string;
   supportId: string;
   detail?: string;
-  fieldErrors?: Record<string, unknown>;
+  fieldErrors?: Record<string, string[]>;
   retryAfterSeconds?: number;
 };
 export type JobStatusV1 = {
@@ -143,7 +143,10 @@ export type PlanCatalog = {
     manual: {
       checkoutAvailable: boolean;
       reason: null | string;
-      methods: Record<string, unknown>;
+      methods: Record<
+        string,
+        { checkoutAvailable: boolean; reason: null | string }
+      >;
     };
   };
 };
@@ -164,6 +167,20 @@ export type UploadPolicy = {
     maxSourceSeconds: number;
     limitingReason: null | string;
   }[];
+};
+export type UploadSession = {
+  id: string;
+  mediaId: string;
+  projectId: string;
+  state: string;
+  byteSize: number;
+  partSize: number;
+  partCount: number;
+  finalization: {
+    operationKey: string;
+    parts: { partNumber: number; etag: string }[];
+  } | null;
+  parts: { partNumber: number; size: number; etag: string }[];
 };
 export type Track = {
   schemaVersion: "1";
@@ -317,7 +334,10 @@ export type BillingSummary = {
     manual: {
       checkoutAvailable: boolean;
       reason: null | string;
-      methods: Record<string, unknown>;
+      methods: Record<
+        string,
+        { checkoutAvailable: boolean; reason: null | string }
+      >;
     };
   };
   usage: {
@@ -353,13 +373,13 @@ export type ManualRequest = {
   schemaVersion: "1";
   transactionId: string;
   planId: string;
-  method: "jazzcash" | "easypaisa" | "bank_transfer";
+  method: "jazzcash" | "easypaisa" | "bank_transfer" | "sadapay" | "nayapay";
   status:
     "requested" | "pending_review" | "approved" | "rejected" | "cancelled";
   amountMinor: number;
   currency: "PKR";
   destination: {
-    method: "jazzcash" | "easypaisa" | "bank_transfer";
+    method: "jazzcash" | "easypaisa" | "bank_transfer" | "sadapay" | "nayapay";
     destinationId: string;
     accountTitle: string;
     accountNumber: string;
@@ -369,4 +389,107 @@ export type ManualRequest = {
   claimedReference: null | string;
   createdAt: string;
   submittedAt: null | string;
+};
+export type AdminSession = { admin: boolean; fresh: boolean };
+export type AdminSettings = {
+  settings: {
+    key: string;
+    label: string;
+    secret: boolean;
+    configured: boolean;
+    version: number;
+    applyMode: "restart-required";
+    value: null | string;
+    updatedAt: null | string;
+  }[];
+};
+export type ComputeAccounts = {
+  accounts: {
+    id: string;
+    name: string;
+    priority: number;
+    enabled: boolean;
+    status: string;
+    cooldownUntil: null | string;
+    maxConcurrent: number;
+    version: number;
+    lastError: null | string;
+    configured: boolean;
+    config: {
+      provider: "modal";
+      appName: string;
+      environment: string;
+      imageId: string;
+      timeoutMs: number;
+      cpu: number;
+      memoryMiB: number;
+    };
+  }[];
+};
+export type ComputeAccountInput = {
+  name: string;
+  priority: number;
+  enabled: boolean;
+  maxConcurrent: number;
+  config: {
+    provider: "modal";
+    tokenId: string;
+    tokenSecret: string;
+    appName: string;
+    environment: string;
+    imageId: string;
+    timeoutMs: number;
+    cpu: number;
+    memoryMiB: number;
+  };
+};
+export type ComputeAccountPatch = {
+  expectedVersion: number;
+  name?: string;
+  priority?: number;
+  enabled?: boolean;
+  maxConcurrent?: number;
+  config?: {
+    provider: "modal";
+    tokenId: string;
+    tokenSecret: string;
+    appName: string;
+    environment: string;
+    imageId: string;
+    timeoutMs: number;
+    cpu: number;
+    memoryMiB: number;
+  };
+};
+export type ManualPaymentReviews = {
+  items: {
+    schemaVersion: "1";
+    transactionId: string;
+    planId: string;
+    method: "jazzcash" | "easypaisa" | "bank_transfer" | "sadapay" | "nayapay";
+    status:
+      "requested" | "pending_review" | "approved" | "rejected" | "cancelled";
+    amountMinor: number;
+    currency: "PKR";
+    destination: {
+      method:
+        "jazzcash" | "easypaisa" | "bank_transfer" | "sadapay" | "nayapay";
+      destinationId: string;
+      accountTitle: string;
+      accountNumber: string;
+      bankName?: string;
+      instructions?: string;
+    };
+    claimedReference: null | string;
+    createdAt: string;
+    submittedAt: null | string;
+    accountId: string;
+  }[];
+  nextCursor: string | null;
+};
+export type ProjectActivity = {
+  jobs: { id: string; state: string }[];
+  renders: { id: string; state: string }[];
+  exports: { id: string; state: string }[];
+  uploads: { id: string; state: string }[];
 };

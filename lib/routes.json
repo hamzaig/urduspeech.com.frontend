@@ -28,6 +28,34 @@
     "method": "GET"
   },
   {
+    "path": "/v1/admin/session",
+    "method": "GET"
+  },
+  {
+    "path": "/v1/admin/settings",
+    "method": "GET"
+  },
+  {
+    "path": "/v1/admin/settings/{key}",
+    "method": "POST"
+  },
+  {
+    "path": "/v1/admin/compute/accounts",
+    "method": "GET"
+  },
+  {
+    "path": "/v1/admin/compute/accounts",
+    "method": "POST"
+  },
+  {
+    "path": "/v1/admin/compute/accounts/{accountId}",
+    "method": "PATCH"
+  },
+  {
+    "path": "/v1/admin/compute/accounts/{accountId}/test",
+    "method": "POST"
+  },
+  {
     "path": "/v1/public/contact",
     "method": "POST"
   },
@@ -45,6 +73,18 @@
   },
   {
     "path": "/v1/billing/manual/requests/{transactionId}/cancel",
+    "method": "POST"
+  },
+  {
+    "path": "/v1/admin/billing/manual-payments",
+    "method": "GET"
+  },
+  {
+    "path": "/v1/admin/billing/manual-payments/{transactionId}/approve",
+    "method": "POST"
+  },
+  {
+    "path": "/v1/admin/billing/manual-payments/{transactionId}/reject",
     "method": "POST"
   },
   {
@@ -110,6 +150,10 @@
   {
     "path": "/v1/projects/{projectId}/uploads",
     "method": "POST"
+  },
+  {
+    "path": "/v1/projects/{projectId}/activity",
+    "method": "GET"
   },
   {
     "path": "/v1/uploads/{uploadId}",

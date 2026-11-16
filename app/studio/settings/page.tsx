@@ -1,10 +1,19 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+import Link from "next/link";
 import { api, mutation, explain } from "@/lib/api";
-import type { Defaults } from "@/lib/contracts";
+import type { Defaults, Session } from "@/lib/contracts";
+import {
+  newDeletionReceipt,
+  rememberDeletion,
+  deletionHeaders,
+  downloadDeletionReceipt,
+  type DeletionReceipt,
+} from "@/lib/deletion";
 import { PageTitle, ErrorNotice, Saved } from "@/components/common";
 import { OutputOptions, type Preset } from "@/components/output-options";
 export default function Settings() {
+  const deletionIntent = useRef<DeletionReceipt | null>(null);
   const [value, setValue] = useState<Defaults | null>(null),
     [presets, setPresets] = useState<Preset[]>([]),
     [error, setError] = useState(""),
@@ -52,10 +61,17 @@ export default function Settings() {
     setBusy(true);
     setError("");
     try {
-      await api("/v1/account", {
+      if (!deletionIntent.current) {
+        const session = await api<Session>("/v1/session");
+        deletionIntent.current = newDeletionReceipt(session.accountId);
+      }
+      rememberDeletion(deletionIntent.current);
+      const result = await api<{ id: string }>("/v1/account", {
         method: "DELETE",
-        headers: { "Idempotency-Key": crypto.randomUUID() },
+        headers: deletionHeaders(deletionIntent.current),
       });
+      deletionIntent.current = { ...deletionIntent.current, id: result.id };
+      rememberDeletion(deletionIntent.current);
       setDeletion(true);
     } catch (e) {
       setError(explain(e));
@@ -101,9 +117,25 @@ export default function Settings() {
           session is no longer fresh.
         </p>
         {deletion ? (
-          <Saved>
-            Account deletion has been requested. You have been signed out.
-          </Saved>
+          <>
+            <Saved>
+              Account deletion has been requested. You have been signed out.
+            </Saved>
+            <div className="actions">
+              <Link href="/deletion-status" className="button secondary">
+                Check deletion status
+              </Link>
+              <button
+                className="text-button"
+                onClick={() =>
+                  deletionIntent.current &&
+                  downloadDeletionReceipt(deletionIntent.current)
+                }
+              >
+                Save deletion receipt
+              </button>
+            </div>
+          </>
         ) : (
           <>
             <label className="field">

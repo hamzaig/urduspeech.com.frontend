@@ -67,6 +67,8 @@ export async function bridge(
     "if-match",
     "if-none-match",
     "range",
+    "deletion-receipt",
+    "deletion-account-id",
   ]) {
     const value = request.headers.get(name);
     if (value) headers.set(name, value);

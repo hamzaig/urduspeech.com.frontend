@@ -9,7 +9,7 @@ import type {
   UploadPolicy,
   Usage,
 } from "@/lib/contracts";
-import { uploadParts } from "@/lib/upload";
+import { finishUpload } from "@/lib/upload";
 import {
   OutputOptions,
   initialDefaults,
@@ -113,17 +113,13 @@ export default function NewProject() {
         setCreated(project);
       }
       setStage("Uploading your media…");
-      const parts = await uploadParts(
+      await finishUpload(
         file,
         project.upload,
         (p) => setPercent(Math.floor((p.completed / p.total) * 100)),
         controller.signal,
       );
       setStage("Checking the completed upload…");
-      await api(`/v1/uploads/${project.upload.id}/finalize`, {
-        ...mutation("POST", { parts }, "finalize-" + project.upload.id),
-        signal: controller.signal,
-      });
       if (saveDefault) await api("/v1/me/defaults", mutation("PATCH", options));
       // Validation is asynchronous; processing starts from the project screen once media is ready.
       router.push(

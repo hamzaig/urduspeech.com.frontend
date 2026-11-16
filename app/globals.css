@@ -1419,3 +1419,161 @@ progress {
   color: var(--muted);
   margin-top: 7px;
 }
+.operations-nav {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  padding: 0 0 22px;
+  border-bottom: 1px solid var(--line);
+}
+.operations-section {
+  scroll-margin-top: 24px;
+  padding: 30px 0;
+  border-bottom: 1px solid var(--line);
+}
+.operations-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 20px;
+}
+.operations-heading h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+.operations-heading p {
+  max-width: 70ch;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 0;
+  color: var(--muted);
+}
+.operations-heading button {
+  flex-shrink: 0;
+}
+.setting-row,
+.payment-review {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+}
+.setting-row summary,
+.payment-review summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  cursor: pointer;
+  padding: 18px;
+  font-size: 13px;
+}
+.setting-row summary strong,
+.payment-review summary strong {
+  display: block;
+  font-size: 14px;
+}
+.setting-row summary small,
+.payment-review summary small {
+  display: block;
+  margin-top: 5px;
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.setting-row summary:focus-visible,
+.payment-review summary:focus-visible {
+  outline: 3px solid var(--blue);
+  outline-offset: 2px;
+}
+.setting-row form,
+.payment-review form,
+.payment-review dl {
+  padding: 0 18px 18px;
+}
+.setting-row .field {
+  margin-top: 0;
+}
+.operations-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+.operations fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+.operations .field input,
+.operations .field select {
+  min-width: 0;
+  width: 100%;
+}
+.operations-editor {
+  padding: 22px;
+  border: 1px solid var(--blue);
+  background: white;
+  margin-top: 20px;
+}
+.operations-editor h3 {
+  margin-top: 0;
+}
+.account-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--line);
+}
+.account-row h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+}
+.account-row p {
+  margin: 8px 0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+.account-row small {
+  color: var(--muted);
+  overflow-wrap: anywhere;
+}
+.account-row > div {
+  min-width: 0;
+}
+.review-rejection {
+  border-top: 1px solid var(--line);
+  padding-top: 18px !important;
+}
+.review-rejection fieldset {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+}
+.review-rejection .field {
+  flex: 1;
+  margin-bottom: 0;
+}
+@media (max-width: 700px) {
+  .operations-heading,
+  .account-row {
+    flex-direction: column;
+    gap: 14px;
+  }
+  .operations-fields {
+    grid-template-columns: 1fr;
+  }
+  .setting-row summary,
+  .payment-review summary {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .operations-nav {
+    gap: 16px;
+    font-size: 13px;
+  }
+  .review-rejection fieldset {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

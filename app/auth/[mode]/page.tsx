@@ -79,7 +79,9 @@ export default function Auth({
     try {
       await api("/v1/auth/" + mode, mutation("POST", body));
       if (mode === "sign-in") {
-        router.push("/studio");
+        router.push(
+          query.get("next") === "/studio/admin" ? "/studio/admin" : "/studio",
+        );
         router.refresh();
       } else
         setMessage(

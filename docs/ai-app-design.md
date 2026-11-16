@@ -30,3 +30,9 @@ A row of analytics cards would repeat a generic SaaS dashboard and obscure the f
 Same-origin /api/backend/v1 bridge handles opaque session cookies. Fixed server-only backend origin; no browser provider keys or localStorage tokens. Metadata bodies are bounded. Media uploads go directly to signed S3 part URLs, never through Vercel. No fake API fallback. Production auth waits for Zoho and actual backend readiness. Signed download URLs and cookies must never be logged.
 
 Verification: production build, TypeScript, API bridge boundary tests, multipart failure tests and HTTP smoke checks. No browser automation; visual/browser parity remains manual.
+
+## Operations extension
+
+The owner works through pending payment reviews, Modal accounts, then private settings. Use the existing six-color palette and Public Sans; left align form labels and account data. A section navigation links to each task, rather than adding an analytics dashboard. Receiving account details sit directly beside the review form. Payment confirmation requires a checked acknowledgment, a separately entered received amount, and a verified settlement reference. Provider credentials are blank password inputs, never displayed existing values. Configuration rows expand only when edited, so infrequent settings do not overwhelm the review queue. Mobile stacks the rows and form fields, preserving complete account numbers and visible keyboard focus. No new decorative motif is needed: the creator studio's caption example remains its visual signature.
+
+This keeps the existing creator-focused layout intact and gives the owner's operational tasks their own page. The API enforces verified owner identity and recent authentication independently of navigation visibility.

@@ -1,6 +1,6 @@
 "use client";
 import { use, useEffect, useRef, useState } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Play, Save, Download, RefreshCw } from "lucide-react";
 import { api, mutation, explain, downloadPath } from "@/lib/api";
 import type {
@@ -12,6 +12,7 @@ import type {
   JobStatusV1,
   Render,
   ExportFile,
+  ProjectActivity,
 } from "@/lib/contracts";
 import {
   PageTitle,
@@ -21,6 +22,7 @@ import {
 } from "@/components/common";
 import type { Preset } from "@/components/output-options";
 import { MediaReadiness } from "@/components/media-readiness";
+import { ResumeUpload } from "@/components/resume-upload";
 type Cue = Track["content"]["cues"][number];
 const terminal = ["completed", "failed", "cancelled"];
 const settledJobs = [...terminal, "ready_for_review", "partial_ready"];
@@ -30,7 +32,6 @@ export default function ProjectEditor({
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
-  const query = useSearchParams();
   const router = useRouter();
   const [project, setProject] = useState<Project | null>(null),
     [tracks, setTracks] = useState<TrackList["tracks"]>([]),
@@ -50,19 +51,50 @@ export default function ProjectEditor({
     [time, setTime] = useState(0),
     [remove, setRemove] = useState(false);
   const [mediaReady, setMediaReady] = useState(false);
+  const [uploadId, setUploadId] = useState<string | null>(null);
   const player = useRef<HTMLVideoElement>(null);
   const alive = useRef(true);
   async function load() {
-    const [p, t, v, styles] = await Promise.all([
+    const [p, t, v, styles, activity] = await Promise.all([
       api<Project>("/v1/projects/" + id),
       api<TrackList>(`/v1/projects/${id}/caption-tracks`),
       api<TranscriptList>(`/v1/projects/${id}/transcripts`),
       api<{ presets: Preset[] }>("/v1/caption-presets"),
+      api<ProjectActivity>(`/v1/projects/${id}/activity`),
     ]);
     if (!alive.current) return;
     setProject(p);
     setTracks(t.tracks);
     setPresets(styles.presets);
+    setUploadId(
+      activity.uploads.find((upload) =>
+        ["uploading", "completing"].includes(upload.state),
+      )?.id ?? null,
+    );
+    const [recoveredJob, recoveredRender, recoveredFiles] = await Promise.all([
+      activity.jobs[0]
+        ? api<JobStatusV1>("/v1/jobs/" + activity.jobs[0].id)
+        : Promise.resolve(null),
+      activity.renders[0]
+        ? api<Render>("/v1/renders/" + activity.renders[0].id)
+        : Promise.resolve(null),
+      Promise.all(
+        activity.exports.map((file) =>
+          api<ExportFile>("/v1/exports/" + file.id),
+        ),
+      ),
+    ]);
+    if (!alive.current) return;
+    setJob(recoveredJob);
+    setRender(recoveredRender);
+    const selectedTrackId = track?.id ?? t.tracks[0]?.id;
+    setFiles(
+      recoveredFiles.filter(
+        (file) =>
+          file.trackId === selectedTrackId ||
+          (!file.trackId && file.sourceVersionId === v.versions.at(-1)?.id),
+      ),
+    );
     setPreset(
       (old) =>
         old ||
@@ -86,13 +118,6 @@ export default function ProjectEditor({
     load().catch((e) => {
       if (alive.current) setError(explain(e));
     });
-    const jobId = sessionStorage.getItem("urduspeech-job-" + id);
-    if (jobId)
-      api<JobStatusV1>("/v1/jobs/" + jobId)
-        .then((j) => {
-          if (alive.current) setJob(j);
-        })
-        .catch(() => {});
     return () => {
       alive.current = false;
     };
@@ -108,7 +133,10 @@ export default function ProjectEditor({
             if (settledJobs.includes(j.state)) await load();
           })
           .catch((e) => {
-            if (alive.current) setError(explain(e));
+            if (alive.current) {
+              setError(explain(e));
+              setJob((old) => (old ? { ...old } : old));
+            }
           });
       },
       Math.max(2000, Math.min(job.retryAfterSeconds * 1000, 30000)),
@@ -128,7 +156,12 @@ export default function ProjectEditor({
         .then((f) => {
           if (alive.current) setFiles(f);
         })
-        .catch((e) => setError(explain(e)));
+        .catch((e) => {
+          if (alive.current) {
+            setError(explain(e));
+            setFiles((old) => [...old]);
+          }
+        });
     }, 2500);
     return () => clearTimeout(timer);
   }, [files]);
@@ -139,7 +172,12 @@ export default function ProjectEditor({
         .then((r) => {
           if (alive.current) setRender(r);
         })
-        .catch((e) => setError(explain(e)));
+        .catch((e) => {
+          if (alive.current) {
+            setError(explain(e));
+            setRender((old) => (old ? { ...old } : old));
+          }
+        });
     }, 3000);
     return () => clearTimeout(timer);
   }, [render]);
@@ -243,7 +281,6 @@ export default function ProjectEditor({
         mutation("POST", {}, crypto.randomUUID()),
       );
       setJob(j);
-      sessionStorage.setItem("urduspeech-job-" + id, j.id);
     });
   }
   async function exports() {
@@ -334,6 +371,13 @@ export default function ProjectEditor({
       {!project && !error && <p role="status">Loading your project…</p>}
       {project && (
         <>
+          {uploadId && (
+            <ResumeUpload
+              key={uploadId}
+              uploadId={uploadId}
+              onComplete={load}
+            />
+          )}
           <MediaReadiness projectId={id} onReady={setMediaReady} />
           <section className="job-status">
             <span className="status-label">
@@ -636,7 +680,7 @@ export default function ProjectEditor({
                       href={downloadPath(f.downloadPath)}
                       download
                     >
-                      Download {f.format.toUpperCase()}
+                      Download {f.format.toUpperCase()} ({f.variant})
                     </a>
                   ) : (
                     <span className="caption-note">

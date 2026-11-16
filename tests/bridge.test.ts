@@ -11,7 +11,7 @@ function request(path = "/v1/session", init: RequestInit = {}) {
 test("only known public product paths are bridged", () => {
   for (const p of [
     "/health/ready",
-    "/v1/admin/billing/manual-payments",
+    "/v1/admin/unreviewed-route",
     "/v1/webhooks/stripe",
     "/v1/../health/ready",
     "/v1/projects/%2fetc",
@@ -20,6 +20,9 @@ test("only known public product paths are bridged", () => {
     assert.equal(allowedRoute(p, "GET"), false, p);
   assert.equal(allowedRoute("/v1/projects", "GET"), true);
   assert.equal(allowedRoute("/v1/projects", "PUT"), false);
+  assert.equal(allowedRoute("/v1/admin/settings", "GET"), true);
+  assert.equal(allowedRoute("/v1/admin/billing/manual-payments", "GET"), true);
+  assert.equal(allowedRoute("/v1/admin/compute/accounts", "DELETE"), false);
 });
 test("unsafe requests require exact canonical origin, including sign-in", async () => {
   for (const origin of [
@@ -149,4 +152,30 @@ test("unsafe JSON forwards origin, etag and idempotency key intact", async () =>
     },
   );
   assert.equal(r.status, 200);
+});
+test("deletion receipts and account identity reach only the fixed backend without being copied into response headers", async () => {
+  const receipt = "a".repeat(64),
+    accountId = "01000000-0000-4000-8000-000000000001";
+  const response = await bridge(
+    request("/v1/account", {
+      method: "DELETE",
+      headers: {
+        origin: env.APP_ORIGIN,
+        "idempotency-key": "owned-deletion",
+        "deletion-receipt": receipt,
+        "deletion-account-id": accountId,
+      },
+    }),
+    ["v1", "account"],
+    env,
+    async (url, init) => {
+      assert.equal(String(url), env.BACKEND_ORIGIN + "/v1/account");
+      const headers = new Headers(init?.headers);
+      assert.equal(headers.get("deletion-receipt"), receipt);
+      assert.equal(headers.get("deletion-account-id"), accountId);
+      return Response.json({ id: "fixture" });
+    },
+  );
+  assert.equal(response.status, 200);
+  assert.equal(response.headers.get("deletion-receipt"), null);
 });
