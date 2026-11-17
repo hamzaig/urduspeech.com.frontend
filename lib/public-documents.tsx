@@ -229,11 +229,13 @@ export const publicDocuments = {
         title: "Duplicate, failed or missing payments",
         body: (
           <p>
-            Tell us about a duplicate charge, money collected without plan
-            activation, an incorrect allowance, or a charge after cancellation.
-            We check the provider’s settlement record and your account history
-            before confirming a correction or refund. A screenshot supports a
-            claim; it does not by itself verify receipt of funds.
+            Tell us about a duplicate or incorrect charge, money collected
+            without paid-plan activation, a paid service that was not delivered,
+            an incorrect allowance, or a charge after cancellation. We verify
+            the provider’s settlement record and your account and processing
+            history. If our review confirms a payment or delivery problem, we
+            will correct the account or arrange a refund. A screenshot supports
+            a claim; it does not by itself verify receipt of funds.
           </p>
         ),
       },
@@ -277,8 +279,9 @@ export const publicDocuments = {
           <p>
             A refund is confirmed after payment review is complete. Where
             available, refunds go through the original payment method. Bank and
-            provider processing times vary. This draft does not set a blanket
-            refund window or override rights under applicable law.
+            provider processing times vary. This policy does not promise an
+            automatic refund window for unused paid plans. Your rights under
+            applicable law are preserved.
           </p>
         ),
       },

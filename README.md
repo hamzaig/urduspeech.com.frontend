@@ -25,7 +25,9 @@ Large downloads mint a short-lived one-time grant through the bridge, then submi
 
 ## Current release gates
 
-The application is implemented and has passing tests, TypeScript, production build and protected Vercel preview CI. Production is not promoted. Backend TLS and host storage still require the owner-run admin steps. Zoho is configured privately in the backend; Vercel access is available through the authorized project API/Git integration. Review production-domain routing against the existing project during the verified cutover.
+The application is implemented and has passing tests, TypeScript, production build and protected Vercel preview CI. Production is not promoted. The owner completed backend storage, Nginx/TLS, certificate-renewal rehearsal and operations installation on18November2026. Backend PR15's release SSH fix is undergoing native CI before a fresh protected deployment. Zoho is configured privately; the owner confirmed receipt of the approved monitoring canary in the Yahoo Inbox. Vercel access is available through the authorized project API/Git integration. Review production-domain routing against the existing project during the verified cutover.
+
+The owner approved the payment-issue correction/refund policy on18November2026, with no automatic unused-plan refund window. Public copy records that decision and preserves applicable legal rights. Its updated preview still needs verification before production promotion.
 
 Release checks still include deployed authenticated E2E, visual/mobile browser review, representative Urdu quality and large-download behavior through production ingress. Multipart recovery and owned job/render/export discovery are implemented and covered by code-level tests; deployed browser parity remains a separate check. The server retains authority over timing QA, retention, availability, minutes and payment activation. No demo projects, fake balances or simulated transcription are used in the application.
 

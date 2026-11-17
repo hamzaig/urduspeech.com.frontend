@@ -55,7 +55,7 @@ export function PolicyPage({
     <div className="public-site">
       <PublicHeader />
       <main id="main" className="policy-page">
-        <p className="policy-date">Launch policy draft · 17 November 2026</p>
+        <p className="policy-date">Launch policy · Updated 18 November 2026</p>
         <h1>{title}</h1>
         <p className="policy-intro">{description}</p>
         <div className="policy-content">{children}</div>

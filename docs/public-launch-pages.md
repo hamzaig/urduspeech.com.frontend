@@ -13,11 +13,14 @@ deletion. Upload copy discloses the scanner cap below 2 GiB, and export copy dis
 the current 256 MiB generated-video bound. Media admission/render changes must pass
 native CI before the advertised HEVC/HLG/PQ support reaches production.
 
-The four policy documents are visibly labelled **launch policy draft**. No arbitrary
-refund window, final legal jurisdiction, or unverified zero-retention/provider-erasure
-promise is invented. The owner has been asked for an approved refund rule. Resolve
-policy approval before production promotion. Card checkout availability comes from
-the workspace API, not the static marketing page.
+On18November2026 the owner approved payment-issue review and correction/refunds
+for confirmed duplicate/incorrect charges, missing paid-plan activation or paid
+service not delivered. No automatic unused-plan refund window was requested.
+The public launch copy now records that rule and its update date, preserving
+applicable legal rights. No final legal jurisdiction or unverified
+zero-retention/provider-erasure promise is invented. Card checkout availability
+comes from the workspace API, not the static marketing page. Production promotion
+still waits for healthy backend integration and release acceptance.
 
 Validation: 18 existing boundary/upload/download tests, TypeScript, formatting and
 production build pass. Local HTTP checks returned 200 for the homepage, four policy
