@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { api, mutation, explain, minutes, money } from "@/lib/api";
 import type {
   PlanCatalog,
@@ -24,6 +24,7 @@ function stripeRedirect(raw: string, portal = false) {
   window.location.assign(url.href);
 }
 export default function Billing() {
+  const summaryRequest = useRef(0);
   const [catalog, setCatalog] = useState<PlanCatalog | null>(null),
     [summary, setSummary] = useState<BillingSummary | null>(null),
     [error, setError] = useState(""),
@@ -40,9 +41,11 @@ export default function Billing() {
       .catch((e) => {
         if (live) setError(explain(e));
       });
+    const initialSummaryRequest = ++summaryRequest.current;
     api<BillingSummary>("/v1/billing/summary")
       .then((s) => {
-        if (live) setSummary(s);
+        if (live && summaryRequest.current === initialSummaryRequest)
+          setSummary(s);
       })
       .catch((e) => {
         if (live) setError(explain(e));
@@ -79,13 +82,15 @@ export default function Billing() {
         if (!live) return;
         setPaymentNotice(result.message);
         if (result.paid) {
+          const latestSummaryRequest = ++summaryRequest.current;
           const latest = await api<BillingSummary>("/v1/billing/summary", {
             signal: AbortSignal.any([
               controller.signal,
               AbortSignal.timeout(10000),
             ]),
           });
-          if (live) setSummary(latest);
+          if (live && summaryRequest.current === latestSummaryRequest)
+            setSummary(latest);
         }
         if (result.terminal) return;
         if (attempts < 12) timer = setTimeout(() => void check(), 5000);
