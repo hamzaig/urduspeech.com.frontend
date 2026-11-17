@@ -7,6 +7,11 @@ import type {
   ManualRequest,
 } from "@/lib/contracts";
 import { PageTitle, ErrorNotice, Saved } from "@/components/common";
+import {
+  parseCheckoutReturn,
+  verifiedPaymentReturn,
+  type BillingTransaction,
+} from "@/lib/billing-return";
 function stripeRedirect(raw: string, portal = false) {
   const url = new URL(raw);
   if (
@@ -22,7 +27,10 @@ export default function Billing() {
   const [catalog, setCatalog] = useState<PlanCatalog | null>(null),
     [summary, setSummary] = useState<BillingSummary | null>(null),
     [error, setError] = useState(""),
-    [busy, setBusy] = useState(false);
+    [busy, setBusy] = useState(false),
+    [paymentNotice, setPaymentNotice] = useState(""),
+    [paymentRefresh, setPaymentRefresh] = useState(0),
+    [canRefreshPayment, setCanRefreshPayment] = useState(false);
   useEffect(() => {
     let live = true;
     api<PlanCatalog>("/v1/public/plans")
@@ -43,6 +51,61 @@ export default function Billing() {
       live = false;
     };
   }, []);
+  useEffect(() => {
+    const returned = parseCheckoutReturn(window.location.search);
+    if (!returned) return;
+    let live = true,
+      attempts = 0,
+      timer: ReturnType<typeof setTimeout> | undefined;
+    const controller = new AbortController();
+    setCanRefreshPayment(false);
+    setPaymentNotice("Checking your payment status…");
+    const check = async () => {
+      attempts++;
+      try {
+        const transaction = await api<BillingTransaction>(
+          "/v1/billing/transactions/" + returned.transactionId,
+          {
+            signal: AbortSignal.any([
+              controller.signal,
+              AbortSignal.timeout(10000),
+            ]),
+          },
+        );
+        const result = verifiedPaymentReturn(
+          transaction,
+          returned.transactionId,
+        );
+        if (!live) return;
+        setPaymentNotice(result.message);
+        if (result.paid) {
+          const latest = await api<BillingSummary>("/v1/billing/summary", {
+            signal: AbortSignal.any([
+              controller.signal,
+              AbortSignal.timeout(10000),
+            ]),
+          });
+          if (live) setSummary(latest);
+        }
+        if (result.terminal) return;
+        if (attempts < 12) timer = setTimeout(() => void check(), 5000);
+        else setCanRefreshPayment(true);
+      } catch (e) {
+        if (!live) return;
+        setPaymentNotice(
+          "Payment status is unavailable. Check again before starting another payment.",
+        );
+        setCanRefreshPayment(true);
+        setError(explain(e));
+      }
+    };
+    void check();
+    return () => {
+      live = false;
+      controller.abort();
+      clearTimeout(timer);
+    };
+  }, [paymentRefresh]);
   async function checkout(planId: string) {
     setBusy(true);
     setError("");
@@ -78,6 +141,22 @@ export default function Billing() {
         description="Pay in PKR. Audio and video use the same minute allowance."
       />
       {error && <ErrorNotice message={error} />}{" "}
+      {paymentNotice && (
+        <div className="notice" role="status">
+          <p>{paymentNotice}</p>
+          {canRefreshPayment && (
+            <button
+              className="text-button"
+              onClick={() => {
+                setError("");
+                setPaymentRefresh((value) => value + 1);
+              }}
+            >
+              Check payment status
+            </button>
+          )}
+        </div>
+      )}
       {summary && (
         <section className="usage-panel">
           <div>
