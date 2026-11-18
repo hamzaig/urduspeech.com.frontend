@@ -229,3 +229,71 @@ test("deletion receipts and account identity reach only the fixed backend withou
   assert.equal(response.status, 200);
   assert.equal(response.headers.get("deletion-receipt"), null);
 });
+test("an empty streamed DELETE body is forwarded without a JSON entity and preserves the receipt and expired cookie", async () => {
+  for (const contentType of [undefined, "application/json"]) {
+    let calls = 0;
+    const headers = new Headers({
+      origin: env.APP_ORIGIN,
+      "idempotency-key": "owned-empty-deletion",
+      "deletion-receipt": "a".repeat(64),
+      "content-length": "0",
+    });
+    if (contentType) headers.set("content-type", contentType);
+    const init: RequestInit & { duplex: "half" } = {
+      method: "DELETE",
+      headers,
+      body: new ReadableStream<Uint8Array>({
+        start(controller) {
+          controller.close();
+        },
+      }),
+      duplex: "half",
+    };
+    const incoming = request("/v1/account", init);
+    assert.notEqual(incoming.body, null);
+    const response = await bridge(
+      incoming,
+      ["v1", "account"],
+      env,
+      async (_url, outgoing) => {
+        calls++;
+        assert.equal(outgoing?.body, undefined);
+        const sent = new Headers(outgoing?.headers);
+        assert.equal(sent.get("content-type"), null);
+        assert.equal(sent.get("content-length"), null);
+        assert.equal(sent.get("deletion-receipt"), "a".repeat(64));
+        assert.equal(sent.get("idempotency-key"), "owned-empty-deletion");
+        return Response.json(
+          { id: "owned-deletion", access: "revoked" },
+          {
+            status: 202,
+            headers: {
+              "set-cookie": `${SESSION_COOKIE}=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=Lax`,
+            },
+          },
+        );
+      },
+    );
+    assert.equal(response.status, 202);
+    assert.equal(calls, 1);
+    assert.match(response.headers.getSetCookie()[0], /Max-Age=0/);
+  }
+});
+test("a nonempty unsafe body still requires JSON before contacting the backend", async () => {
+  let calls = 0;
+  const response = await bridge(
+    request("/v1/account", {
+      method: "DELETE",
+      headers: { origin: env.APP_ORIGIN, "content-type": "text/plain" },
+      body: "not-json",
+    }),
+    ["v1", "account"],
+    env,
+    async () => {
+      calls++;
+      return Response.json({});
+    },
+  );
+  assert.equal(response.status, 415);
+  assert.equal(calls, 0);
+});
