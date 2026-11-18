@@ -75,13 +75,10 @@ export async function bridge(
   }
   let body: Uint8Array | undefined;
   if (unsafe && request.body) {
-    if (
-      !request.headers
-        .get("content-type")
-        ?.toLowerCase()
-        .startsWith("application/json")
-    )
-      return problem(415, "JSON_REQUIRED");
+    const json = request.headers
+      .get("content-type")
+      ?.toLowerCase()
+      .startsWith("application/json");
     if (Number(request.headers.get("content-length") ?? 0) > MAX_BODY)
       return problem(413, "BODY_TOO_LARGE");
     const reader = request.body.getReader();
@@ -90,6 +87,11 @@ export async function bridge(
     while (true) {
       const part = await reader.read();
       if (part.done) break;
+      if (!part.value.length) continue;
+      if (!json) {
+        await reader.cancel();
+        return problem(415, "JSON_REQUIRED");
+      }
       size += part.value.length;
       if (size > MAX_BODY) {
         await reader.cancel();
@@ -97,13 +99,17 @@ export async function bridge(
       }
       chunks.push(part.value);
     }
-    body = new Uint8Array(size);
-    let offset = 0;
-    for (const chunk of chunks) {
-      body.set(chunk, offset);
-      offset += chunk.length;
+    // Next can expose a bodyless DELETE as an empty stream. Forward no entity
+    // in that case: an empty application/json entity is also invalid upstream.
+    if (size) {
+      body = new Uint8Array(size);
+      let offset = 0;
+      for (const chunk of chunks) {
+        body.set(chunk, offset);
+        offset += chunk.length;
+      }
+      headers.set("content-type", "application/json");
     }
-    headers.set("content-type", "application/json");
   }
   const incoming = new URL(request.url);
   upstream.pathname = path;
