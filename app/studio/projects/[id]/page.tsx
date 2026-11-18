@@ -3,6 +3,7 @@ import { use, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Play, Save, Download, RefreshCw } from "lucide-react";
 import { api, mutation, explain } from "@/lib/api";
+import { captionChanges } from "@/lib/caption-edits";
 import { startDownload } from "@/lib/download";
 import type {
   Project,
@@ -54,6 +55,12 @@ export default function ProjectEditor({
   const [mediaReady, setMediaReady] = useState(false);
   const [uploadId, setUploadId] = useState<string | null>(null);
   const player = useRef<HTMLVideoElement>(null);
+  const pendingCaptionSave = useRef<{
+    trackId: string;
+    etag: string;
+    body: string;
+    key: string;
+  } | null>(null);
   const alive = useRef(true);
   async function load() {
     const [p, t, v, styles, activity] = await Promise.all([
@@ -233,6 +240,11 @@ export default function ProjectEditor({
   async function save() {
     if (!track) return;
     await action(async () => {
+      const changes = captionChanges(track.content.cues, cues);
+      if (!changes.length) {
+        setDirty(false);
+        return;
+      }
       for (let i = 0; i < cues.length; i++) {
         const c = cues[i];
         if (
@@ -250,13 +262,29 @@ export default function ProjectEditor({
           return;
         }
       }
+      const body = JSON.stringify({ changes });
+      const pending = pendingCaptionSave.current;
+      const key =
+        pending?.trackId === track.id &&
+        pending.etag === track.etag &&
+        pending.body === body
+          ? pending.key
+          : crypto.randomUUID();
+      pendingCaptionSave.current = {
+        trackId: track.id,
+        etag: track.etag,
+        body,
+        key,
+      };
       const t = await api<Track>("/v1/caption-tracks/" + track.id, {
-        ...mutation("PATCH", { cues }),
+        method: "PATCH",
+        body,
         headers: {
           "If-Match": track.etag,
-          "Idempotency-Key": crypto.randomUUID(),
+          "Idempotency-Key": key,
         },
       });
+      pendingCaptionSave.current = null;
       setTrack(t);
       setCues(t.content.cues);
       setTracks((old) => [
@@ -268,7 +296,7 @@ export default function ProjectEditor({
           variant: t.content.variant,
           timingReady: t.content.timingReady,
         },
-        ...old,
+        ...old.filter((entry) => entry.id !== t.id),
       ]);
       setDirty(false);
       setFiles([]);
@@ -515,6 +543,7 @@ export default function ProjectEditor({
                               type="number"
                               step="0.001"
                               min={0}
+                              disabled={busy}
                               value={c.startMs / 1000}
                               onChange={(e) =>
                                 updateCue(
@@ -532,6 +561,7 @@ export default function ProjectEditor({
                               type="number"
                               step="0.001"
                               min={0}
+                              disabled={busy}
                               value={c.endMs / 1000}
                               onChange={(e) =>
                                 updateCue(
@@ -548,6 +578,7 @@ export default function ProjectEditor({
                           className="cue-text"
                           dir="auto"
                           aria-label={"Caption " + (i + 1)}
+                          disabled={busy}
                           value={c.text}
                           onChange={(e) => updateCue(i, "text", e.target.value)}
                           maxLength={5000}
