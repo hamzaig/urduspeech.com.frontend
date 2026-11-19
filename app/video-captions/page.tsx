@@ -20,7 +20,12 @@ export default function VideoCaptions() {
             Add captions to reels, interviews and longer videos. Review each
             line in Studio, then choose a style and export the file you need.
           </p>
-          <StartFree />
+          <div className="product-actions">
+            <StartFree />
+            <Link href="/demo" className="button secondary">
+              Try the editor
+            </Link>
+          </div>
         </MarketingIntro>
         <CaptionStyleGallery preload />
       </section>

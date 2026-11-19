@@ -20,7 +20,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" data-type="software" className="m-enter">
+    <html lang="en" data-type="software">
       <body>
         <a className="skip" href="#main">
           Skip to content

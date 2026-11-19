@@ -7,17 +7,17 @@
 }
 
 :root {
-  --ink: #19231c;
-  --muted: #4d5c51;
-  --accent: #20583c;
-  --accent-hover: #16432d;
-  --wash: #eaf2e6;
-  --paper: #f4f6f1;
-  --line: #d9e1d7;
-  --control: #87988a;
-  --canvas: #fcfdf9;
-  --surface: #fff;
-  --stage: #1c2921;
+  --ink: #172820;
+  --muted: #4c5d52;
+  --accent: #204d36;
+  --accent-hover: #153b2a;
+  --wash: #e8eee1;
+  --paper: #f2f3eb;
+  --line: #d5ddd0;
+  --control: #758574;
+  --canvas: #faf9f4;
+  --surface: #fffefa;
+  --stage: #17271e;
   --stage-accent: #dceadd;
   --red: #a62c48;
   --green: #1d6848;
@@ -385,39 +385,6 @@ button.danger:hover {
 }
 
 /* Project list and upload */
-
-.workspace-usage {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 18px;
-  margin-block-end: 22px;
-  background: var(--wash);
-  color: var(--ink);
-  border-radius: 12px;
-  text-decoration: none;
-}
-
-.workspace-usage:hover {
-  background: var(--paper);
-  text-decoration: none;
-}
-
-.workspace-usage small {
-  display: block;
-  margin-block-start: 3px;
-}
-
-.workspace-usage > svg {
-  color: var(--accent);
-}
-
-.workspace-usage-link {
-  margin-inline-start: auto;
-  font-size: 13px;
-  font-weight: 680;
-  color: var(--accent);
-}
 
 .project-icon {
   display: grid;
@@ -1202,18 +1169,6 @@ a.plan-status {
   .page-heading p {
     margin-block-start: 7px;
     font-size: 14px;
-  }
-
-  .workspace-usage {
-    padding: 12px;
-  }
-
-  .workspace-usage > svg {
-    margin-inline-start: auto;
-  }
-
-  .workspace-usage-link {
-    display: none;
   }
 
   .table-head {

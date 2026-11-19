@@ -5,6 +5,7 @@ import { publicGuides } from "@/lib/public-guides";
 export default function sitemap(): MetadataRoute.Sitemap {
   const paths = [
     "/",
+    "/demo",
     "/urdu-transcription",
     "/video-captions",
     "/pricing",

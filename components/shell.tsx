@@ -125,7 +125,9 @@ export function Shell({ children }: { children: React.ReactNode }) {
             {error}
           </div>
         )}
-        <main id="main">{children}</main>
+        <main id="main" tabIndex={-1}>
+          {children}
+        </main>
         <footer className="studio-footer">
           <nav aria-label="Service information">
             <Link href="/privacy">Privacy</Link>

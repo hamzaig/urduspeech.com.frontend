@@ -21,7 +21,12 @@ export default function UrduTranscription() {
             words in Studio, then export the transcript for your notes, quotes
             or articles.
           </p>
-          <StartFree />
+          <div className="product-actions">
+            <StartFree />
+            <Link href="/demo" className="button secondary">
+              Try the editor
+            </Link>
+          </div>
         </MarketingIntro>
         <PublicCaptionPreview />
       </section>

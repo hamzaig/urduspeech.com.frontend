@@ -4,28 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Check } from "lucide-react";
 import creatorStill from "@/assets/short-video-demo.webp";
-import { captionCues } from "@/lib/caption-demo";
-
-const examples = [
-  {
-    name: "Clean",
-    color: "#FFFFFF",
-    box: false,
-    description: "White text with a shadow.",
-  },
-  {
-    name: "Social highlight",
-    color: "#FFD54F",
-    box: false,
-    description: "Gold text for short videos.",
-  },
-  {
-    name: "Boxed",
-    color: "#FFFFFF",
-    box: true,
-    description: "A dark box behind the words.",
-  },
-] as const;
+import { captionCues, sampleCaptionStyles } from "@/lib/caption-demo";
 
 export function CaptionStyleGallery({
   preload = false,
@@ -33,7 +12,7 @@ export function CaptionStyleGallery({
   preload?: boolean;
 }) {
   const [styleIndex, setStyleIndex] = useState(0);
-  const style = examples[styleIndex];
+  const style = sampleCaptionStyles[styleIndex];
 
   return (
     <div className="caption-style-gallery app-frame">
@@ -62,7 +41,7 @@ export function CaptionStyleGallery({
         role="group"
         aria-label="Caption style"
       >
-        {examples.map((example, index) => (
+        {sampleCaptionStyles.map((example, index) => (
           <button
             key={example.name}
             type="button"

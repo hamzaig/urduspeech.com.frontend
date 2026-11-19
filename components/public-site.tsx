@@ -9,6 +9,7 @@ const footerGroups = [
     links: [
       { href: "/video-captions", label: "Video captions" },
       { href: "/urdu-transcription", label: "Transcription" },
+      { href: "/demo", label: "Caption demo" },
       { href: "/pricing", label: "Pricing" },
     ],
   },
@@ -35,11 +36,9 @@ const footerGroups = [
 export function PublicFooter({ intro }: { intro?: ReactNode }) {
   return (
     <footer
-      className={
-        intro ? "public-footer closing landing-footer" : "public-footer"
-      }
+      className={intro ? "public-footer landing-footer" : "public-footer"}
     >
-      <div className="public-container wrap">
+      <div className="public-container">
         {intro}
         <div className="public-footer-info">
           <div className="site-footer-layout">
