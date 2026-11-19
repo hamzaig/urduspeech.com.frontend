@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
-import captionDemo from "@/assets/caption-demo.webp";
+import { ArrowRight, Captions, FileVideo, Globe } from "lucide-react";
+import { CaptionStyleGallery } from "@/components/caption-style-gallery";
 import { PublicPage } from "@/components/public-site";
 import { MarketingIntro, StartFree } from "@/components/marketing";
 
@@ -13,53 +13,54 @@ export const metadata: Metadata = {
 
 export default function VideoCaptions() {
   return (
-    <PublicPage
-      current="/video-captions"
-      mainClassName="public-container marketing-page"
-    >
-      <section className="feature-opening" aria-label="Video captions">
-        <MarketingIntro title="Captions for Urdu videos.">
+    <PublicPage mainClassName="public-container marketing-page">
+      <section className="product-hero" aria-label="Video captions">
+        <MarketingIntro title="Subtitles for Urdu videos">
           <p>
-            Give viewers words they can follow. Review the text and timing for
-            your reels, interviews and longer videos, then choose the export
-            that fits your edit.
+            Add captions to reels, interviews and longer videos. Review each
+            line in Studio, then choose a style and export the file you need.
           </p>
           <StartFree />
         </MarketingIntro>
-        <figure className="feature-frame">
-          <Image
-            src={captionDemo}
-            alt=""
-            unoptimized
-            sizes="(max-width: 760px) 100vw, 560px"
-          />
-          <div className="feature-caption">
-            <span lang="ur" dir="rtl">
-              ہر کہانی کی اپنی آواز ہوتی ہے۔
-            </span>
-            <span>Every story has a voice of its own.</span>
-          </div>
-          <figcaption>Illustrative frame with bilingual captions</figcaption>
-        </figure>
+        <CaptionStyleGallery preload />
       </section>
-      <section className="marketing-detail" aria-labelledby="video-exports">
-        <h2 id="video-exports">Choose your export</h2>
-        <ul className="marketing-list">
+      <section className="product-section" aria-labelledby="video-exports">
+        <h2 id="video-exports">Caption files for your edit</h2>
+        <ul className="product-points" role="list">
           <li>
-            <strong>SRT</strong> for importing subtitles into an editor or
-            upload platform that supports SRT files.
+            <Captions size={24} aria-hidden="true" />
+            <h3>SRT subtitles</h3>
+            <p>
+              Import timed captions into an editor or publishing platform that
+              accepts SRT.
+            </p>
           </li>
           <li>
-            <strong>VTT</strong> for compatible web video players.
+            <Globe size={24} aria-hidden="true" />
+            <h3>VTT subtitles</h3>
+            <p>
+              Use a separate subtitle track in a compatible web video player.
+            </p>
           </li>
           <li>
-            <strong>Captioned MP4</strong> when you want the subtitles visible
-            in the exported video itself.
+            <FileVideo size={24} aria-hidden="true" />
+            <h3>Captioned MP4</h3>
+            <p>
+              Render a video with the captions on it so the text travels with
+              the file.
+            </p>
           </li>
         </ul>
-        <Link className="public-inline-link" href="/supported-formats">
-          Check supported video formats and limits
-        </Link>
+        <div className="guide-link-row">
+          <Link href="/guides/make-urdu-video-captions">
+            Read the Urdu caption guide{" "}
+            <ArrowRight size={18} aria-hidden="true" />
+          </Link>
+          <Link href="/supported-formats">
+            Check supported formats and limits{" "}
+            <ArrowRight size={18} aria-hidden="true" />
+          </Link>
+        </div>
       </section>
     </PublicPage>
   );

@@ -1,59 +1,36 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { ArrowRight } from "lucide-react";
 import { Brand } from "@/components/brand";
-
-const publicLinks = [
-  { href: "/urdu-transcription", label: "Transcription" },
-  { href: "/video-captions", label: "Captions" },
-  { href: "/pricing", label: "Pricing" },
-  { href: "/faq", label: "FAQ" },
-];
-
-const policyLinks = [
-  { href: "/privacy", label: "Privacy" },
-  { href: "/terms", label: "Terms" },
-  { href: "/refunds", label: "Payments & refunds" },
-];
-
-const helpLinks = [
-  { href: "/supported-formats", label: "Supported formats" },
-  { href: "/contact", label: "Contact" },
-];
+import { SiteHeader } from "@/components/site-header";
 
 const footerGroups = [
-  { name: "Product", links: publicLinks.slice(0, 3) },
-  { name: "Support", links: [publicLinks[3], ...helpLinks] },
-  { name: "Policies", links: policyLinks },
+  {
+    name: "Product",
+    links: [
+      { href: "/video-captions", label: "Video captions" },
+      { href: "/urdu-transcription", label: "Transcription" },
+      { href: "/pricing", label: "Pricing" },
+    ],
+  },
+  {
+    name: "Resources",
+    links: [
+      { href: "/guides", label: "Creator guides" },
+      { href: "/supported-formats", label: "Supported formats" },
+      { href: "/faq", label: "FAQ" },
+      { href: "/contact", label: "Contact" },
+    ],
+  },
+  {
+    name: "Policies",
+    links: [
+      { href: "/privacy", label: "Privacy" },
+      { href: "/terms", label: "Terms" },
+      { href: "/refunds", label: "Payments & refunds" },
+      { href: "/delete-account", label: "Delete account" },
+    ],
+  },
 ];
-
-function PublicHeader({ current }: { current?: string }) {
-  return (
-    <header className="public-header">
-      <div className="public-container public-header-inner">
-        <Brand />
-        <nav aria-label="Website navigation">
-          {publicLinks.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              aria-current={current === href ? "page" : undefined}
-            >
-              {label}
-            </Link>
-          ))}
-        </nav>
-        <Link
-          className="public-sign-in"
-          href="/auth/sign-in"
-          aria-current={current === "/auth/sign-in" ? "page" : undefined}
-        >
-          Sign in <ArrowRight size={16} aria-hidden="true" />
-        </Link>
-      </div>
-    </header>
-  );
-}
 
 export function PublicFooter({ intro }: { intro?: ReactNode }) {
   return (
@@ -65,15 +42,12 @@ export function PublicFooter({ intro }: { intro?: ReactNode }) {
       <div className="public-container wrap">
         {intro}
         <div className="public-footer-info">
-          {intro ? (
-            <nav
-              className="landing-footer-nav"
-              aria-label="Service information"
-            >
-              <div>
-                <Brand />
-                <p>Urdu transcription and captions for creators.</p>
-              </div>
+          <div className="site-footer-layout">
+            <div>
+              <Brand />
+              <p>Urdu transcription and captions for creators.</p>
+            </div>
+            <nav className="site-footer-nav" aria-label="Service information">
               {footerGroups.map(({ name, links }) => (
                 <div key={name}>
                   <h3>{name}</h3>
@@ -85,21 +59,7 @@ export function PublicFooter({ intro }: { intro?: ReactNode }) {
                 </div>
               ))}
             </nav>
-          ) : (
-            <div className="public-footer-top">
-              <div>
-                <Brand />
-                <p>Urdu transcription and captions for creators.</p>
-              </div>
-              <nav aria-label="Service information">
-                {[...policyLinks, ...helpLinks].map(({ href, label }) => (
-                  <Link key={href} href={href}>
-                    {label}
-                  </Link>
-                ))}
-              </nav>
-            </div>
-          )}
+          </div>
           <small>
             Operated by MoonSys Ltd. Prices are in Pakistani rupees.
           </small>
@@ -111,17 +71,15 @@ export function PublicFooter({ intro }: { intro?: ReactNode }) {
 
 export function PublicPage({
   children,
-  current,
   mainClassName,
 }: {
   children: ReactNode;
-  current?: string;
   mainClassName?: string;
 }) {
   return (
     <div className="public-site">
-      <PublicHeader current={current} />
-      <main id="main" className={mainClassName}>
+      <SiteHeader />
+      <main id="main" className={mainClassName} tabIndex={-1}>
         {children}
       </main>
       <PublicFooter />
@@ -129,21 +87,62 @@ export function PublicPage({
   );
 }
 
+export type DocumentSection = { title: string; body: ReactNode };
+
+export function ReadingSections({
+  sections,
+}: {
+  sections: readonly DocumentSection[];
+}) {
+  const chapters = sections.map((section) => ({
+    ...section,
+    id: section.title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-|-$/g, ""),
+  }));
+
+  return (
+    <div className="reading-layout">
+      <nav className="reading-nav" aria-label="On this page">
+        <p>On this page</p>
+        <ol role="list">
+          {chapters.map(({ id, title }) => (
+            <li key={id}>
+              <a href={"#" + id}>{title}</a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+      <div className="reading-content">
+        {chapters.map(({ id, title, body }) => (
+          <section key={id} id={id} aria-labelledby={id + "-heading"}>
+            <h2 id={id + "-heading"}>{title}</h2>
+            {body}
+          </section>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function PolicyPage({
   title,
   description,
-  children,
+  sections,
+  updated,
 }: {
   title: string;
   description: string;
-  children: ReactNode;
+  sections: readonly DocumentSection[];
+  updated?: string;
 }) {
   return (
     <PublicPage mainClassName="public-container policy-page">
       <h1>{title}</h1>
-      <p className="policy-date">Updated 18 November 2026</p>
+      {updated && <p className="policy-date">Updated {updated}</p>}
       <p className="policy-intro">{description}</p>
-      <div className="policy-content">{children}</div>
+      <ReadingSections sections={sections} />
     </PublicPage>
   );
 }

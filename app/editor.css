@@ -581,3 +581,78 @@ video.local-player {
     grid-column: 2 / -1;
   }
 }
+
+.editor-caption-presets {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.editor-caption-presets legend {
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 690;
+}
+
+.editor-preset-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+}
+
+.editor-preset {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 48px;
+  padding: 5px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface);
+  cursor: pointer;
+}
+
+.editor-preset:has(input:checked) {
+  border-color: var(--control);
+  background: var(--wash);
+}
+
+.editor-preset:has(input:focus-visible) {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.editor-preset input {
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.editor-preset-sample {
+  display: grid;
+  place-items: center;
+  padding-inline: 3px;
+  border-radius: 4px;
+  background: var(--stage);
+  font:
+    400 14px/2.25 CaptionUrdu,
+    serif;
+  white-space: nowrap;
+}
+
+.editor-preset-sample [data-box="true"] {
+  background: #0d1710;
+}
+
+.editor-preset strong {
+  color: var(--ink);
+  font-size: 11px;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+  text-transform: capitalize;
+}
+
+.editor-caption-presets small {
+  display: block;
+  margin-top: 5px;
+}

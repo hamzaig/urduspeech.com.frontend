@@ -16,11 +16,8 @@ export const metadata: Metadata = {
 
 export default function Pricing() {
   return (
-    <PublicPage
-      current="/pricing"
-      mainClassName="public-container marketing-page"
-    >
-      <MarketingIntro title="Plans in Pakistani rupees.">
+    <PublicPage mainClassName="public-container marketing-page pricing-page">
+      <MarketingIntro title="Plans in Pakistani rupees">
         <p>
           Audio and video share one minute allowance. Start with 10 free
           minutes, then compare plans by minutes, export resolution and media
@@ -33,7 +30,10 @@ export default function Pricing() {
         </h2>
         <Plans />
       </section>
-      <section className="marketing-detail" aria-labelledby="pricing-questions">
+      <section
+        className="product-section pricing-questions"
+        aria-labelledby="pricing-questions"
+      >
         <h2 id="pricing-questions">Minutes and retention</h2>
         <QuestionList
           questions={commonQuestions.filter(

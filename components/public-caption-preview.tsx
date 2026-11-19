@@ -34,10 +34,10 @@ export function PublicCaptionPreview() {
     >
       <div className="sample-toolbar">
         <h2 id="caption-demo-title">
-          <Captions size={19} aria-hidden="true" /> Caption demo
+          <Captions size={19} aria-hidden="true" /> Transcript demo
         </h2>
         <fieldset className="sample-options">
-          <legend className="sr-only">Caption language</legend>
+          <legend className="sr-only">Transcript language</legend>
           {captionModes.map(({ id, label }) => (
             <label key={id}>
               <input
@@ -84,7 +84,7 @@ export function PublicCaptionPreview() {
           <div className="sample-output-meta">
             <span>
               <span className="sample-time">{captionTime(line.start)}</span>{" "}
-              <span>{outputName} caption</span>
+              <span>{outputName} transcript</span>
             </span>
             <button type="button" onClick={copyCaption} className="sample-copy">
               {copyStatus === "Caption copied." ? (

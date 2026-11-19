@@ -47,7 +47,7 @@ export function CaptionStudioDemo() {
             width={clipStill.width}
             height={clipStill.height}
             preload
-            sizes="(max-width: 700px) calc(100vw - 60px), (max-width: 900px) 40vw, 590px"
+            sizes="(max-width: 960px) calc(100vw - 60px), 660px"
           />
           <div className="caption-studio-clock" aria-hidden="true">
             {captionTime(cue.start)} / {captionTime(captionCues[2].end)}
@@ -83,7 +83,7 @@ export function CaptionStudioDemo() {
             </div>
           </fieldset>
           <div className="caption-studio-transcript">
-            <p id="caption-studio-cues">Urdu transcript</p>
+            <p id="caption-studio-cues">Timeline</p>
             <ol aria-labelledby="caption-studio-cues" role="list">
               {captionCues.map((line, index) => (
                 <li key={line.start}>
@@ -95,7 +95,7 @@ export function CaptionStudioDemo() {
                     <span className="caption-studio-time">
                       {captionTime(line.start)}
                     </span>
-                    <span lang="ur" dir="rtl">
+                    <span className="sr-only" lang="ur" dir="rtl">
                       {line.urdu}
                     </span>
                   </button>

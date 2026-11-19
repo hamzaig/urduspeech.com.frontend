@@ -287,6 +287,55 @@ export const publicDocuments = {
       },
     ],
   },
+  "delete-account": {
+    title: "Delete your UrduSpeech account",
+    description:
+      "Find the deletion option, save copies of your work and check the cleanup status.",
+    sections: [
+      {
+        title: "Save your work first",
+        body: (
+          <p>
+            Download any recordings, transcripts, subtitles and rendered videos
+            you want to keep before deleting your account. Project access and
+            downloads become unavailable after the request is accepted.
+          </p>
+        ),
+      },
+      {
+        title: "Request deletion in Studio",
+        body: (
+          <ol>
+            <li>
+              Sign in and open{" "}
+              <Link href="/studio/settings">Studio settings</Link>.
+            </li>
+            <li>
+              Go to <strong>Delete your account</strong> and type{" "}
+              <strong>DELETE</strong> in the confirmation field.
+            </li>
+            <li>
+              Select <strong>Delete my account</strong>. Sign in again first if
+              Studio asks you to refresh your session.
+            </li>
+          </ol>
+        ),
+      },
+      {
+        title: "Check your deletion status",
+        body: (
+          <p>
+            Save the private receipt displayed after your request. Open{" "}
+            <Link href="/deletion-status">Deletion status</Link> to check
+            content removal, billing cleanup and backup propagation. Read the{" "}
+            <Link href="/privacy">privacy policy</Link> for details about
+            provider cleanup and records that may be kept for legal or
+            accounting reasons.
+          </p>
+        ),
+      },
+    ],
+  },
   "supported-formats": {
     title: "Check your recording before uploading.",
     description:
@@ -403,7 +452,7 @@ export const publicDocuments = {
             Use clear speech with minimal background music. Mixed Urdu and
             English are supported, but names and figures need review. If timing
             needs attention, edit it before exporting or rendering. See{" "}
-            <Link href="/">plans</Link> or email {contact} with a project
+            <Link href="/pricing">plans</Link> or email {contact} with a project
             reference for help.
           </p>
         ),
