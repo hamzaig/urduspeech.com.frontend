@@ -162,6 +162,8 @@ components:
 
 ## Overview
 
+The homepage uses a separate ink and green palette in app/home.css, with a centered masthead and a parallel-text caption demo. The violet workspace and authentication surfaces use the shared tokens below.
+
 **Creative North Star: "Post-production screening sheet"**
 
 UrduSpeech takes its visual cues from reviewing a recording. Lavender and white surfaces support deep violet type. A matte indigo frame holds the media, and timecoded caption rows link words to the recording. Public typography opens up the page. Studio uses the same palette at the scale of fields, rows, and editing panels.
@@ -219,9 +221,9 @@ Use close spacing inside controls and cues, then separate working panels with `1
 
 ## Elevation & Depth
 
-Workspace depth comes from white panels against cool paper, lighter dividers, and tinted selection. The public screening panel carries the soft offset shadow (`0 20px 42px #35246822`). Local media captions use a small text shadow (`0 1px 3px #120b1a`) for readability against footage.
+Workspace depth comes from white panels against cool paper, lighter dividers, and tinted selection. Local media captions use a small text shadow (`0 1px 3px #120b1a`) for readability against footage.
 
-**The Media Shadow Rule.** Keep work panels flat and bordered. Reserve the broad ambient shadow for the public screening panel.
+**The Media Shadow Rule.** Keep work panels flat and bordered.
 
 ## Shapes
 
@@ -255,7 +257,7 @@ On the indigo stage, a segmented radio group sets the caption language. Selectab
 
 Studio places the editable text and timing beside the local player at wide widths. The empty media frame holds the Choose original recording action. When video is playing, the compact subtitle overlay sits above the player controls.
 
-The illustrative interview still used in the demo and auth was generated with ImageGen. [Asset provenance](assets/caption-demo.webp.json)
+The illustrative interview still on the authentication screens was generated with ImageGen. [Asset provenance](assets/caption-demo.webp.json)
 
 ## Do's and Don'ts
 
@@ -267,6 +269,6 @@ The illustrative interview still used in the demo and auth was generated with Im
 
 ### Don't
 
-- **Don't** bake captions into an illustrative still used for the interactive demo.
+- **Don't** bake captions into artwork used for interactive caption examples.
 - **Don't** add ambient shadow to routine Studio panels.
 - **Don't** apply the tight display leading to Urdu captions.

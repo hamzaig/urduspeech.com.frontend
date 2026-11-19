@@ -64,28 +64,29 @@ const steps = [
 
 export default function Home() {
   return (
-    <div className="public-site">
+    <div className="public-site home-site">
       <PublicHeader />
       <main id="main">
         <section className="public-hero" aria-labelledby="hero-title">
           <div className="public-container">
             <div className="hero-intro">
               <h1 id="hero-title">
-                Urdu captions,
-                <br />
-                <span>ready to edit.</span>
+                Turn Urdu speech
+                <br /> into <span>captions.</span>
               </h1>
-              <div className="hero-offer">
-                <p>
-                  Turn your audio or video into editable Urdu and Roman Urdu
-                  captions, English translations or bilingual subtitles.
-                </p>
+              <p>
+                Upload a recording, edit the words and timing, and export in
+                Urdu, Roman Urdu, English or both Urdu and English.
+              </p>
+              <div className="hero-actions">
                 <Link className="button hero-action" href="/auth/register">
-                  Start with 10 free minutes{" "}
-                  <ArrowRight size={19} aria-hidden="true" />
+                  Start free <ArrowRight size={17} aria-hidden="true" />
                 </Link>
-                <small>No card needed. Free minutes are available once.</small>
+                <a className="button secondary" href="#caption-demo">
+                  Try the demo
+                </a>
               </div>
+              <small>10 free minutes once. No card required.</small>
             </div>
             <PublicCaptionPreview />
           </div>

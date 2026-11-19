@@ -1,9 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import Image from "next/image";
-import captionDemo from "@/assets/caption-demo.webp";
-import { Captions, ChevronRight } from "lucide-react";
+import { Captions, ChevronRight, Copy, Check } from "lucide-react";
 
 const outputs = [
   { id: "urdu", label: "Urdu" },
@@ -37,8 +35,20 @@ export function PublicCaptionPreview() {
   const [output, setOutput] =
     useState<(typeof outputs)[number]["id"]>("bilingual");
   const [active, setActive] = useState(0);
+  const [copyStatus, setCopyStatus] = useState("");
   const line = lines[active];
-  const listOutput = output === "bilingual" ? "english" : output;
+  const outputName = outputs.find(({ id }) => id === output)?.label;
+
+  async function copyCaption() {
+    try {
+      await navigator.clipboard.writeText(
+        output === "bilingual" ? line.urdu + "\n" + line.english : line[output],
+      );
+      setCopyStatus("Caption copied.");
+    } catch {
+      setCopyStatus("Couldn’t copy. You can select the caption text.");
+    }
+  }
 
   return (
     <section
@@ -48,8 +58,7 @@ export function PublicCaptionPreview() {
     >
       <div className="sample-toolbar">
         <h2 id="caption-demo-title">
-          <Captions size={20} aria-hidden="true" />
-          Caption demo
+          <Captions size={19} aria-hidden="true" /> Caption demo
         </h2>
         <fieldset className="sample-options">
           <legend className="sr-only">Caption language</legend>
@@ -60,7 +69,10 @@ export function PublicCaptionPreview() {
                 type="radio"
                 name="sample-language"
                 checked={id === output}
-                onChange={() => setOutput(id)}
+                onChange={() => {
+                  setOutput(id);
+                  setCopyStatus("");
+                }}
               />
               <span>{label}</span>
             </label>
@@ -68,52 +80,60 @@ export function PublicCaptionPreview() {
         </fieldset>
       </div>
       <div className="sample-body">
-        <figure className="sample-frame">
-          <Image
-            src={captionDemo}
-            alt=""
-            fill
-            unoptimized
-            loading="eager"
-            fetchPriority="high"
-          />
-          <div className="sample-lines" aria-live="polite" aria-atomic="true">
-            {(output === "urdu" || output === "bilingual") && (
-              <span lang="ur" dir="rtl">
-                {line.urdu}
-              </span>
-            )}
-            {output !== "urdu" && <span>{line[listOutput]}</span>}
-          </div>
-          <figcaption className="sample-frame-label">
-            Illustrative frame
-          </figcaption>
-        </figure>
         <div className="sample-script">
-          <h3>Caption lines</h3>
-          <ol>
+          <h3>Urdu sample</h3>
+          <ol role="list">
             {lines.map((item, index) => (
               <li key={item.time}>
                 <button
                   type="button"
                   className="sample-line"
                   aria-pressed={index === active}
-                  onClick={() => setActive(index)}
+                  onClick={() => {
+                    setActive(index);
+                    setCopyStatus("");
+                  }}
                 >
                   <span className="sample-time">{item.time}</span>
-                  <span className="sample-line-copy">
-                    {(output === "urdu" || output === "bilingual") && (
-                      <span lang="ur" dir="rtl">
-                        {item.urdu}
-                      </span>
-                    )}
-                    {output !== "urdu" && <span>{item[listOutput]}</span>}
+                  <span lang="ur" dir="rtl">
+                    {item.urdu}
                   </span>
                   <ChevronRight size={15} aria-hidden="true" />
                 </button>
               </li>
             ))}
           </ol>
+        </div>
+        <div className="sample-output">
+          <div className="sample-output-meta">
+            <span>
+              <span className="sample-time">{line.time}</span>{" "}
+              <span>{outputName} caption</span>
+            </span>
+            <button type="button" onClick={copyCaption} className="sample-copy">
+              {copyStatus === "Caption copied." ? (
+                <Check size={15} aria-hidden="true" />
+              ) : (
+                <Copy size={15} aria-hidden="true" />
+              )}
+              Copy text
+            </button>
+          </div>
+          <div className="sample-lines" aria-live="polite" aria-atomic="true">
+            {(output === "urdu" || output === "bilingual") && (
+              <span lang="ur" dir="rtl">
+                {line.urdu}
+              </span>
+            )}
+            {output !== "urdu" && (
+              <span>
+                {output === "bilingual" ? line.english : line[output]}
+              </span>
+            )}
+          </div>
+          <p className="sample-copy-status" role="status">
+            {copyStatus}
+          </p>
         </div>
       </div>
     </section>
