@@ -4,6 +4,7 @@ import "@fontsource-variable/bricolage-grotesque";
 import "./globals.css";
 import "./editor.css";
 import "./public.css";
+import "./home.css";
 export const metadata: Metadata = {
   title: {
     default: "UrduSpeech — Creator studio",
