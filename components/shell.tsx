@@ -25,11 +25,16 @@ export function Shell({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [error, setError] = useState("");
   const [admin, setAdmin] = useState(false);
+  const [checkingSession, setCheckingSession] = useState(true);
+  const [signingOut, setSigningOut] = useState(false);
   useEffect(() => {
     let live = true;
     api<Session>("/v1/session")
       .then(async (s) => {
-        if (live) setSession(s);
+        if (live) {
+          setSession(s);
+          setCheckingSession(false);
+        }
         const owner = await api<{ admin: boolean }>("/v1/admin/session").catch(
           () => ({ admin: false }),
         );
@@ -38,12 +43,15 @@ export function Shell({ children }: { children: React.ReactNode }) {
       .catch((e) => {
         if (live && (!(e instanceof ApiError) || e.status !== 401))
           setError(explain(e));
+        if (live) setCheckingSession(false);
       });
     return () => {
       live = false;
     };
   }, []);
   async function signOut() {
+    setSigningOut(true);
+    setError("");
     try {
       await api("/v1/auth/sign-out", mutation("POST", {}));
       setSession(null);
@@ -52,6 +60,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
       router.refresh();
     } catch (e) {
       setError(explain(e));
+    } finally {
+      setSigningOut(false);
     }
   }
   return (
@@ -67,17 +77,24 @@ export function Shell({ children }: { children: React.ReactNode }) {
           </span>
         </Link>
         <nav aria-label="Main navigation">
-          {links.map(({ href, label, icon: Icon }) => (
-            <Link
-              key={href}
-              href={href}
-              className={"nav-link " + (path === href ? "active" : "")}
-              aria-current={path === href ? "page" : undefined}
-            >
-              <Icon size={19} />
-              {label}
-            </Link>
-          ))}
+          {links.map(({ href, label, icon: Icon }) => {
+            const active =
+              path === href ||
+              (href === "/studio" && path.startsWith("/studio/projects/"));
+            return (
+              <Link
+                key={href}
+                href={href}
+                className={"nav-link " + (active ? "active" : "")}
+                aria-current={
+                  active ? (path === href ? "page" : "location") : undefined
+                }
+              >
+                <Icon size={19} />
+                {label}
+              </Link>
+            );
+          })}
           {admin && (
             <Link
               href="/studio/admin"
@@ -91,37 +108,24 @@ export function Shell({ children }: { children: React.ReactNode }) {
             </Link>
           )}
         </nav>
-        <div className="sidebar-note">
-          <AudioLines size={21} />
-          <p>
-            Your voice.
-            <br />
-            Ready to be read.
-          </p>
-          <small>Transcripts and captions for the way you create.</small>
-        </div>
-        <div className="sidebar-bottom">
-          <span className="avatar">US</span>
-          <div>
-            <strong>Your workspace</strong>
-            <small>{session ? "Signed in" : "Personal studio"}</small>
-          </div>
-        </div>
-      </aside>
-      <div className="app-main">
-        <header className="topbar">
-          <span>From spoken to shareable</span>
+        <div className="workspace-account">
           {session ? (
-            <button className="text-button" onClick={signOut}>
-              <LogOut size={16} />
-              Sign out
+            <button
+              className="text-button"
+              disabled={signingOut}
+              onClick={signOut}
+            >
+              <LogOut size={16} aria-hidden="true" />
+              {signingOut ? "Signing out…" : "Sign out"}
             </button>
-          ) : (
+          ) : !checkingSession ? (
             <Link href="/auth/sign-in" className="text-button">
               Sign in
             </Link>
-          )}
-        </header>
+          ) : null}
+        </div>
+      </aside>
+      <div className="app-main">
         {error && (
           <div role="status" className="service-notice">
             {error}
@@ -129,7 +133,6 @@ export function Shell({ children }: { children: React.ReactNode }) {
         )}
         <main id="main">{children}</main>
         <footer className="studio-footer">
-          <span>Made for Urdu-speaking creators.</span>
           <span>
             <Link href="/privacy">Privacy</Link> ·{" "}
             <Link href="/terms">Terms</Link> ·{" "}

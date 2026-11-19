@@ -56,7 +56,7 @@ export default function DeletionStatus() {
     if (saved) void check(saved);
   }, []);
   return (
-    <main className="page narrow">
+    <main id="main" className="page narrow">
       <PageTitle
         title="Deletion status"
         description="Use your private deletion receipt to check progress after your account is signed out."

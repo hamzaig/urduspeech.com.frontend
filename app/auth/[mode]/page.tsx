@@ -2,18 +2,18 @@
 import { use, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { AudioLines } from "lucide-react";
+import { AudioLines, Eye, EyeOff } from "lucide-react";
 import { api, mutation, explain } from "@/lib/api";
 import { ErrorNotice, Saved } from "@/components/common";
 const modes = {
   "sign-in": {
-    title: "Welcome back.",
+    title: "Sign in to UrduSpeech",
     description: "Sign in to your creator studio.",
     button: "Sign in",
   },
   register: {
-    title: "Your voice, a little further.",
-    description: "Create your UrduSpeech account.",
+    title: "Create your account",
+    description: "Start with 10 free minutes for transcripts and captions.",
     button: "Create account",
   },
   "forgot-password": {
@@ -44,6 +44,7 @@ export default function Auth({
   const [error, setError] = useState(""),
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   if (!config)
     return (
       <div className="auth-wrap">
@@ -99,7 +100,7 @@ export default function Auth({
   }
   return (
     <main className="auth-wrap" id="main">
-      <Link className="brand" href="/studio">
+      <Link className="brand" href="/">
         <span className="brand-mark">
           <AudioLines size={24} />
         </span>
@@ -136,20 +137,40 @@ export default function Auth({
           </label>
         )}
         {["sign-in", "register", "reset-password"].includes(mode) && (
-          <label className="field">
-            Password
-            <input
-              name="password"
-              type="password"
-              required
-              minLength={mode === "sign-in" ? 1 : 12}
-              maxLength={128}
-              autoComplete={
-                mode === "sign-in" ? "current-password" : "new-password"
-              }
-            />
-            {mode !== "sign-in" && <small>At least 12 characters.</small>}
-          </label>
+          <div className="field">
+            <label htmlFor="auth-password">Password</label>
+            <div className="password-field">
+              <input
+                id="auth-password"
+                name="password"
+                type={showPassword ? "text" : "password"}
+                required
+                minLength={mode === "sign-in" ? 1 : 12}
+                maxLength={128}
+                aria-describedby={
+                  mode === "register" ? "password-hint" : undefined
+                }
+                autoComplete={
+                  mode === "sign-in" ? "current-password" : "new-password"
+                }
+              />
+              <button
+                type="button"
+                className="text-button"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                onClick={() => setShowPassword((visible) => !visible)}
+              >
+                {showPassword ? (
+                  <EyeOff size={18} aria-hidden="true" />
+                ) : (
+                  <Eye size={18} aria-hidden="true" />
+                )}
+              </button>
+            </div>
+            {mode === "register" && (
+              <small id="password-hint">At least 12 characters.</small>
+            )}
+          </div>
         )}
         <button disabled={busy || !!message}>
           {busy ? "Please wait…" : config.button}

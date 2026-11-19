@@ -1,37 +1,33 @@
 "use client";
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FileVideo, Upload, ArrowUpRight, AudioLines } from "lucide-react";
-import { api, explain, minutes } from "@/lib/api";
+import { AudioLines, FileVideo } from "lucide-react";
+import { api, ApiError, explain, minutes } from "@/lib/api";
 import type { ProjectList, Usage } from "@/lib/contracts";
-import {
-  PageTitle,
-  CaptionExample,
-  ErrorNotice,
-  UploadLink,
-} from "@/components/common";
+import { ErrorNotice, PageTitle, UploadLink } from "@/components/common";
+import { outputLabel } from "@/components/output-options";
+
+const pageSize = 10;
+
 export default function Studio() {
   const [projects, setProjects] = useState<ProjectList | null>(null);
   const [usage, setUsage] = useState<Usage | null>(null);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<unknown>();
   const [loading, setLoading] = useState(true);
   const [offset, setOffset] = useState(0);
+  const [attempt, setAttempt] = useState(0);
+
   useEffect(() => {
     let live = true;
     setLoading(true);
-    setError("");
-    Promise.all([
-      api<ProjectList>(`/v1/projects?limit=10&offset=${offset}`),
-      api<Usage>("/v1/usage"),
-    ])
-      .then(([p, u]) => {
-        if (live) {
-          setProjects(p);
-          setUsage(u);
-        }
+    setError(undefined);
+    api<ProjectList>(`/v1/projects?limit=${pageSize}&offset=${offset}`)
+      .then((result) => {
+        if (live) setProjects(result);
       })
-      .catch((e) => {
-        if (live) setError(explain(e));
+      .catch((err: unknown) => {
+        if (live) setError(err);
       })
       .finally(() => {
         if (live) setLoading(false);
@@ -39,124 +35,113 @@ export default function Studio() {
     return () => {
       live = false;
     };
-  }, [offset]);
+  }, [offset, attempt]);
+
+  useEffect(() => {
+    let live = true;
+    api<Usage>("/v1/usage")
+      .then((result) => {
+        if (live) setUsage(result);
+      })
+      .catch(() => {
+        // Project access is independent of the optional allowance summary.
+      });
+    return () => {
+      live = false;
+    };
+  }, [attempt]);
+
+  const needsSignIn = error instanceof ApiError && error.status === 401;
   return (
     <div className="page">
       <PageTitle
-        title="Make your words go further."
-        description="Your Urdu audio. A transcript you can edit. Captions you can make your own."
-        action={
-          usage && (
-            <Link className="usage-pill" href="/studio/billing">
-              <AudioLines size={18} />
-              <strong>{minutes(usage.remaining)}</strong> minutes left
-            </Link>
-          )
-        }
+        title="My projects"
+        description="Open an existing project to edit captions or download your exports."
+        action={<UploadLink />}
       />
-      <section className="welcome-grid">
-        <div className="upload-intro">
-          <div className="intro-symbol">
-            <Upload size={26} />
-          </div>
-          <h2>
-            Good content starts
-            <br />
-            with your voice.
-          </h2>
-          <p>
-            Bring a reel, a podcast or a full-length video. Choose how your
-            words look, then let AI prepare your transcript and captions.
-          </p>
-          <UploadLink />
-          <div className="flow-hint">
-            <span>Upload your media</span>
-            <span>Choose your output</span>
-            <span>Review & export</span>
-          </div>
-        </div>
-        <CaptionExample />
-      </section>
-      <div className="section-heading">
-        <div>
-          <h2>My projects</h2>
-          <p>Pick up where you left off.</p>
-        </div>
-        <Link href="/studio/new" className="text-button">
-          New project <ArrowUpRight size={17} />
+      {usage && (
+        <Link className="usage-pill" href="/studio/billing">
+          <AudioLines size={17} aria-hidden="true" />
+          <strong>{minutes(usage.remaining)}</strong> minutes left
         </Link>
-      </div>
-      {error ? (
-        <ErrorNotice message={error} />
-      ) : loading ? (
-        <p role="status" className="loading">
-          Loading your projects…
-        </p>
-      ) : projects?.projects.length ? (
-        <>
+      )}
+      <section aria-label="Project list" className="project-list">
+        {error ? (
+          <ErrorNotice
+            message={explain(error)}
+            signIn={needsSignIn}
+            retry={
+              needsSignIn ? undefined : () => setAttempt((value) => value + 1)
+            }
+          />
+        ) : loading ? (
+          <p role="status" className="loading">
+            Loading your projects…
+          </p>
+        ) : projects?.projects.length ? (
           <div className="project-table">
-            <div className="table-head">
+            <div className="table-head" aria-hidden="true">
               <span>Project</span>
               <span>Output</span>
               <span>Created</span>
             </div>
-            {projects.projects.map((p) => (
+            {projects.projects.map((project) => (
               <Link
-                href={"/studio/projects/" + p.id}
-                key={p.id}
+                href={`/studio/projects/${project.id}`}
+                key={project.id}
                 className="project-row"
               >
                 <span>
-                  <FileVideo size={21} />
-                  <strong>{p.title}</strong>
+                  <FileVideo size={20} aria-hidden="true" />
+                  <strong dir="auto">{project.title}</strong>
                 </span>
                 <span>
-                  {typeof p.settings.outputVariant === "string"
-                    ? p.settings.outputVariant
-                    : "Urdu"}
+                  {outputLabel(project.settings.outputVariant ?? "urdu")}
                 </span>
-                <time dateTime={p.createdAt}>
-                  {new Date(p.createdAt).toLocaleDateString("en-PK")}
+                <time dateTime={project.createdAt}>
+                  {new Date(project.createdAt).toLocaleDateString("en-PK", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  })}
                 </time>
               </Link>
             ))}
           </div>
-          <div className="pager">
+        ) : (
+          <div className="empty-projects">
+            <FileVideo size={28} aria-hidden="true" />
+            <div>
+              <h2>{offset ? "No more projects" : "No projects yet"}</h2>
+              <p>
+                {offset
+                  ? "Go back to see earlier results."
+                  : "Upload audio or video to create your first transcript and captions."}
+              </p>
+            </div>
+          </div>
+        )}
+        {(offset > 0 || projects?.projects.length === pageSize) && (
+          <div className="pager" aria-label="Project pages">
             <button
               className="secondary"
-              disabled={offset === 0}
-              onClick={() => setOffset(Math.max(0, offset - 10))}
+              disabled={loading || offset === 0}
+              onClick={() => setOffset((value) => value - pageSize)}
             >
               Previous
             </button>
             <button
               className="secondary"
-              disabled={projects.projects.length < 10}
-              onClick={() => setOffset(offset + 10)}
+              disabled={
+                loading || !!error || projects?.projects.length !== pageSize
+              }
+              onClick={() => setOffset((value) => value + pageSize)}
             >
               Next
             </button>
           </div>
-        </>
-      ) : (
-        <div className="empty-projects">
-          <FileVideo size={28} />
-          <div>
-            <h3>Your first project belongs here.</h3>
-            <p>Upload audio or video to start your transcript.</p>
-          </div>
-          <Link className="secondary button" href="/studio/new">
-            Create a project
-          </Link>
-        </div>
-      )}
-      <div className="workspace-note">
-        <span>Built around your workflow</span>
-        <p>
-          One allowance for audio and video. Urdu, Roman Urdu, English and
-          bilingual outputs.
-        </p>
-      </div>
+        )}
+      </section>
     </div>
   );
 }

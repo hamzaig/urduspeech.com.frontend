@@ -35,6 +35,13 @@ const variants = [
     description: "Urdu script with an English translation.",
   },
 ] as const;
+export function outputLabel(variant: unknown) {
+  return (
+    variants.find(({ id }) => id === variant)?.label ??
+    (typeof variant === "string" && variant ? variant : "Unknown output")
+  );
+}
+
 export type Preset = { id: string; name: string; color: string; box: boolean };
 export function OutputOptions({
   value,
@@ -53,9 +60,6 @@ export function OutputOptions({
   return (
     <fieldset className="options-fieldset" disabled={disabled}>
       <legend>Choose your caption output</legend>
-      <p className="field-help">
-        Same voice. Choose how your audience reads it.
-      </p>
       <div className="output-options">
         {variants.map((v) => (
           <label
@@ -73,7 +77,11 @@ export function OutputOptions({
               onChange={() => update("outputVariant", v.id)}
             />
             <strong>{v.label}</strong>
-            <span className="output-example" dir="auto">
+            <span
+              className="output-example"
+              dir="auto"
+              lang={v.id === "urdu" ? "ur" : undefined}
+            >
               {v.example}
             </span>
             <small>{v.description}</small>
