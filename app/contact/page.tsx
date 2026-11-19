@@ -24,6 +24,9 @@ export default function Contact() {
         <p className="contact-address">notification@urduspeech.com</p>
       </MarketingIntro>
       <div className="question-list support-links">
+        <Link href="/guides">
+          Creator guides <ArrowRight size={17} aria-hidden="true" />
+        </Link>
         <Link href="/faq">
           Answers to common questions{" "}
           <ArrowRight size={17} aria-hidden="true" />

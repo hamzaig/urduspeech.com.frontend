@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ArrowRight, FileText, Languages, PencilLine } from "lucide-react";
 import { PublicPage } from "@/components/public-site";
 import { MarketingIntro, StartFree } from "@/components/marketing";
 import { PublicCaptionPreview } from "@/components/public-caption-preview";
@@ -12,39 +13,59 @@ export const metadata: Metadata = {
 
 export default function UrduTranscription() {
   return (
-    <PublicPage
-      current="/urdu-transcription"
-      mainClassName="public-container marketing-page"
-    >
-      <MarketingIntro title="Urdu recordings into editable text.">
-        <p>
-          Transcribe interviews, podcasts or voice recordings. Review the words
-          in Studio, then take the transcript into your notes, articles or show
-          notes.
-        </p>
-        <StartFree />
-      </MarketingIntro>
-      <PublicCaptionPreview />
+    <PublicPage mainClassName="public-container marketing-page">
+      <section className="product-hero" aria-label="Urdu transcription">
+        <MarketingIntro title="Urdu audio into editable text">
+          <p>
+            Transcribe interviews, podcasts and voice recordings. Review the
+            words in Studio, then export the transcript for your notes, quotes
+            or articles.
+          </p>
+          <StartFree />
+        </MarketingIntro>
+        <PublicCaptionPreview />
+      </section>
       <section
-        className="marketing-detail"
+        className="product-section"
         aria-labelledby="transcription-workflow"
       >
         <h2 id="transcription-workflow">From recording to transcript</h2>
-        <ol className="marketing-list">
+        <ol className="product-points" role="list">
           <li>
-            <strong>Choose the output.</strong> Keep Urdu script, switch to
-            Roman Urdu, translate to English or keep both languages together.
+            <Languages size={24} aria-hidden="true" />
+            <h3>Choose your output</h3>
+            <p>
+              Keep Urdu script, switch to Roman Urdu, translate to English or
+              show both languages.
+            </p>
           </li>
           <li>
-            <strong>Review the draft.</strong> Check names, numbers and words
-            that are hard to hear. You can turn automated corrections off.
+            <PencilLine size={24} aria-hidden="true" />
+            <h3>Review the draft</h3>
+            <p>
+              Check names, numbers and hard-to-hear words. You can turn
+              automated correction off.
+            </p>
           </li>
           <li>
-            <strong>Download the text.</strong> Export TXT when the transcript
-            is ready. If you need timed subtitles,{" "}
-            <Link href="/video-captions">explore video captions</Link>.
+            <FileText size={24} aria-hidden="true" />
+            <h3>Download the text</h3>
+            <p>
+              Export TXT when the transcript is ready and use it as plain text
+              in your next document.
+            </p>
           </li>
         </ol>
+        <div className="guide-link-row">
+          <Link href="/guides/urdu-roman-urdu-and-english">
+            Compare scripts and translations{" "}
+            <ArrowRight size={18} aria-hidden="true" />
+          </Link>
+          <Link href="/video-captions">
+            Try timed captions for video{" "}
+            <ArrowRight size={18} aria-hidden="true" />
+          </Link>
+        </div>
       </section>
     </PublicPage>
   );

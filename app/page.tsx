@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import type { Metadata } from "next";
 import {
   ArrowDown,
@@ -11,9 +10,10 @@ import {
   LockKeyhole,
 } from "lucide-react";
 import clipStill from "@/assets/caption-demo.webp";
-import shortVideoStill from "@/assets/short-video-demo.webp";
 import { CaptionStudioDemo } from "@/components/caption-studio-demo";
-import { LandingHeader } from "@/components/landing-header";
+import { CaptionStyleGallery } from "@/components/caption-style-gallery";
+import { GuideCards } from "@/components/guide-cards";
+import { SiteHeader } from "@/components/site-header";
 import { LandingMotion } from "@/components/landing-motion";
 import {
   Plans,
@@ -84,10 +84,10 @@ const homeQuestions = [
 export default function Home() {
   return (
     <>
-      <LandingHeader />
+      <SiteHeader landing />
       <main id="main" className="home-site" tabIndex={-1}>
         <section
-          className="hero hero--centred landing-hero"
+          className="hero hero--split landing-hero"
           aria-labelledby="hero-title"
           data-enter
         >
@@ -95,11 +95,12 @@ export default function Home() {
             <div className="hero-text">
               <div className="landing-hero-copy">
                 <h1 id="hero-title">
-                  Urdu captions <span>for creators</span>
+                  Urdu captions <span>for your videos</span>
                 </h1>
                 <p>
-                  Transcribe spoken Urdu, then edit and export captions in Urdu,
-                  Roman Urdu, English or both Urdu and English.
+                  Upload an Urdu recording and review the words and timing.
+                  Export subtitles, an editable transcript or a video with
+                  captions.
                 </p>
                 <div className="landing-hero-actions">
                   <StartFree />
@@ -112,6 +113,32 @@ export default function Home() {
               <div className="landing-hero-frame" data-enter-media>
                 <CaptionStudioDemo />
               </div>
+            </div>
+          </div>
+        </section>
+        <section
+          id="use-cases"
+          className="landing-section landing-styles"
+          aria-labelledby="caption-styles-title"
+          tabIndex={-1}
+        >
+          <div className="public-container wrap">
+            <div className="landing-section-heading">
+              <h2 id="caption-styles-title">Caption styles for your video</h2>
+              <p>
+                Try a style on the same Urdu line before choosing one in Studio.
+              </p>
+            </div>
+            <CaptionStyleGallery />
+            <div className="guide-link-row">
+              <Link href="/video-captions">
+                Make captions for videos{" "}
+                <ArrowRight size={18} aria-hidden="true" />
+              </Link>
+              <Link href="/urdu-transcription">
+                Transcribe interviews and podcasts{" "}
+                <ArrowRight size={18} aria-hidden="true" />
+              </Link>
             </div>
           </div>
         </section>
@@ -218,77 +245,6 @@ export default function Home() {
           </div>
         </section>
         <section
-          id="use-cases"
-          className="landing-section landing-use-cases"
-          aria-labelledby="use-cases-title"
-          tabIndex={-1}
-        >
-          <div className="public-container wrap">
-            <div className="landing-section-heading">
-              <h2 id="use-cases-title">Video captions and audio transcripts</h2>
-            </div>
-            <div className="landing-case-grid">
-              <Link href="/video-captions" className="landing-case">
-                <div
-                  className="landing-case-visual case-video"
-                  aria-hidden="true"
-                  data-visual
-                >
-                  <Image
-                    src={shortVideoStill}
-                    alt=""
-                    width={shortVideoStill.width}
-                    height={shortVideoStill.height}
-                    sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 1316px) calc(50vw - 60px), 598px"
-                  />
-                  <div className="case-video-caption">
-                    <span lang="ur" dir="rtl">
-                      {captionCues[0].urdu}
-                    </span>
-                    <span>{captionCues[0].english}</span>
-                  </div>
-                </div>
-                <div className="landing-case-copy">
-                  <div>
-                    <h3>Captions for short videos</h3>
-                    <p>
-                      Give viewers subtitles they can read with the sound off.
-                    </p>
-                  </div>
-                  <ArrowRight size={23} aria-hidden="true" />
-                </div>
-              </Link>
-              <Link href="/urdu-transcription" className="landing-case">
-                <div
-                  className="landing-case-visual case-audio"
-                  aria-hidden="true"
-                >
-                  <div className="case-transcript">
-                    <div>
-                      <FileText size={16} /> interview.txt
-                    </div>
-                    {captionCues.map(({ start, urdu }) => (
-                      <p key={start} lang="ur" dir="rtl">
-                        {urdu}
-                      </p>
-                    ))}
-                  </div>
-                </div>
-                <div className="landing-case-copy">
-                  <div>
-                    <h3>Transcripts for interviews</h3>
-                    <p>
-                      Turn interviews and podcasts into text for quotes and show
-                      notes.
-                    </p>
-                  </div>
-                  <ArrowRight size={23} aria-hidden="true" />
-                </div>
-              </Link>
-            </div>
-          </div>
-        </section>
-        <section
           className="landing-section landing-exports"
           aria-labelledby="export-title"
           data-moment="iris-opens"
@@ -346,6 +302,20 @@ export default function Home() {
               </Link>
             </div>
             <Plans showStart={false} />
+          </div>
+        </section>
+        <section
+          className="landing-section landing-guides"
+          aria-labelledby="creator-guides-title"
+        >
+          <div className="public-container wrap">
+            <div className="landing-section-heading landing-heading-row">
+              <h2 id="creator-guides-title">Creator guides</h2>
+              <Link className="public-inline-link" href="/guides">
+                See all guides <ArrowRight size={17} aria-hidden="true" />
+              </Link>
+            </div>
+            <GuideCards />
           </div>
         </section>
         <section

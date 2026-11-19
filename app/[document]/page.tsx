@@ -17,15 +17,14 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
   return { title: document.title, description: document.description };
 }
 export default async function Document({ params }: Params) {
-  const document = getDocument((await params).document);
+  const { document: name } = await params;
+  const document = getDocument(name);
   return (
-    <PolicyPage title={document.title} description={document.description}>
-      {document.sections.map((section) => (
-        <section key={section.title}>
-          <h2>{section.title}</h2>
-          {section.body}
-        </section>
-      ))}
-    </PolicyPage>
+    <PolicyPage
+      title={document.title}
+      description={document.description}
+      sections={document.sections}
+      updated={name === "delete-account" ? undefined : "18 November 2026"}
+    />
   );
 }

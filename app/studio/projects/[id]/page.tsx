@@ -838,20 +838,45 @@ export default function ProjectEditor({
                     compatible copy of the recording.
                   </p>
                 )}
-                <label className="field">
-                  Caption style
-                  <select
-                    value={preset}
-                    onChange={(e) => setPreset(e.target.value)}
-                  >
+                <fieldset
+                  className="editor-caption-presets"
+                  disabled={busy}
+                  aria-describedby="preset-preview-note"
+                >
+                  <legend>Caption style</legend>
+                  <div className="editor-preset-grid">
                     {presets.map((p) => (
-                      <option key={p.id} value={p.id}>
-                        {p.name.replaceAll("-", " ")}
-                      </option>
+                      <label key={p.id} className="editor-preset">
+                        <input
+                          type="radio"
+                          name="render-preset"
+                          value={p.id}
+                          checked={p.id === preset}
+                          onChange={() => setPreset(p.id)}
+                        />
+                        <span
+                          className="editor-preset-sample"
+                          aria-hidden="true"
+                        >
+                          <span
+                            lang="ur"
+                            dir="rtl"
+                            style={{ color: p.color }}
+                            data-box={p.box}
+                          >
+                            آواز
+                          </span>
+                        </span>
+                        <strong>{p.name.replaceAll("-", " ")}</strong>
+                      </label>
                     ))}
-                  </select>
-                  <small>Style preview is approximate.</small>
-                </label>
+                  </div>
+                  <small id="preset-preview-note">
+                    {presets.length
+                      ? "Style preview is approximate."
+                      : "Caption styles are unavailable."}
+                  </small>
+                </fieldset>
               </section>
               <section
                 className="editor-exports"
