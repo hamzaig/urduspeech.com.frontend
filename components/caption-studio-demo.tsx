@@ -46,9 +46,8 @@ export function CaptionStudioDemo() {
             alt=""
             width={clipStill.width}
             height={clipStill.height}
-            unoptimized
             preload
-            sizes="(max-width: 700px) 100vw, 60vw"
+            sizes="(max-width: 700px) calc(100vw - 60px), (max-width: 900px) 40vw, 590px"
           />
           <div className="caption-studio-clock" aria-hidden="true">
             {captionTime(cue.start)} / {captionTime(captionCues[2].end)}

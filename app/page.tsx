@@ -239,8 +239,7 @@ export default function Home() {
                     alt=""
                     width={shortVideoStill.width}
                     height={shortVideoStill.height}
-                    unoptimized
-                    sizes="(max-width: 700px) 100vw, 50vw"
+                    sizes="(max-width: 700px) calc(100vw - 40px), (max-width: 1316px) calc(50vw - 60px), 598px"
                   />
                   <div className="case-video-caption">
                     <span lang="ur" dir="rtl">

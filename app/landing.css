@@ -714,6 +714,24 @@ body:has(> .landing-header) .button:not(.secondary) {
   color: #f6fbf4;
 }
 
+/* Draw the expanding ring inside a fixed box so nearby content stays put. */
+.landing-exports > .mo-io__stage > .mo-io__ring {
+  inset: 0;
+  width: auto;
+  height: auto;
+  transform: none;
+  border: 0;
+  border-radius: 0;
+  background: radial-gradient(
+    circle at var(--mo-cx) var(--mo-cy),
+    transparent max(0px, calc(var(--mo-r) - 1px)),
+    #83ad91 max(0px, calc(var(--mo-r) - 0.5px)),
+    #83ad91 calc(var(--mo-r) + 0.5px),
+    transparent calc(var(--mo-r) + 1px)
+  );
+  will-change: auto;
+}
+
 .landing-exports:focus-within > .mo-io__stage {
   display: none;
 }
@@ -1003,6 +1021,52 @@ body:has(> .landing-header) .button:not(.secondary) {
   }
 }
 
+@media (min-width: 701px) and (max-height: 820px) {
+  .landing-hero {
+    padding-block: calc(var(--landing-nav-height) + 19px) 20px;
+  }
+
+  .landing-hero-copy h1 {
+    font-size: clamp(3rem, 5.2vw, 4rem);
+  }
+
+  .landing-hero-frame {
+    margin-top: 18px;
+    padding-block: 16px;
+  }
+
+  .caption-studio-monitor {
+    min-height: 265px;
+  }
+
+  .caption-studio-editor {
+    gap: 13px;
+    padding-block: 12px;
+  }
+}
+
+@media (min-width: 761px) and (max-width: 900px) and (min-height: 950px) {
+  .step-visual {
+    min-height: clamp(260px, 30svh, 345px);
+  }
+
+  .landing-case-visual {
+    min-height: clamp(380px, 45svh, 480px);
+  }
+
+  .landing-pricing .public-pricing {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .landing-pricing .public-pricing li {
+    padding-block: 22px;
+  }
+
+  .landing-questions .question-list summary {
+    min-height: 78px;
+  }
+}
+
 @media (max-width: 760px) {
   body:has(> .landing-header) {
     --landing-nav-height: 62px;
@@ -1255,5 +1319,52 @@ body:has(> .landing-header) .button:not(.secondary) {
 
   .caption-studio-modes label span {
     font-size: 11px;
+  }
+}
+
+@media (max-width: 350px) {
+  .landing-header .brand {
+    gap: 6px;
+    font-size: 15px;
+  }
+
+  .landing-header .brand-mark {
+    width: 28px;
+    height: 28px;
+  }
+
+  .landing-hero {
+    padding-block: calc(var(--landing-nav-height) + 23px) 14px;
+  }
+
+  .landing-hero-copy h1 {
+    font-size: 2.37rem;
+  }
+
+  .landing-hero-copy p {
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .landing-hero-actions {
+    margin-top: 12px;
+  }
+
+  .landing-hero-frame {
+    margin-top: 15px;
+  }
+
+  .caption-studio-editor {
+    gap: 7px;
+  }
+
+  .landing-pricing .public-pricing li {
+    padding-block: 17px 20px;
+  }
+
+  .landing-pricing .public-pricing dl {
+    gap: 10px;
+    margin-top: 16px;
+    padding-top: 12px;
   }
 }
