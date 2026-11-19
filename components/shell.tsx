@@ -2,7 +2,8 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  AudioLines,
+  ChevronRight,
+  CircleHelp,
   FolderOpen,
   Plus,
   SlidersHorizontal,
@@ -12,6 +13,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { api, mutation, explain, ApiError } from "@/lib/api";
+import { Brand } from "@/components/brand";
 import type { Session } from "@/lib/contracts";
 const links = [
   { href: "/studio", label: "My projects", icon: FolderOpen },
@@ -22,6 +24,9 @@ const links = [
 export function Shell({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const router = useRouter();
+  const section =
+    links.find(({ href }) => href === path)?.label ??
+    (path === "/studio/admin" ? "Operations" : "Caption editor");
   const [session, setSession] = useState<Session | null>(null);
   const [error, setError] = useState("");
   const [admin, setAdmin] = useState(false);
@@ -67,15 +72,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
   return (
     <div className="app-shell">
       <aside className="sidebar">
-        <Link className="brand" href="/studio" aria-label="UrduSpeech studio">
-          <span className="brand-mark">
-            <AudioLines size={24} />
-          </span>
-          <span>
-            Urdu<span className="brand-light">Speech</span>
-            <small>Creator studio</small>
-          </span>
-        </Link>
+        <Brand studio />
         <nav aria-label="Main navigation">
           {links.map(({ href, label, icon: Icon }) => {
             const active =
@@ -90,7 +87,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
                   active ? (path === href ? "page" : "location") : undefined
                 }
               >
-                <Icon size={19} />
+                <Icon size={18} aria-hidden="true" />
                 {label}
               </Link>
             );
@@ -103,7 +100,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
               }
               aria-current={path === "/studio/admin" ? "page" : undefined}
             >
-              <Settings size={19} />
+              <Settings size={18} aria-hidden="true" />
               Operations
             </Link>
           )}
@@ -126,6 +123,17 @@ export function Shell({ children }: { children: React.ReactNode }) {
         </div>
       </aside>
       <div className="app-main">
+        <div className="workspace-header">
+          <div className="workspace-location">
+            <span>Studio</span>
+            <ChevronRight size={14} aria-hidden="true" />
+            <strong>{section}</strong>
+          </div>
+          <Link href="/supported-formats">
+            <CircleHelp size={16} aria-hidden="true" />
+            Supported formats
+          </Link>
+        </div>
         {error && (
           <div role="status" className="service-notice">
             {error}
@@ -133,12 +141,12 @@ export function Shell({ children }: { children: React.ReactNode }) {
         )}
         <main id="main">{children}</main>
         <footer className="studio-footer">
-          <span>
-            <Link href="/privacy">Privacy</Link> ·{" "}
-            <Link href="/terms">Terms</Link> ·{" "}
-            <Link href="/refunds">Payments</Link> ·{" "}
+          <nav aria-label="Service information">
+            <Link href="/privacy">Privacy</Link>
+            <Link href="/terms">Terms</Link>
+            <Link href="/refunds">Payments</Link>
             <Link href="/supported-formats">Formats</Link>
-          </span>
+          </nav>
         </footer>
       </div>
     </div>

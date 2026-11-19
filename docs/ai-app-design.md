@@ -1,5 +1,7 @@
 # UrduSpeech creator studio
 
+This file records the launch design. See [DESIGN.md](../DESIGN.md) for the current interface.
+
 Authorized scope: self-service AI transcription/captions for Pakistani creators; new application at urduspeech.com, backend on the approved MoonSys hostname. Existing main-worktree edits remain untouched. Zoho email integration is deferred. No human fulfillment or general video editor.
 
 Design skill: https://raw.githubusercontent.com/anthropics/skills/main/skills/frontend-design/SKILL.md

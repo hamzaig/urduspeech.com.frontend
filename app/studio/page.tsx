@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { AudioLines, FileVideo } from "lucide-react";
+import { ArrowRight, ChevronRight, FileVideo, Wallet } from "lucide-react";
 import { api, ApiError, explain, minutes } from "@/lib/api";
 import type { ProjectList, Usage } from "@/lib/contracts";
 import { ErrorNotice, PageTitle, UploadLink } from "@/components/common";
@@ -60,9 +60,16 @@ export default function Studio() {
         action={<UploadLink />}
       />
       {usage && (
-        <Link className="usage-pill" href="/studio/billing">
-          <AudioLines size={17} aria-hidden="true" />
-          <strong>{minutes(usage.remaining)}</strong> minutes left
+        <Link className="workspace-usage" href="/studio/billing">
+          <span className="project-icon">
+            <Wallet size={20} aria-hidden="true" />
+          </span>
+          <span>
+            <strong>{minutes(usage.remaining)} minutes left</strong>
+            <small>{usage.plan.name} plan</small>
+          </span>
+          <span className="workspace-usage-link">Plan &amp; minutes</span>
+          <ArrowRight size={18} aria-hidden="true" />
         </Link>
       )}
       <section aria-label="Project list" className="project-list">
@@ -84,6 +91,7 @@ export default function Studio() {
               <span>Project</span>
               <span>Output</span>
               <span>Created</span>
+              <span />
             </div>
             {projects.projects.map((project) => (
               <Link
@@ -92,8 +100,12 @@ export default function Studio() {
                 className="project-row"
               >
                 <span>
-                  <FileVideo size={20} aria-hidden="true" />
-                  <strong dir="auto">{project.title}</strong>
+                  <span className="project-icon">
+                    <FileVideo size={19} aria-hidden="true" />
+                  </span>
+                  <strong>
+                    <bdi>{project.title}</bdi>
+                  </strong>
                 </span>
                 <span>
                   {outputLabel(project.settings.outputVariant ?? "urdu")}
@@ -105,12 +117,19 @@ export default function Studio() {
                     year: "numeric",
                   })}
                 </time>
+                <ChevronRight
+                  className="project-chevron"
+                  size={16}
+                  aria-hidden="true"
+                />
               </Link>
             ))}
           </div>
         ) : (
-          <div className="empty-projects">
-            <FileVideo size={28} aria-hidden="true" />
+          <div className="empty-projects project-empty">
+            <span className="project-icon">
+              <FileVideo size={25} aria-hidden="true" />
+            </span>
             <div>
               <h2>{offset ? "No more projects" : "No projects yet"}</h2>
               <p>

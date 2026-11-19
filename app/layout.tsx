@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import "@fontsource-variable/public-sans";
+import "@fontsource-variable/bricolage-grotesque";
 import "./globals.css";
+import "./editor.css";
+import "./public.css";
 export const metadata: Metadata = {
   title: {
     default: "UrduSpeech — Creator studio",

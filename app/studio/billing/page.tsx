@@ -184,14 +184,28 @@ export default function Billing() {
               {minutes(summary.usage.reserved)} minutes reserved for active
               jobs.
             </p>
-            {summary.usage.period.endsAt && (
-              <p>
-                Current period ends{" "}
-                {new Date(summary.usage.period.endsAt).toLocaleDateString(
-                  "en-PK",
-                )}
-                .
-              </p>
+            {summary.usage.plan.renewal === "one_time" ? (
+              <p>Free minutes are a one-time allowance and do not reset.</p>
+            ) : (
+              summary.usage.period.endsAt && (
+                <p>
+                  {summary.usage.blockingReason === "PLAN_EXPIRED"
+                    ? "Paid period ended"
+                    : "Current paid period ends"}{" "}
+                  <time dateTime={summary.usage.period.endsAt}>
+                    {new Date(summary.usage.period.endsAt).toLocaleDateString(
+                      "en-PK",
+                      {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                        timeZone: "Asia/Karachi",
+                      },
+                    )}
+                  </time>
+                  .
+                </p>
+              )
             )}
             {summary.providers.stripe.checkoutAvailable && (
               <button className="text-button" disabled={busy} onClick={portal}>

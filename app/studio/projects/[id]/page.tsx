@@ -2,7 +2,16 @@
 import { use, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Play, Save, Download, RefreshCw } from "lucide-react";
+import {
+  ArrowLeft,
+  Captions,
+  ChevronDown,
+  FolderOpen,
+  Play,
+  Save,
+  Download,
+  RefreshCw,
+} from "lucide-react";
 import { api, mutation, explain } from "@/lib/api";
 import { captionChanges } from "@/lib/caption-edits";
 import { startDownload } from "@/lib/download";
@@ -17,12 +26,7 @@ import type {
   ExportFile,
   ProjectActivity,
 } from "@/lib/contracts";
-import {
-  PageTitle,
-  ErrorNotice,
-  CaptionExample,
-  Saved,
-} from "@/components/common";
+import { PageTitle, ErrorNotice, Saved } from "@/components/common";
 import { outputLabel, type Preset } from "@/components/output-options";
 import { MediaReadiness } from "@/components/media-readiness";
 import { ResumeUpload } from "@/components/resume-upload";
@@ -50,12 +54,18 @@ export default function ProjectEditor({
     [busy, setBusy] = useState(false),
     [dirty, setDirty] = useState(false),
     [saved, setSaved] = useState(""),
-    [localMedia, setLocalMedia] = useState(""),
+    [localMedia, setLocalMedia] = useState<{
+      url: string;
+      name: string;
+      audio: boolean;
+    } | null>(null),
+    [previewError, setPreviewError] = useState(false),
     [time, setTime] = useState(0),
     [remove, setRemove] = useState(false);
   const [mediaReady, setMediaReady] = useState(false);
   const [uploadId, setUploadId] = useState<string | null>(null);
-  const player = useRef<HTMLVideoElement>(null);
+  const player = useRef<HTMLMediaElement>(null);
+  const previewInput = useRef<HTMLInputElement>(null);
   const pendingCaptionSave = useRef<{
     trackId: string;
     etag: string;
@@ -192,7 +202,7 @@ export default function ProjectEditor({
   }, [render]);
   useEffect(
     () => () => {
-      if (localMedia) URL.revokeObjectURL(localMedia);
+      if (localMedia) URL.revokeObjectURL(localMedia.url);
     },
     [localMedia],
   );
@@ -380,9 +390,22 @@ export default function ProjectEditor({
     });
   }
   const activeCue = cues.find((c) => time >= c.startMs && time < c.endMs);
-  const previewCue = activeCue ?? cues[0];
+  const playableMedia = previewError ? null : localMedia;
+  const previewCue = playableMedia ? activeCue : cues[0];
+  const PreviewPlayer = localMedia?.audio ? "audio" : "video";
+  const previewPreset = presets.find(({ id }) => id === preset);
+  const hasDraft = !!(track || transcript);
+  const processingStatus =
+    job?.state.replaceAll("_", " ") ??
+    (track
+      ? "Captions ready"
+      : transcript
+        ? "Transcript ready"
+        : mediaReady
+          ? "Ready to transcribe"
+          : "Media check");
   return (
-    <div className="page">
+    <div className="page editor-page">
       <Link
         href="/studio"
         className="project-back"
@@ -396,19 +419,18 @@ export default function ProjectEditor({
       </Link>
       <PageTitle
         title={project ? <bdi>{project.title}</bdi> : "Your project"}
-        description="Review the words, adjust the timing and make your captions yours."
-        action={
-          <button
-            className="secondary"
-            disabled={busy || dirty}
-            onClick={() => action(load)}
-          >
-            <RefreshCw size={16} />
-            Refresh
-          </button>
+        description={
+          project && !hasDraft
+            ? "Check your recording and start transcription."
+            : undefined
         }
       />
-      {error && <ErrorNotice message={error} />}{" "}
+      {error && (
+        <ErrorNotice
+          message={error}
+          retry={project ? undefined : () => action(load)}
+        />
+      )}
       {saved && <Saved>{saved}</Saved>}{" "}
       {!project && !error && <p role="status">Loading your project…</p>}
       {project && (
@@ -420,82 +442,113 @@ export default function ProjectEditor({
               onComplete={load}
             />
           )}
-          <MediaReadiness projectId={id} onReady={setMediaReady} />
-          <section className="job-status">
-            <span className="status-label">
-              {job ? job.state.replaceAll("_", " ") : "Prepare your transcript"}
-            </span>
-            <p>
-              {job
-                ? `Completed stages: ${job.completedStages.join(", ") || "Waiting to start"}`
-                : "Media is checked before processing. Start transcription once your upload has finished validation."}
-            </p>
-            {job?.errorCode && (
-              <p>
-                Processing stopped: {job.errorCode}. Support reference:{" "}
-                {job.supportId}.
-              </p>
-            )}
-            <div className="actions">
-              <button
-                onClick={process}
-                disabled={
-                  busy ||
-                  !mediaReady ||
-                  (!!job && !settledJobs.includes(job.state))
-                }
-              >
-                <Play size={16} />
-                Start transcription
-              </button>
-              {job?.capabilities.canCancel && (
-                <button
-                  className="secondary"
-                  disabled={busy}
-                  onClick={() =>
-                    action(async () =>
-                      setJob(
-                        await api<JobStatusV1>(
-                          "/v1/jobs/" + job.id + "/cancel",
-                          mutation("POST", {}, crypto.randomUUID()),
-                        ),
-                      ),
-                    )
-                  }
-                >
-                  Cancel processing
-                </button>
-              )}
-              <button
-                className="text-button"
-                disabled={busy}
-                onClick={() =>
-                  action(async () => {
-                    await api(
-                      `/v1/projects/${id}/make-default`,
-                      mutation("POST", {}),
-                    );
-                    setSaved("These project choices are now your defaults.");
-                  })
-                }
-              >
-                Make project choices my defaults
-              </button>
-            </div>
-          </section>
+          <div className="project-status-bar">
+            <details className="processing-panel" open={!hasDraft}>
+              <summary>
+                <strong>Project status</strong>
+                <span className="status-label" role="status">
+                  {processingStatus}
+                </span>
+                <ChevronDown size={17} aria-hidden="true" />
+              </summary>
+              <div className="processing-grid">
+                <MediaReadiness projectId={id} onReady={setMediaReady} />
+                <section className="job-status" aria-label="Transcription">
+                  <p>
+                    {job
+                      ? `Completed stages: ${job.completedStages.join(", ") || "Waiting to start"}`
+                      : "Media is checked before processing. Start transcription once your upload has finished validation."}
+                  </p>
+                  {job?.errorCode && (
+                    <p>
+                      Processing stopped: {job.errorCode}. Support reference:{" "}
+                      {job.supportId}.
+                    </p>
+                  )}
+                  <div className="actions">
+                    <button
+                      onClick={process}
+                      disabled={
+                        busy ||
+                        !mediaReady ||
+                        (!!job && !settledJobs.includes(job.state))
+                      }
+                    >
+                      <Play size={16} />
+                      Start transcription
+                    </button>
+                    {job?.capabilities.canCancel && (
+                      <button
+                        className="secondary"
+                        disabled={busy}
+                        onClick={() =>
+                          action(async () =>
+                            setJob(
+                              await api<JobStatusV1>(
+                                "/v1/jobs/" + job.id + "/cancel",
+                                mutation("POST", {}, crypto.randomUUID()),
+                              ),
+                            ),
+                          )
+                        }
+                      >
+                        Cancel processing
+                      </button>
+                    )}
+                    <button
+                      className="text-button"
+                      disabled={busy}
+                      onClick={() =>
+                        action(async () => {
+                          await api(
+                            `/v1/projects/${id}/make-default`,
+                            mutation("POST", {}),
+                          );
+                          setSaved(
+                            "These project choices are now your defaults.",
+                          );
+                        })
+                      }
+                    >
+                      Make project choices my defaults
+                    </button>
+                  </div>
+                </section>
+              </div>
+            </details>
+            <button
+              className="secondary refresh-project"
+              aria-label="Refresh project"
+              disabled={busy || dirty}
+              onClick={() => action(load)}
+            >
+              <RefreshCw size={16} aria-hidden="true" />
+              <span>Refresh</span>
+            </button>
+          </div>
           <div className="editor-grid">
             <section
               className="editor-content"
-              aria-label="Transcript and caption editor"
+              aria-labelledby="caption-editor-title"
             >
               <div className="editor-toolbar">
-                <h2>{track ? "Caption timing" : "Transcript"}</h2>
-                <a className="text-button editor-jump" href="#media-preview">
-                  Preview & export
-                </a>
+                <h2 id="caption-editor-title">
+                  <Captions size={19} aria-hidden="true" />
+                  {track ? "Caption editor" : "Transcript"}
+                </h2>
+                <div className="editor-shortcuts">
+                  <a className="text-button editor-jump" href="#media-preview">
+                    Preview
+                  </a>
+                  <a className="text-button" href="#editor-exports">
+                    Exports
+                  </a>
+                </div>
+              </div>
+              <div className="editor-controls">
                 {tracks.length > 0 && (
                   <label className="inline-select">
-                    Output
+                    <span>Output</span>
                     <select
                       value={track?.id ?? ""}
                       onChange={(e) => switchTrack(e.target.value)}
@@ -513,27 +566,23 @@ export default function ProjectEditor({
                   </label>
                 )}
                 {track && (
-                  <button
-                    className="secondary"
-                    disabled={!dirty || busy}
-                    onClick={save}
-                  >
-                    <Save size={16} />
-                    Save changes
-                  </button>
+                  <div className="editor-save">
+                    {dirty && <small role="status">Unsaved changes</small>}
+                    <button
+                      aria-label="Save caption changes"
+                      disabled={!dirty || busy}
+                      onClick={save}
+                    >
+                      <Save size={16} aria-hidden="true" />
+                      Save
+                    </button>
+                  </div>
                 )}
               </div>
               {track ? (
                 <>
                   <p className="subtitle">
-                    Times are in seconds. Changes create a new caption version.
-                    {!localMedia && (
-                      <>
-                        {" "}
-                        Choose your original file in Media preview to play a
-                        caption.
-                      </>
-                    )}
+                    Times are in seconds. Saving creates a new version.
                   </p>
                   {track.content.qa.defects.length > 0 && (
                     <p className="notice">
@@ -542,13 +591,25 @@ export default function ProjectEditor({
                       be unavailable.
                     </p>
                   )}
-                  <div className="cue-list">
+                  <div
+                    className="cue-list"
+                    role="region"
+                    aria-label="Caption lines"
+                    tabIndex={0}
+                  >
                     {cues.map((c, i) => (
-                      <div className="cue" key={c.position}>
+                      <div
+                        className={
+                          activeCue === c && localMedia
+                            ? "cue cue-current"
+                            : "cue"
+                        }
+                        key={c.position}
+                      >
                         <div className="cue-meta">
                           <button
                             className="text-button"
-                            disabled={!localMedia}
+                            disabled={!localMedia || previewError}
                             aria-label={"Play caption " + (i + 1)}
                             onClick={() => {
                               if (player.current) {
@@ -557,7 +618,7 @@ export default function ProjectEditor({
                               }
                             }}
                           >
-                            <Play size={13} />
+                            <Play size={13} aria-hidden="true" />
                             {i + 1}
                           </button>
                           <label>
@@ -601,6 +662,9 @@ export default function ProjectEditor({
                         <textarea
                           className="cue-text"
                           dir="auto"
+                          lang={
+                            track.content.variant === "urdu" ? "ur" : undefined
+                          }
                           aria-label={"Caption " + (i + 1)}
                           disabled={busy}
                           value={c.text}
@@ -616,7 +680,8 @@ export default function ProjectEditor({
                   {transcript.text}
                 </div>
               ) : (
-                <div className="empty-projects">
+                <div className="editor-empty">
+                  <Captions size={26} aria-hidden="true" />
                   <div>
                     <h3>Your words will appear here.</h3>
                     <p>Finish your upload, then start transcription.</p>
@@ -654,154 +719,227 @@ export default function ProjectEditor({
                 </section>
               )}
             </section>
-            <aside
-              id="media-preview"
-              tabIndex={-1}
-              className="editor-aside"
-              aria-labelledby="media-preview-title"
-            >
-              <h2 id="media-preview-title">Media preview</h2>
-              <p className="caption-note">
-                Choose your original file for a local timing preview. This does
-                not upload it again.
-              </p>
-              <label className="field">
-                Original audio or video
-                <input
-                  type="file"
-                  accept="audio/*,video/*"
-                  onChange={(e) => {
-                    const f = e.target.files?.[0];
-                    if (f) setLocalMedia(URL.createObjectURL(f));
-                  }}
-                />
-              </label>
-              {localMedia && (
-                <>
-                  <video
-                    ref={player}
-                    className="local-player"
-                    src={localMedia}
-                    controls
-                    playsInline
-                    onTimeUpdate={(e) =>
-                      setTime(e.currentTarget.currentTime * 1000)
-                    }
-                  />
-                  <p className="local-caption" dir="auto">
-                    {activeCue?.text ?? "No caption at this time"}
-                  </p>
-                </>
-              )}
-              <label className="field">
-                Caption style
-                <select
-                  value={preset}
-                  onChange={(e) => setPreset(e.target.value)}
-                >
-                  {presets.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name.replaceAll("-", " ")}
-                    </option>
-                  ))}
-                </select>
-              </label>
-              {previewCue && (
-                <CaptionExample
-                  preset={preset || undefined}
-                  text={previewCue.text}
-                  isExample={false}
-                />
-              )}
-              <h2>Export your work</h2>
-              <p className="caption-note">
-                Preview is approximate. The rendered video uses the exact
-                caption fonts and layout.
-              </p>
-              <div className="actions">
-                <button disabled={busy || dirty || !track} onClick={exports}>
-                  <Download size={15} />
-                  Prepare text & subtitles
-                </button>
-                <button
-                  className="secondary"
-                  disabled={
-                    busy ||
-                    dirty ||
-                    !track?.content.timingReady ||
-                    !preset ||
-                    (!!render && !terminal.includes(render.state))
+            <aside className="editor-aside" aria-label="Preview and export">
+              <section
+                id="media-preview"
+                tabIndex={-1}
+                className="editor-preview"
+                aria-labelledby="media-preview-title"
+              >
+                <h2 id="media-preview-title">Media preview</h2>
+                <div
+                  className={
+                    "editor-player-frame " +
+                    (playableMedia
+                      ? playableMedia.audio
+                        ? "audio-preview"
+                        : ""
+                      : "preview-empty")
                   }
-                  onClick={renderVideo}
                 >
-                  Render captioned MP4
-                </button>
-              </div>
-              {files.map((f) => (
-                <div key={f.id} className="actions">
-                  {f.state === "ready" && f.downloadPath ? (
-                    <button
-                      className="button secondary"
-                      disabled={busy || dirty}
-                      onClick={() =>
-                        action(() => startDownload(f.downloadPath!))
+                  {playableMedia ? (
+                    <PreviewPlayer
+                      key={playableMedia.url}
+                      ref={(element: HTMLMediaElement | null) => {
+                        player.current = element;
+                      }}
+                      className="local-player"
+                      aria-label={playableMedia.name}
+                      src={playableMedia.url}
+                      controls
+                      playsInline={!playableMedia.audio || undefined}
+                      onError={() => setPreviewError(true)}
+                      onTimeUpdate={(e) =>
+                        setTime(e.currentTarget.currentTime * 1000)
+                      }
+                    />
+                  ) : (
+                    <div className="preview-placeholder">
+                      <button
+                        className="secondary"
+                        type="button"
+                        onClick={() => previewInput.current?.click()}
+                      >
+                        <FolderOpen size={17} aria-hidden="true" /> Choose
+                        original recording
+                      </button>
+                      <small>Preview stays on this device.</small>
+                    </div>
+                  )}
+                  {previewCue && (
+                    <div
+                      className={
+                        previewPreset?.box
+                          ? "local-caption boxed"
+                          : "local-caption"
                       }
                     >
-                      Download {f.format.toUpperCase()} (
-                      {outputLabel(f.variant)})
-                    </button>
-                  ) : (
-                    <span className="caption-note">
-                      {f.format.toUpperCase()}: {f.state}
-                      {f.errorCode ? " — " + f.errorCode : ""}
-                    </span>
+                      <p
+                        lang={
+                          track?.content.variant === "urdu" ? "ur" : undefined
+                        }
+                        dir="auto"
+                        style={{ color: previewPreset?.color }}
+                      >
+                        {previewCue.text}
+                      </p>
+                    </div>
                   )}
                 </div>
-              ))}
-              {render && (
-                <div className="notice">
-                  <p>Video render: {render.state}</p>
-                  {render.state === "completed" ? (
+                <input
+                  ref={previewInput}
+                  className="visually-hidden"
+                  type="file"
+                  aria-label="Original audio or video"
+                  tabIndex={-1}
+                  accept="audio/*,video/*"
+                  onChange={(e) => {
+                    const file = e.currentTarget.files?.[0];
+                    e.currentTarget.value = "";
+                    if (!file) return;
+                    setPreviewError(false);
+                    setTime(0);
+                    setLocalMedia({
+                      url: URL.createObjectURL(file),
+                      name: file.name,
+                      audio: file.type.startsWith("audio/"),
+                    });
+                  }}
+                />
+                {playableMedia && (
+                  <div className="preview-file">
+                    <small>
+                      <bdi>{playableMedia.name}</bdi>
+                    </small>
                     <button
-                      className="button secondary"
-                      disabled={busy || dirty}
-                      onClick={() =>
-                        action(() =>
-                          startDownload(
-                            "/v1/renders/" + render.id + "/download",
-                          ),
-                        )
-                      }
+                      className="text-button"
+                      type="button"
+                      onClick={() => previewInput.current?.click()}
                     >
-                      Download MP4
+                      Change recording
                     </button>
-                  ) : (
-                    !terminal.includes(render.state) && (
+                  </div>
+                )}
+                {previewError && (
+                  <p className="notice" role="status">
+                    This browser could not play the selected file. Try a
+                    compatible copy of the recording.
+                  </p>
+                )}
+                <label className="field">
+                  Caption style
+                  <select
+                    value={preset}
+                    onChange={(e) => setPreset(e.target.value)}
+                  >
+                    {presets.map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name.replaceAll("-", " ")}
+                      </option>
+                    ))}
+                  </select>
+                  <small>Style preview is approximate.</small>
+                </label>
+              </section>
+              <section
+                className="editor-exports"
+                id="editor-exports"
+                tabIndex={-1}
+                aria-labelledby="editor-exports-title"
+              >
+                <h2 id="editor-exports-title">Export</h2>
+                {dirty && (
+                  <p className="caption-note">
+                    Save your changes before exporting.
+                  </p>
+                )}
+                <div className="export-actions">
+                  <button disabled={busy || dirty || !track} onClick={exports}>
+                    <Download size={15} />
+                    {track?.content.timingReady
+                      ? "Prepare TXT, SRT & VTT"
+                      : "Prepare transcript (TXT)"}
+                  </button>
+                  <button
+                    className="secondary"
+                    disabled={
+                      busy ||
+                      dirty ||
+                      !track?.content.timingReady ||
+                      !preset ||
+                      (!!render && !terminal.includes(render.state))
+                    }
+                    onClick={renderVideo}
+                  >
+                    Render captioned MP4
+                  </button>
+                </div>
+                {files.map((f) => (
+                  <div key={f.id} className="actions">
+                    {f.state === "ready" && f.downloadPath ? (
                       <button
-                        className="text-button"
-                        disabled={busy}
+                        className="button secondary"
+                        disabled={busy || dirty}
                         onClick={() =>
-                          action(async () =>
-                            setRender(
-                              await api<Render>(
-                                "/v1/renders/" + render.id + "/cancel",
-                                mutation("POST", {}, crypto.randomUUID()),
-                              ),
+                          action(() => startDownload(f.downloadPath!))
+                        }
+                      >
+                        Download {f.format.toUpperCase()} (
+                        {outputLabel(f.variant)})
+                      </button>
+                    ) : (
+                      <span className="caption-note">
+                        {f.format.toUpperCase()}: {f.state}
+                        {f.errorCode ? " — " + f.errorCode : ""}
+                      </span>
+                    )}
+                  </div>
+                ))}
+                {render && (
+                  <div className="notice">
+                    <p>Video render: {render.state}</p>
+                    {render.state === "completed" ? (
+                      <button
+                        className="button secondary"
+                        disabled={busy || dirty}
+                        onClick={() =>
+                          action(() =>
+                            startDownload(
+                              "/v1/renders/" + render.id + "/download",
                             ),
                           )
                         }
                       >
-                        Cancel render
+                        Download MP4
                       </button>
-                    )
-                  )}
-                  {render.errorCode && <p>{render.errorCode}</p>}
-                </div>
-              )}
+                    ) : (
+                      !terminal.includes(render.state) && (
+                        <button
+                          className="text-button"
+                          disabled={busy}
+                          onClick={() =>
+                            action(async () =>
+                              setRender(
+                                await api<Render>(
+                                  "/v1/renders/" + render.id + "/cancel",
+                                  mutation("POST", {}, crypto.randomUUID()),
+                                ),
+                              ),
+                            )
+                          }
+                        >
+                          Cancel render
+                        </button>
+                      )
+                    )}
+                    {render.errorCode && <p>{render.errorCode}</p>}
+                  </div>
+                )}
+              </section>
             </aside>
           </div>
-          <section className="danger-zone">
-            <h2>Delete this project</h2>
+          <details className="danger-zone">
+            <summary>Delete this project</summary>
             <p>Starts permanent deletion of this project and its media.</p>
             <label className="check-row">
               <input
@@ -826,7 +964,7 @@ export default function ProjectEditor({
             >
               Delete project
             </button>
-          </section>
+          </details>
         </>
       )}
     </div>
