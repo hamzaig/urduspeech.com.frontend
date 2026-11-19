@@ -10,11 +10,12 @@ import { StartFree } from "@/components/marketing";
 const pages = [
   { href: "/video-captions", label: "Video captions" },
   { href: "/urdu-transcription", label: "Transcription" },
+  { href: "/demo", label: "Demo" },
   { href: "/guides", label: "Guides" },
   { href: "/pricing", label: "Pricing" },
 ];
 
-export function SiteHeader({ landing = false }: { landing?: boolean }) {
+export function SiteHeader() {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const toggle = useRef<HTMLButtonElement>(null);
@@ -26,8 +27,7 @@ export function SiteHeader({ landing = false }: { landing?: boolean }) {
 
   return (
     <header
-      className="nav site-header"
-      data-landing={landing || undefined}
+      className="site-header"
       onKeyDown={(event) => {
         if (event.key === "Escape" && open) {
           setOpen(false);

@@ -53,26 +53,38 @@ export default function Studio() {
 
   const needsSignIn = error instanceof ApiError && error.status === 401;
   return (
-    <div className="page">
-      <PageTitle
-        title="My projects"
-        description="Open an existing project to edit captions or download your exports."
-        action={<UploadLink />}
-      />
-      {usage && (
-        <Link className="workspace-usage" href="/studio/billing">
-          <span className="project-icon">
-            <Wallet size={20} aria-hidden="true" />
-          </span>
-          <span>
-            <strong>{minutes(usage.remaining)} minutes left</strong>
-            <small>{usage.plan.name} plan</small>
-          </span>
-          <span className="workspace-usage-link">Plan &amp; minutes</span>
-          <ArrowRight size={18} aria-hidden="true" />
-        </Link>
-      )}
-      <section aria-label="Project list" className="project-list">
+    <div className="page studio-overview">
+      <div className="studio-overview-summary" data-usage={!!usage}>
+        <PageTitle
+          title="Your Studio"
+          description="Upload a recording or pick up a project to finish your captions."
+          action={<UploadLink />}
+        />
+        {usage && (
+          <Link className="workspace-usage" href="/studio/billing">
+            <span className="workspace-usage-plan">
+              <Wallet size={19} aria-hidden="true" />
+              {usage.plan.name} plan
+            </span>
+            <span>
+              <strong>{minutes(usage.remaining)}</strong> minutes left
+            </span>
+            {usage.allowance > 0 && (
+              <meter
+                min={0}
+                max={usage.allowance}
+                value={Math.min(usage.allowance, Math.max(0, usage.remaining))}
+                aria-label="Share of transcription allowance remaining"
+              />
+            )}
+            <span className="workspace-usage-link">
+              Plan &amp; minutes <ArrowRight size={17} aria-hidden="true" />
+            </span>
+          </Link>
+        )}
+      </div>
+      <section aria-labelledby="project-list-title" className="project-list">
+        <h2 id="project-list-title">My projects</h2>
         {error ? (
           <ErrorNotice
             message={explain(error)}
@@ -131,12 +143,21 @@ export default function Studio() {
               <FileVideo size={25} aria-hidden="true" />
             </span>
             <div>
-              <h2>{offset ? "No more projects" : "No projects yet"}</h2>
+              <h3>{offset ? "No more projects" : "No projects yet"}</h3>
               <p>
                 {offset
                   ? "Go back to see earlier results."
                   : "Upload audio or video to create your first transcript and captions."}
               </p>
+              {offset === 0 && (
+                <Link
+                  className="public-inline-link"
+                  href="/guides/make-urdu-video-captions"
+                >
+                  Read the caption guide{" "}
+                  <ArrowRight size={16} aria-hidden="true" />
+                </Link>
+              )}
             </div>
           </div>
         )}

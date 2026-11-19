@@ -1,20 +1,19 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import {
-  ArrowDown,
+  ArrowDownRight,
   ArrowRight,
   Captions,
-  FileAudio,
+  Check,
   FileText,
   FileVideo,
   LockKeyhole,
 } from "lucide-react";
-import clipStill from "@/assets/caption-demo.webp";
+import sampleStill from "@/assets/studio-interview.webp";
 import { CaptionStudioDemo } from "@/components/caption-studio-demo";
 import { CaptionStyleGallery } from "@/components/caption-style-gallery";
 import { GuideCards } from "@/components/guide-cards";
 import { SiteHeader } from "@/components/site-header";
-import { LandingMotion } from "@/components/landing-motion";
 import {
   Plans,
   QuestionList,
@@ -22,7 +21,6 @@ import {
   commonQuestions,
 } from "@/components/marketing";
 import { PublicFooter } from "@/components/public-site";
-import { captionCues, sampleSrt } from "@/lib/caption-demo";
 import "./landing.css";
 
 const title = "Urdu captions and transcripts for creators";
@@ -41,35 +39,57 @@ export const metadata: Metadata = {
     description,
     url: "/",
     images: [
-      { url: clipStill.src, width: clipStill.width, height: clipStill.height },
+      {
+        url: sampleStill.src,
+        width: sampleStill.width,
+        height: sampleStill.height,
+      },
     ],
   },
   twitter: {
     card: "summary_large_image",
     title,
     description,
-    images: [clipStill.src],
+    images: [sampleStill.src],
   },
   other: { "page-type": "software", "site-kind": "software" },
 };
 
-const exportFormats = [
+const workflow = [
+  {
+    title: "Upload a recording",
+    description: "Add an audio file or a video with spoken Urdu.",
+  },
+  {
+    title: "Review the draft",
+    description:
+      "Correct words and names, and adjust when each caption appears.",
+  },
+  {
+    title: "Export your work",
+    description:
+      "Choose a transcript, subtitle track, or a video with captions.",
+  },
+];
+
+const exports = [
   {
     icon: FileText,
-    name: "TXT transcripts",
-    description:
-      "Pull a quote, write show notes or edit the transcript in a document.",
+    name: "Plain text",
+    description: "For show notes, quotes and articles",
+    format: "TXT",
   },
   {
     icon: Captions,
-    name: "SRT and VTT subtitles",
-    description: "Import captions into an editor or a compatible video player.",
+    name: "Timed subtitles",
+    description: "For video editors and web players",
+    format: "SRT · VTT",
   },
   {
     icon: FileVideo,
-    name: "Captioned MP4 video",
-    description:
-      "Render supported videos with captions visible in the exported file.",
+    name: "Captioned video",
+    description: "For sharing with captions on the video",
+    format: "MP4",
   },
 ];
 
@@ -84,217 +104,121 @@ const homeQuestions = [
 export default function Home() {
   return (
     <>
-      <SiteHeader landing />
+      <SiteHeader />
       <main id="main" className="home-site" tabIndex={-1}>
-        <section
-          className="hero hero--split landing-hero"
-          aria-labelledby="hero-title"
-          data-enter
-        >
-          <div className="public-container wrap">
-            <div className="hero-text">
+        <section className="landing-hero" aria-labelledby="hero-title">
+          <div className="public-container">
+            <div className="landing-hero-intro">
+              <h1 id="hero-title">
+                Urdu captions.
+                <br />
+                <span>Ready to publish.</span>
+              </h1>
               <div className="landing-hero-copy">
-                <h1 id="hero-title">
-                  Urdu captions <span>for your videos</span>
-                </h1>
                 <p>
-                  Upload an Urdu recording and review the words and timing.
-                  Export subtitles, an editable transcript or a video with
-                  captions.
+                  Turn spoken Urdu into captions and transcripts you can edit,
+                  translate and share. Built for interviews, podcasts and reels.
                 </p>
                 <div className="landing-hero-actions">
                   <StartFree />
                   <a className="button secondary" href="#caption-demo">
-                    Try the demo <ArrowDown size={16} aria-hidden="true" />
+                    Try the demo <ArrowDownRight size={17} aria-hidden="true" />
                   </a>
                 </div>
-                <small>10 free minutes per account. No card required.</small>
-              </div>
-              <div className="landing-hero-frame" data-enter-media>
-                <CaptionStudioDemo />
+                <small>
+                  <Check size={15} aria-hidden="true" /> 10 free minutes. No
+                  card required.
+                </small>
               </div>
             </div>
+            <CaptionStudioDemo />
           </div>
         </section>
+
         <section
           id="use-cases"
           className="landing-section landing-styles"
           aria-labelledby="caption-styles-title"
           tabIndex={-1}
         >
-          <div className="public-container wrap">
+          <div className="public-container landing-style-layout">
             <div className="landing-section-heading">
-              <h2 id="caption-styles-title">Caption styles for your video</h2>
+              <h2 id="caption-styles-title">Make the words fit the frame</h2>
               <p>
-                Try a style on the same Urdu line before choosing one in Studio.
+                See how a style reads over your footage. Preview clean,
+                highlighted and boxed captions before you render.
               </p>
+              <Link href="/video-captions" className="public-inline-link">
+                Explore video captions{" "}
+                <ArrowRight size={17} aria-hidden="true" />
+              </Link>
             </div>
             <CaptionStyleGallery />
-            <div className="guide-link-row">
-              <Link href="/video-captions">
-                Make captions for videos{" "}
-                <ArrowRight size={18} aria-hidden="true" />
-              </Link>
-              <Link href="/urdu-transcription">
-                Transcribe interviews and podcasts{" "}
-                <ArrowRight size={18} aria-hidden="true" />
-              </Link>
-            </div>
           </div>
         </section>
+
         <section
           id="workflow"
           className="landing-section landing-workflow"
           aria-labelledby="workflow-title"
           tabIndex={-1}
         >
-          <div className="public-container wrap">
+          <div className="public-container landing-workflow-layout">
             <div className="landing-section-heading">
-              <h2 id="workflow-title">The Urdu caption workflow</h2>
-              <p>Review the draft and make the final edits in Studio.</p>
-            </div>
-            <ol className="landing-steps" role="list">
-              <li>
-                <div
-                  className="step-visual step-upload"
-                  aria-hidden="true"
-                  data-ui="source-recording"
-                >
-                  <div className="step-fragment">
-                    <div className="step-file">
-                      <FileAudio size={22} />
-                      <span>
-                        <strong>interview.m4a</strong>
-                        <small>Source recording</small>
-                      </span>
-                    </div>
-                    <div className="step-wave">
-                      {[
-                        16, 28, 21, 39, 31, 50, 35, 42, 22, 33, 48, 25, 53, 38,
-                        46, 28, 38, 49, 26, 33, 20, 11,
-                      ].map((height, index) => (
-                        <span key={index} style={{ height }} />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="landing-step-copy">
-                  <h3>Upload a recording</h3>
-                  <p>Add an audio file or a video with spoken Urdu.</p>
-                </div>
-              </li>
-              <li>
-                <div
-                  className="step-visual step-edit"
-                  aria-hidden="true"
-                  data-ui="caption-timing"
-                >
-                  <div className="step-edit-card">
+              <h2 id="workflow-title">From recording to final cut</h2>
+              <ol className="landing-steps" role="list">
+                {workflow.map(({ title, description }, index) => (
+                  <li key={title}>
+                    <span aria-hidden="true">{index + 1}</span>
                     <div>
-                      <span>00:04.000</span>
-                      <span>00:08.000</span>
+                      <h3>{title}</h3>
+                      <p>{description}</p>
                     </div>
-                    <span lang="ur" dir="rtl">
-                      {captionCues[1].urdu}
-                    </span>
-                    <div className="step-edit-track">
-                      {captionCues.map(({ start }) => (
-                        <span key={start} />
-                      ))}
-                    </div>
-                  </div>
-                </div>
-                <div className="landing-step-copy">
-                  <h3>Edit words and timing</h3>
-                  <p>
-                    Correct names and sentences, then adjust when each caption
-                    appears.
-                  </p>
-                </div>
-              </li>
-              <li>
-                <div
-                  className="step-visual step-export"
-                  aria-hidden="true"
-                  data-ui="subtitle-export"
-                >
-                  <div className="step-fragment">
-                    <div className="step-formats">
-                      <span>TXT</span>
-                      <span>SRT</span>
-                      <span>VTT</span>
-                    </div>
-                    <div className="step-file">
-                      <Captions size={22} />
-                      <span>
-                        <strong>interview.srt</strong>
-                        <small>Timed subtitles</small>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="landing-step-copy">
-                  <h3>Export your work</h3>
-                  <p>
-                    Download text, subtitle files or a video with captions on
-                    it.
-                  </p>
-                </div>
-              </li>
-            </ol>
-          </div>
-        </section>
-        <section
-          className="landing-section landing-exports"
-          aria-labelledby="export-title"
-          data-moment="iris-opens"
-        >
-          <div className="public-container wrap">
-            <div className="landing-section-heading">
-              <h2 id="export-title">Caption and transcript exports</h2>
+                  </li>
+                ))}
+              </ol>
             </div>
-            <div className="landing-export-grid">
-              <div className="landing-export-copy">
-                <ul className="landing-export-list" role="list">
-                  {exportFormats.map(({ icon: Icon, name, description }) => (
-                    <li key={name}>
-                      <Icon size={23} aria-hidden="true" />
-                      <div>
-                        <h3>{name}</h3>
-                        <p>{description}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
+            <div className="landing-export-panel">
+              <div className="landing-export-heading">
+                <h3>Choose your export</h3>
                 <Link href="/supported-formats" className="public-inline-link">
-                  Check supported formats{" "}
-                  <ArrowRight size={17} aria-hidden="true" />
+                  File requirements <ArrowRight size={16} aria-hidden="true" />
                 </Link>
               </div>
-              <div className="landing-srt app-frame">
-                <div>
-                  <Captions size={18} aria-hidden="true" /> interview.srt
-                </div>
-                <pre>
-                  <code>{sampleSrt("bilingual").trimEnd()}</code>
-                </pre>
-              </div>
+              <ul className="landing-export-list" role="list">
+                {exports.map(({ icon: Icon, name, description, format }) => (
+                  <li key={name}>
+                    <span className="landing-export-icon">
+                      <Icon size={24} aria-hidden="true" />
+                    </span>
+                    <div>
+                      <strong>{name}</strong>
+                      <small>{description}</small>
+                    </div>
+                    <span className="landing-export-format">{format}</span>
+                  </li>
+                ))}
+              </ul>
+              <Link href="/urdu-transcription" className="public-inline-link">
+                Explore Urdu transcription{" "}
+                <ArrowRight size={17} aria-hidden="true" />
+              </Link>
             </div>
           </div>
         </section>
+
         <section
           id="pricing"
           className="landing-section landing-pricing"
           aria-labelledby="pricing-title"
           tabIndex={-1}
         >
-          <div className="public-container wrap">
+          <div className="public-container">
             <div className="landing-section-heading landing-heading-row">
               <div>
-                <h2 id="pricing-title">Plans in Pakistani rupees</h2>
+                <h2 id="pricing-title">Start with 10 free minutes</h2>
                 <p>
-                  Compare transcription minutes, video quality and how long we
-                  keep your media.
+                  Compare plans by minutes, video quality and media retention.
                 </p>
               </div>
               <Link className="public-inline-link" href="/pricing">
@@ -304,11 +228,12 @@ export default function Home() {
             <Plans showStart={false} />
           </div>
         </section>
+
         <section
           className="landing-section landing-guides"
           aria-labelledby="creator-guides-title"
         >
-          <div className="public-container wrap">
+          <div className="public-container">
             <div className="landing-section-heading landing-heading-row">
               <h2 id="creator-guides-title">Creator guides</h2>
               <Link className="public-inline-link" href="/guides">
@@ -318,11 +243,12 @@ export default function Home() {
             <GuideCards />
           </div>
         </section>
+
         <section
           className="landing-section landing-questions"
           aria-labelledby="home-questions"
         >
-          <div className="public-container wrap landing-questions-grid">
+          <div className="public-container landing-questions-grid">
             <div className="landing-section-heading">
               <h2 id="home-questions">Common questions</h2>
               <div className="landing-privacy">
@@ -346,16 +272,14 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <LandingMotion />
       </main>
       <PublicFooter
         intro={
           <div className="landing-close">
             <div>
-              <h2>Create your first Urdu captions</h2>
+              <h2>Give your next video Urdu captions</h2>
               <p>
-                Bring an audio or video recording into Studio and review the
-                draft.
+                Start with a recording. Make the captions your own in Studio.
               </p>
             </div>
             <StartFree />

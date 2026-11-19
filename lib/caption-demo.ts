@@ -6,6 +6,28 @@ export const captionModes = [
 ] as const;
 
 export type CaptionMode = (typeof captionModes)[number]["id"];
+export type CaptionLanguage = Exclude<CaptionMode, "bilingual">;
+
+export const sampleCaptionStyles = [
+  {
+    name: "Clean",
+    color: "#FFFFFF",
+    box: false,
+    description: "White text with a shadow.",
+  },
+  {
+    name: "Social highlight",
+    color: "#FFD54F",
+    box: false,
+    description: "Gold text for short videos.",
+  },
+  {
+    name: "Boxed",
+    color: "#FFFFFF",
+    box: true,
+    description: "A dark box behind the words.",
+  },
+] as const;
 
 export const captionCues = [
   {
@@ -42,17 +64,29 @@ export function captionText(cue: CaptionCue, mode: CaptionMode) {
   return mode === "bilingual" ? `${cue.urdu}\n${cue.english}` : cue[mode];
 }
 
-export function sampleSrt(mode: CaptionMode) {
-  return (
-    captionCues
-      .map(
-        (cue, index) =>
-          `${index + 1}\n00:${captionTime(cue.start)},000 --> 00:${captionTime(cue.end)},000\n${captionText(cue, mode)}`,
-      )
-      .join("\n\n") + "\n"
-  );
-}
+export function sampleExport(
+  format: "srt" | "vtt" | "txt",
+  lines: readonly string[],
+) {
+  const cues = captionCues
+    .map(({ start, end }, index) => ({
+      start,
+      end,
+      text: lines[index]?.trim() ?? "",
+    }))
+    .filter((cue) => cue.text);
+  if (format === "txt") return cues.map((cue) => cue.text).join("\n\n") + "\n";
 
-export function sampleSrtHref(mode: CaptionMode) {
-  return `data:text/plain;charset=utf-8,${encodeURIComponent(sampleSrt(mode))}`;
+  const separator = format === "srt" ? "," : ".";
+  const blocks = cues.map(({ start, end, text }, index) => {
+    const timing = `00:${captionTime(start)}${separator}000 --> 00:${captionTime(end)}${separator}000`;
+    if (format === "srt") return `${index + 1}\n${timing}\n${text}`;
+    const escaped = text
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;");
+    return `${timing}\n${escaped}`;
+  });
+  const header = format === "vtt" ? "WEBVTT\n\n" : "";
+  return header + blocks.join("\n\n") + "\n";
 }
