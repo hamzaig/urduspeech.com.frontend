@@ -1,7 +1,8 @@
 "use client";
 import { use, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Play, Save, Download, RefreshCw } from "lucide-react";
+import { ArrowLeft, Play, Save, Download, RefreshCw } from "lucide-react";
 import { api, mutation, explain } from "@/lib/api";
 import { captionChanges } from "@/lib/caption-edits";
 import { startDownload } from "@/lib/download";
@@ -22,7 +23,7 @@ import {
   CaptionExample,
   Saved,
 } from "@/components/common";
-import type { Preset } from "@/components/output-options";
+import { outputLabel, type Preset } from "@/components/output-options";
 import { MediaReadiness } from "@/components/media-readiness";
 import { ResumeUpload } from "@/components/resume-upload";
 type Cue = Track["content"]["cues"][number];
@@ -379,10 +380,22 @@ export default function ProjectEditor({
     });
   }
   const activeCue = cues.find((c) => time >= c.startMs && time < c.endMs);
+  const previewCue = activeCue ?? cues[0];
   return (
     <div className="page">
+      <Link
+        href="/studio"
+        className="project-back"
+        onNavigate={(event) => {
+          if (dirty && !window.confirm("Discard unsaved caption changes?")) {
+            event.preventDefault();
+          }
+        }}
+      >
+        <ArrowLeft size={16} aria-hidden="true" /> My projects
+      </Link>
       <PageTitle
-        title={project?.title ?? "Your project"}
+        title={project ? <bdi>{project.title}</bdi> : "Your project"}
         description="Review the words, adjust the timing and make your captions yours."
         action={
           <button
@@ -477,6 +490,9 @@ export default function ProjectEditor({
             >
               <div className="editor-toolbar">
                 <h2>{track ? "Caption timing" : "Transcript"}</h2>
+                <a className="text-button editor-jump" href="#media-preview">
+                  Preview & export
+                </a>
                 {tracks.length > 0 && (
                   <label className="inline-select">
                     Output
@@ -490,7 +506,7 @@ export default function ProjectEditor({
                       </option>
                       {tracks.map((t) => (
                         <option key={t.id} value={t.id}>
-                          {t.variant} · version {t.version}
+                          {outputLabel(t.variant)} · version {t.version}
                         </option>
                       ))}
                     </select>
@@ -511,6 +527,13 @@ export default function ProjectEditor({
                 <>
                   <p className="subtitle">
                     Times are in seconds. Changes create a new caption version.
+                    {!localMedia && (
+                      <>
+                        {" "}
+                        Choose your original file in Media preview to play a
+                        caption.
+                      </>
+                    )}
                   </p>
                   {track.content.qa.defects.length > 0 && (
                     <p className="notice">
@@ -525,6 +548,7 @@ export default function ProjectEditor({
                         <div className="cue-meta">
                           <button
                             className="text-button"
+                            disabled={!localMedia}
                             aria-label={"Play caption " + (i + 1)}
                             onClick={() => {
                               if (player.current) {
@@ -630,12 +654,13 @@ export default function ProjectEditor({
                 </section>
               )}
             </section>
-            <aside className="editor-aside">
-              <CaptionExample
-                preset={preset || undefined}
-                text={activeCue?.text ?? "Har lafz ko apni pehchaan dein."}
-              />
-              <h2>Media preview</h2>
+            <aside
+              id="media-preview"
+              tabIndex={-1}
+              className="editor-aside"
+              aria-labelledby="media-preview-title"
+            >
+              <h2 id="media-preview-title">Media preview</h2>
               <p className="caption-note">
                 Choose your original file for a local timing preview. This does
                 not upload it again.
@@ -658,6 +683,7 @@ export default function ProjectEditor({
                     className="local-player"
                     src={localMedia}
                     controls
+                    playsInline
                     onTimeUpdate={(e) =>
                       setTime(e.currentTarget.currentTime * 1000)
                     }
@@ -680,6 +706,13 @@ export default function ProjectEditor({
                   ))}
                 </select>
               </label>
+              {previewCue && (
+                <CaptionExample
+                  preset={preset || undefined}
+                  text={previewCue.text}
+                  isExample={false}
+                />
+              )}
               <h2>Export your work</h2>
               <p className="caption-note">
                 Preview is approximate. The rendered video uses the exact
@@ -714,7 +747,8 @@ export default function ProjectEditor({
                         action(() => startDownload(f.downloadPath!))
                       }
                     >
-                      Download {f.format.toUpperCase()} ({f.variant})
+                      Download {f.format.toUpperCase()} (
+                      {outputLabel(f.variant)})
                     </button>
                   ) : (
                     <span className="caption-note">

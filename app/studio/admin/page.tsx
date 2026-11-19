@@ -72,9 +72,14 @@ export default function Admin() {
           title="Owner access required"
           description="Sign in with the UrduSpeech owner account to manage operations."
         />
-        <Link className="button" href="/studio">
-          Back to my projects
-        </Link>
+        <div className="actions">
+          <Link className="button" href="/auth/sign-in?next=/studio/admin">
+            Sign in as owner
+          </Link>
+          <Link className="button secondary" href="/studio">
+            Back to my projects
+          </Link>
+        </div>
       </div>
     );
   return (

@@ -2,7 +2,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Upload, FileVideo, X, ShieldCheck } from "lucide-react";
-import { api, mutation, explain } from "@/lib/api";
+import { api, ApiError, mutation, explain } from "@/lib/api";
 import type {
   Defaults,
   CreatedProject,
@@ -28,6 +28,8 @@ export default function NewProject() {
     [policy, setPolicy] = useState<UploadPolicy | null>(null),
     [usage, setUsage] = useState<Usage | null>(null),
     [ready, setReady] = useState(false),
+    [setupError, setSetupError] = useState<unknown>(),
+    [setupAttempt, setSetupAttempt] = useState(0),
     [rights, setRights] = useState(false),
     [saveDefault, setSaveDefault] = useState(false),
     [error, setError] = useState(""),
@@ -37,6 +39,7 @@ export default function NewProject() {
     [created, setCreated] = useState<CreatedProject | null>(null);
   useEffect(() => {
     let live = true;
+    setSetupError(undefined);
     Promise.all([
       api<Defaults>("/v1/me/defaults"),
       api<{ presets: Preset[] }>("/v1/caption-presets"),
@@ -52,14 +55,16 @@ export default function NewProject() {
           setReady(true);
         }
       })
-      .catch((e) => {
-        if (live) setError(explain(e));
+      .catch((e: unknown) => {
+        if (live) setSetupError(e);
       });
     return () => {
       live = false;
-      control.current?.abort();
     };
-  }, []);
+  }, [setupAttempt]);
+  useEffect(() => () => control.current?.abort(), []);
+  const needsSignIn =
+    setupError instanceof ApiError && setupError.status === 401;
   const cap = policy?.plans.find((p) => p.slug === usage?.plan.slug);
   function choose(f: File | undefined) {
     if (!f) return;
@@ -141,151 +146,174 @@ export default function NewProject() {
   return (
     <div className="page">
       <PageTitle
-        title="Start with your voice."
+        title="New upload"
         description="Upload your media and choose the captions your audience will see."
       />
-      <div className="new-grid">
-        <div className="upload-form">
-          {error && <ErrorNotice message={error} />}
-          <section className="form-section">
-            <h2>1. Add your audio or video</h2>
-            <button
-              className={"dropzone " + (file ? "has-file" : "")}
-              disabled={busy || !!created}
-              onClick={() => input.current?.click()}
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={(e) => {
-                e.preventDefault();
-                if (!busy && !created) choose(e.dataTransfer.files[0]);
-              }}
-            >
-              <Upload size={30} />
-              <strong>
-                {file ? file.name : "Drop your file here, or choose a file"}
-              </strong>
-              <span>
-                {file
-                  ? `${(file.size / 1024 ** 2).toFixed(1)} MB`
-                  : "Reels, podcasts and long-form videos are welcome."}
-              </span>
-            </button>
-            <input
-              ref={input}
-              className="visually-hidden"
-              type="file"
-              aria-label="Choose audio or video"
-              accept=".wav,.flac,.mp3,.m4a,.mp4,.mov,audio/wav,audio/flac,audio/mpeg,audio/mp4,video/mp4,video/quicktime"
-              onChange={(e) => choose(e.target.files?.[0])}
-            />
-            {cap && (
-              <p className="field-help">
-                Up to {(cap.maxUploadBytes / 1024 ** 3).toFixed(1)} GiB and{" "}
-                {Math.floor(cap.maxSourceSeconds / 60)} minutes per file. Format
-                and content are checked after upload.
-              </p>
-            )}
-            <label className="field">
-              Project name
-              <input
-                required
-                maxLength={200}
-                value={title}
-                disabled={busy || !!created}
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </label>
-          </section>
-          <section className="form-section">
-            <h2>2. Make it yours</h2>
-            <OutputOptions
-              value={options}
-              onChange={setOptions}
-              presets={presets}
-              disabled={busy || !!created}
-            />
-            <label className="check-row">
-              <input
-                type="checkbox"
-                checked={saveDefault}
-                disabled={busy}
-                onChange={(e) => setSaveDefault(e.target.checked)}
-              />
-              Make these choices my defaults for future uploads
-            </label>
-          </section>
-          <section className="form-section">
-            <h2>3. Ready when you are</h2>
-            <label className="check-row">
-              <input
-                type="checkbox"
-                checked={rights}
-                disabled={busy || !!created}
-                onChange={(e) => setRights(e.target.checked)}
-              />
-              I have the rights and permission to process this media.
-            </label>
-            {busy && (
-              <div className="upload-progress" role="status">
-                <p>{stage}</p>
-                <progress max={100} value={percent} />
-                <span>{percent}% uploaded</span>
-              </div>
-            )}
-            <div className="actions">
-              <button
-                disabled={
-                  !ready ||
-                  !file ||
-                  !rights ||
-                  !title.trim() ||
-                  busy ||
-                  !!created
-                }
-                onClick={start}
-              >
-                <FileVideo size={18} />
-                {busy ? "Uploading…" : "Upload media"}
-              </button>
-              {busy && (
-                <button
-                  className="secondary"
-                  onClick={() => control.current?.abort()}
-                >
-                  <X size={16} />
-                  Stop upload
-                </button>
-              )}
-              {created && !busy && (
-                <button
-                  className="secondary"
-                  onClick={() =>
-                    router.push(
-                      "/studio/projects/" +
-                        created.project.id +
-                        "?upload=" +
-                        created.upload.id,
-                    )
-                  }
-                >
-                  Open saved project
-                </button>
-              )}
-            </div>
-          </section>
-        </div>
-        <aside className="upload-aside">
-          <CaptionExample
-            preset={options.captionPresetVersionId ?? undefined}
+      {!ready ? (
+        setupError ? (
+          <ErrorNotice
+            message={explain(setupError)}
+            signIn={needsSignIn}
+            retry={
+              needsSignIn
+                ? undefined
+                : () => setSetupAttempt((value) => value + 1)
+            }
           />
-          <div className="privacy-note">
-            <ShieldCheck size={20} />
-            <p>
-              Your media stays private. Automatic deletion follows your plan’s
-              retention period.
-            </p>
+        ) : (
+          <p className="loading" role="status">
+            Loading upload options…
+          </p>
+        )
+      ) : (
+        <div className="new-grid">
+          <div className="upload-form">
+            {error && <ErrorNotice message={error} />}
+            <section className="form-section">
+              <h2>1. Add your audio or video</h2>
+              <button
+                className={"dropzone " + (file ? "has-file" : "")}
+                disabled={busy || !!created}
+                onClick={() => input.current?.click()}
+                onDragOver={(e) => e.preventDefault()}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  if (!busy && !created) choose(e.dataTransfer.files[0]);
+                }}
+              >
+                <Upload size={30} />
+                <strong>
+                  {file ? file.name : "Drop your file here, or choose a file"}
+                </strong>
+                <span>
+                  {file
+                    ? `${(file.size / 1024 ** 2).toFixed(1)} MB`
+                    : "Reels, podcasts and long-form videos are welcome."}
+                </span>
+              </button>
+              <input
+                ref={input}
+                className="visually-hidden"
+                type="file"
+                aria-label="Choose audio or video"
+                tabIndex={-1}
+                accept=".wav,.flac,.mp3,.m4a,.mp4,.mov,audio/wav,audio/flac,audio/mpeg,audio/mp4,video/mp4,video/quicktime"
+                onChange={(e) => choose(e.target.files?.[0])}
+              />
+              {cap && (
+                <p className="field-help">
+                  Up to {(cap.maxUploadBytes / 1024 ** 3).toFixed(1)} GiB and{" "}
+                  {Math.floor(cap.maxSourceSeconds / 60)} minutes per file.
+                  Format and content are checked after upload.
+                </p>
+              )}
+              <label className="field">
+                Project name
+                <input
+                  required
+                  maxLength={200}
+                  value={title}
+                  disabled={busy || !!created}
+                  onChange={(e) => setTitle(e.target.value)}
+                />
+              </label>
+            </section>
+            <section className="form-section">
+              <h2>2. Caption options</h2>
+              <OutputOptions
+                value={options}
+                onChange={setOptions}
+                presets={presets}
+                disabled={busy || !!created}
+              />
+              <label className="check-row">
+                <input
+                  type="checkbox"
+                  checked={saveDefault}
+                  disabled={busy}
+                  onChange={(e) => setSaveDefault(e.target.checked)}
+                />
+                Make these choices my defaults for future uploads
+              </label>
+            </section>
+            <section className="form-section">
+              <h2>3. Confirm and upload</h2>
+              <label className="check-row">
+                <input
+                  type="checkbox"
+                  checked={rights}
+                  disabled={busy || !!created}
+                  onChange={(e) => setRights(e.target.checked)}
+                />
+                I have the rights and permission to process this media.
+              </label>
+              {busy && (
+                <div className="upload-progress" role="status">
+                  <p>{stage}</p>
+                  <progress
+                    aria-label="File upload progress"
+                    max={100}
+                    value={percent}
+                  />
+                  <span>{percent}% uploaded</span>
+                </div>
+              )}
+              <div className="actions">
+                <button
+                  disabled={
+                    !ready ||
+                    !file ||
+                    !rights ||
+                    !title.trim() ||
+                    busy ||
+                    !!created
+                  }
+                  onClick={start}
+                >
+                  <FileVideo size={18} />
+                  {busy ? "Uploading…" : "Upload media"}
+                </button>
+                {busy && (
+                  <button
+                    className="secondary"
+                    onClick={() => control.current?.abort()}
+                  >
+                    <X size={16} />
+                    Stop upload
+                  </button>
+                )}
+                {created && !busy && (
+                  <button
+                    className="secondary"
+                    onClick={() =>
+                      router.push(
+                        "/studio/projects/" +
+                          created.project.id +
+                          "?upload=" +
+                          created.upload.id,
+                      )
+                    }
+                  >
+                    Open saved project
+                  </button>
+                )}
+              </div>
+            </section>
           </div>
-        </aside>
-      </div>
+          <aside className="upload-aside">
+            <CaptionExample
+              preset={options.captionPresetVersionId ?? undefined}
+            />
+            <div className="privacy-note">
+              <ShieldCheck size={20} />
+              <p>
+                Your media stays private. Automatic deletion follows your plan’s
+                retention period.
+              </p>
+            </div>
+          </aside>
+        </div>
+      )}
     </div>
   );
 }

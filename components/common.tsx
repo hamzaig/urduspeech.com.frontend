@@ -4,16 +4,18 @@ import { AlertCircle, AudioLines, Upload, Check } from "lucide-react";
 export function ErrorNotice({
   message,
   retry,
+  signIn = false,
 }: {
   message: string;
   retry?: () => void;
+  signIn?: boolean;
 }) {
   return (
     <div className="error-notice" role="alert">
       <AlertCircle size={19} />
       <div>
         <p>{message}</p>
-        <Link href="/auth/sign-in">Sign in</Link>
+        {signIn && <Link href="/auth/sign-in">Sign in</Link>}
         {retry && (
           <button className="text-button" onClick={retry}>
             Try again
@@ -28,7 +30,7 @@ export function PageTitle({
   description,
   action,
 }: {
-  title: string;
+  title: React.ReactNode;
   description: string;
   action?: React.ReactNode;
 }) {
@@ -45,16 +47,18 @@ export function PageTitle({
 export function CaptionExample({
   preset = "social-highlight:1",
   text = "Har lafz ko apni pehchaan dein.",
+  isExample = true,
 }: {
   preset?: string;
   text?: string;
+  isExample?: boolean;
 }) {
   return (
     <div className="example-wrap">
       <div className={"caption-frame " + preset.split(":")[0]}>
         <div className="frame-top">
           <AudioLines size={20} />
-          <span>Caption example</span>
+          <span>{isExample ? "Caption example" : "Caption style preview"}</span>
         </div>
         <div className="voice-art" aria-hidden="true">
           {[22, 45, 32, 67, 90, 52, 75, 110, 72, 46, 82, 58, 34, 50, 25].map(
@@ -71,9 +75,11 @@ export function CaptionExample({
           <span>9:16</span>
         </div>
       </div>
-      <p className="caption-note">
-        A style example. Your own media appears after upload.
-      </p>
+      {isExample && (
+        <p className="caption-note">
+          A style example. Your own media appears after upload.
+        </p>
+      )}
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowRight, Check } from "lucide-react";
-import { CaptionExample } from "@/components/common";
+import { PublicCaptionPreview } from "@/components/public-caption-preview";
 import { PublicFooter, PublicHeader } from "@/components/public-site";
 
 export const metadata: Metadata = {
@@ -46,11 +46,9 @@ export default function Home() {
       <main id="main">
         <section className="public-hero" aria-labelledby="hero-title">
           <div>
-            <p className="hero-note">For the way Pakistan creates</p>
             <h1 id="hero-title">
-              Your Urdu voice.
-              <br />
-              <span>Ready to be read.</span>
+              Urdu captions.
+              <span>In your words.</span>
             </h1>
             <p className="hero-description">
               Turn your audio and video into editable transcripts and captions.
@@ -65,13 +63,12 @@ export default function Home() {
               A one-time free allowance. No card needed to start.
             </p>
           </div>
-          <CaptionExample />
+          <PublicCaptionPreview />
         </section>
         <section className="public-section" aria-labelledby="workflow-title">
           <div className="section-intro">
-            <p className="hero-note">From upload to export</p>
             <h2 id="workflow-title">
-              A caption workflow that stays in your hands.
+              From recording to ready-to-share captions.
             </h2>
           </div>
           <ol className="public-steps">
@@ -115,50 +112,37 @@ export default function Home() {
           aria-labelledby="pricing-title"
         >
           <div className="section-intro">
-            <p className="hero-note">Plans in PKR</p>
-            <h2 id="pricing-title">
-              One minute of audio. One minute of video.
-              <br />
-              The same allowance.
-            </h2>
+            <h2 id="pricing-title">Plans in Pakistani rupees</h2>
             <p>
-              Paid plans provide a monthly allowance. Your free minutes are a
-              one-time trial. Unused monthly minutes do not roll over.
+              Audio and video share the same allowance. Free minutes are
+              available once. Unused monthly minutes do not roll over.
             </p>
           </div>
-          <div
-            className="pricing-scroll"
-            role="region"
-            aria-label="Plan comparison"
-            tabIndex={0}
-          >
-            <table className="public-pricing">
-              <caption className="sr-only">UrduSpeech launch plans</caption>
-              <thead>
-                <tr>
-                  <th scope="col">Plan</th>
-                  <th scope="col">Price (PKR)</th>
-                  <th scope="col">Transcription</th>
-                  <th scope="col">Video exports</th>
-                  <th scope="col">Media kept for</th>
-                </tr>
-              </thead>
-              <tbody>
-                {plans.map((plan) => (
-                  <tr key={plan.name}>
-                    <th scope="row">{plan.name}</th>
-                    <td className="public-price">
-                      {plan.price}
-                      {plan.name !== "Free" && <small> / month</small>}
-                    </td>
-                    <td>{plan.minutes}</td>
-                    <td>{plan.quality}</td>
-                    <td>{plan.media}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <ul className="public-pricing" role="list">
+            {plans.map((plan) => (
+              <li key={plan.name}>
+                <h3>{plan.name}</h3>
+                <p className="public-price">
+                  <small>PKR</small> {plan.price}
+                  {plan.name !== "Free" && <small> / month</small>}
+                </p>
+                <dl>
+                  <div>
+                    <dt>Transcription</dt>
+                    <dd>{plan.minutes}</dd>
+                  </div>
+                  <div>
+                    <dt>Video exports</dt>
+                    <dd>{plan.quality}</dd>
+                  </div>
+                  <div>
+                    <dt>Media kept for</dt>
+                    <dd>{plan.media}</dd>
+                  </div>
+                </dl>
+              </li>
+            ))}
+          </ul>
           <p className="public-footnote">
             Available payment methods appear in your workspace. Manual payments
             activate a paid period after verification. Download your media

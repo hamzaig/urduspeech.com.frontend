@@ -142,7 +142,7 @@ export default function Billing() {
   return (
     <div className="page">
       <PageTitle
-        title="A plan for your pace."
+        title="Plan & minutes"
         description="Pay in PKR. Audio and video use the same minute allowance."
       />
       {error && <ErrorNotice message={error} />}{" "}
@@ -173,6 +173,7 @@ export default function Billing() {
               minutes remaining
             </p>
             <progress
+              aria-label="Minutes used or reserved"
               max={summary.usage.allowance}
               value={summary.usage.consumed + summary.usage.reserved}
             />
@@ -192,13 +193,11 @@ export default function Billing() {
                 .
               </p>
             )}
-            <button
-              className="text-button"
-              disabled={busy || !summary.providers.stripe.checkoutAvailable}
-              onClick={portal}
-            >
-              Manage card subscription
-            </button>
+            {summary.providers.stripe.checkoutAvailable && (
+              <button className="text-button" disabled={busy} onClick={portal}>
+                Manage card subscription
+              </button>
+            )}
           </div>
         </section>
       )}
@@ -225,25 +224,24 @@ export default function Billing() {
                 {p.watermark ? "Watermarked videos" : "No video watermark"}
               </li>
             </ul>
-            <button
-              disabled={
-                busy ||
-                p.slug === "free" ||
-                !p.checkoutAvailable ||
-                !summary ||
-                !summary.providers.stripe.checkoutAvailable ||
-                summary.usage.plan.id === p.id
-              }
-              onClick={() => checkout(p.id)}
-            >
-              {summary?.usage.plan.id === p.id
-                ? "Current plan"
-                : p.slug === "free"
-                  ? "Start with a free account"
-                  : p.checkoutAvailable
-                    ? "Choose " + p.name
-                    : "Checkout unavailable"}
-            </button>
+            {summary?.usage.plan.id === p.id ? (
+              <p className="plan-status">Current plan</p>
+            ) : (
+              p.slug !== "free" &&
+              summary &&
+              (p.checkoutAvailable &&
+              summary.providers.stripe.checkoutAvailable ? (
+                <button disabled={busy} onClick={() => checkout(p.id)}>
+                  Choose {p.name}
+                </button>
+              ) : catalog.providers.manual.checkoutAvailable ? (
+                <a className="text-button plan-status" href="#manual-payment">
+                  Manual payment options
+                </a>
+              ) : (
+                <p className="plan-status">Checkout unavailable</p>
+              ))
+            )}
           </article>
         ))}
       </div>
@@ -253,9 +251,9 @@ export default function Billing() {
         </p>
       )}
       <p className="billing-note">
-        Monthly card subscriptions renew automatically. Manual Easypaisa, bank
-        transfer, SadaPay and NayaPay payments cover one term and are activated
-        after payment verification. Unused minutes do not roll over.
+        Monthly card subscriptions renew automatically. Manual payments cover
+        one term and activate after verification. Unused minutes do not roll
+        over.
       </p>
       {catalog && !catalog.providers.manual.checkoutAvailable && (
         <p className="notice">
@@ -349,8 +347,8 @@ function ManualPayment({ catalog }: { catalog: PlanCatalog }) {
     }
   }
   return (
-    <section className="settings-panel">
-      <h2>Pay by JazzCash, Easypaisa or bank</h2>
+    <section className="settings-panel" id="manual-payment" tabIndex={-1}>
+      <h2>Pay manually</h2>
       <p className="billing-note">
         One month at a time. Your plan is activated after your payment is
         verified.

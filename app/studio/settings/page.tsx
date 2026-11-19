@@ -82,7 +82,7 @@ export default function Settings() {
   return (
     <div className="page narrow">
       <PageTitle
-        title="Make it your default."
+        title="My defaults"
         description="Choose once. Change your choices for any upload."
       />
       {error && <ErrorNotice message={error} />}
