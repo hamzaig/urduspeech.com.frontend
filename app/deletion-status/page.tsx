@@ -10,6 +10,7 @@ import {
   downloadDeletionReceipt,
   type DeletionReceipt,
 } from "@/lib/deletion";
+import { PublicPage } from "@/components/public-site";
 import { ErrorNotice, PageTitle } from "@/components/common";
 interface Status {
   content: string;
@@ -56,7 +57,7 @@ export default function DeletionStatus() {
     if (saved) void check(saved);
   }, []);
   return (
-    <main id="main" className="page narrow">
+    <PublicPage mainClassName="public-container policy-page">
       <PageTitle
         title="Deletion status"
         description="Use your private deletion receipt to check progress after your account is signed out."
@@ -143,6 +144,6 @@ export default function DeletionStatus() {
       <p>
         <Link href="/auth/sign-in">Back to sign in</Link>
       </p>
-    </main>
+    </PublicPage>
   );
 }

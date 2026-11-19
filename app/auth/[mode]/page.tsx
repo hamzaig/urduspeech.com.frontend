@@ -1,12 +1,10 @@
 "use client";
 import { use, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import captionDemo from "@/assets/caption-demo.webp";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowLeft, ArrowRight, Eye, EyeOff } from "lucide-react";
+import { ArrowRight, Eye, EyeOff } from "lucide-react";
 import { api, mutation, explain } from "@/lib/api";
-import { Brand } from "@/components/brand";
+import { PublicPage } from "@/components/public-site";
 import { ErrorNotice, Saved } from "@/components/common";
 const modes = {
   "sign-in": {
@@ -41,7 +39,9 @@ export default function Auth({
   params: Promise<{ mode: string }>;
 }) {
   const { mode } = use(params);
-  const config = modes[mode as keyof typeof modes];
+  const config = Object.hasOwn(modes, mode)
+    ? modes[mode as keyof typeof modes]
+    : undefined;
   const router = useRouter();
   const query = useSearchParams();
   const [error, setError] = useState(""),
@@ -50,10 +50,14 @@ export default function Auth({
   const [showPassword, setShowPassword] = useState(false);
   if (!config)
     return (
-      <main className="auth-wrap" id="main">
-        <h1>Page not found</h1>
-        <Link href="/auth/sign-in">Sign in</Link>
-      </main>
+      <PublicPage mainClassName="account-page">
+        <section className="account-panel">
+          <h1>Page not found</h1>
+          <Link className="button" href="/auth/sign-in">
+            Sign in
+          </Link>
+        </section>
+      </PublicPage>
     );
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -102,108 +106,87 @@ export default function Auth({
     }
   }
   return (
-    <main className="auth-layout" id="main">
-      <div className="auth-panel">
-        <Brand />
-        <div className="auth-content">
-          <Link className="auth-back" href="/">
-            <ArrowLeft size={15} aria-hidden="true" /> Home
-          </Link>
-          <h1>{config.title}</h1>
-          <p>{config.description}</p>
-          {error && <ErrorNotice message={error} />}
-          <form onSubmit={submit}>
-            {mode === "register" && (
-              <label className="field">
-                Your name
+    <PublicPage current={"/auth/" + mode} mainClassName="account-page">
+      <section className="account-panel" aria-labelledby="account-title">
+        <h1 id="account-title">{config.title}</h1>
+        <p>{config.description}</p>
+        {error && <ErrorNotice message={error} />}
+        <form onSubmit={submit}>
+          {mode === "register" && (
+            <label className="field">
+              Your name
+              <input
+                name="name"
+                autoComplete="name"
+                required
+                minLength={1}
+                maxLength={120}
+              />
+            </label>
+          )}
+          {["sign-in", "register", "forgot-password"].includes(mode) && (
+            <label className="field">
+              Email address
+              <input
+                name="email"
+                type="email"
+                required
+                autoComplete="email"
+                maxLength={254}
+              />
+            </label>
+          )}
+          {["sign-in", "register", "reset-password"].includes(mode) && (
+            <div className="field">
+              <label htmlFor="auth-password">Password</label>
+              <div className="password-field">
                 <input
-                  name="name"
-                  autoComplete="name"
+                  id="auth-password"
+                  name="password"
+                  type={showPassword ? "text" : "password"}
                   required
-                  minLength={1}
-                  maxLength={120}
+                  minLength={mode === "sign-in" ? 1 : 12}
+                  maxLength={128}
+                  aria-describedby={
+                    mode === "register" ? "password-hint" : undefined
+                  }
+                  autoComplete={
+                    mode === "sign-in" ? "current-password" : "new-password"
+                  }
                 />
-              </label>
-            )}
-            {["sign-in", "register", "forgot-password"].includes(mode) && (
-              <label className="field">
-                Email address
-                <input
-                  name="email"
-                  type="email"
-                  required
-                  autoComplete="email"
-                  maxLength={254}
-                />
-              </label>
-            )}
-            {["sign-in", "register", "reset-password"].includes(mode) && (
-              <div className="field">
-                <label htmlFor="auth-password">Password</label>
-                <div className="password-field">
-                  <input
-                    id="auth-password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    required
-                    minLength={mode === "sign-in" ? 1 : 12}
-                    maxLength={128}
-                    aria-describedby={
-                      mode === "register" ? "password-hint" : undefined
-                    }
-                    autoComplete={
-                      mode === "sign-in" ? "current-password" : "new-password"
-                    }
-                  />
-                  <button
-                    type="button"
-                    className="text-button"
-                    aria-label={
-                      showPassword ? "Hide password" : "Show password"
-                    }
-                    onClick={() => setShowPassword((visible) => !visible)}
-                  >
-                    {showPassword ? (
-                      <EyeOff size={18} aria-hidden="true" />
-                    ) : (
-                      <Eye size={18} aria-hidden="true" />
-                    )}
-                  </button>
-                </div>
-                {mode === "register" && (
-                  <small id="password-hint">At least 12 characters.</small>
-                )}
+                <button
+                  type="button"
+                  className="text-button"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  onClick={() => setShowPassword((visible) => !visible)}
+                >
+                  {showPassword ? (
+                    <EyeOff size={18} aria-hidden="true" />
+                  ) : (
+                    <Eye size={18} aria-hidden="true" />
+                  )}
+                </button>
               </div>
-            )}
-            <button disabled={busy || !!message}>
-              {busy ? "Please wait…" : config.button}
-              <ArrowRight size={17} aria-hidden="true" />
-            </button>
-          </form>
-          {message && <Saved>{message}</Saved>}
-          <div className="auth-links">
-            <Link
-              href={mode === "sign-in" ? "/auth/register" : "/auth/sign-in"}
-            >
-              {mode === "sign-in" ? "Create an account" : "Sign in instead"}
-            </Link>
-            {mode === "sign-in" && (
-              <Link href="/auth/forgot-password">Forgot password?</Link>
-            )}
-          </div>
+              {mode === "register" && (
+                <small id="password-hint">At least 12 characters.</small>
+              )}
+            </div>
+          )}
+          <button className="button" disabled={busy || !!message}>
+            {busy ? "Please wait…" : config.button}
+            <ArrowRight size={17} aria-hidden="true" />
+          </button>
+        </form>
+        {message && <Saved>{message}</Saved>}
+        <div className="auth-links">
+          <Link href={mode === "sign-in" ? "/auth/register" : "/auth/sign-in"}>
+            {mode === "sign-in" ? "Create an account" : "Sign in instead"}
+          </Link>
+          {mode === "sign-in" && (
+            <Link href="/auth/forgot-password">Forgot password?</Link>
+          )}
         </div>
-        <nav className="auth-policy-links" aria-label="Service information">
-          <Link href="/terms">Terms</Link>
-          <Link href="/privacy">Privacy</Link>
-          <Link href="/refunds">Payments &amp; refunds</Link>
-        </nav>
-      </div>
-      <figure className="auth-image" aria-hidden="true">
-        <Image src={captionDemo} alt="" fill unoptimized />
-        <figcaption lang="ur" dir="rtl">
-          ہر کہانی کی اپنی آواز ہوتی ہے۔
-        </figcaption>
-      </figure>
-    </main>
+      </section>
+    </PublicPage>
   );
 }

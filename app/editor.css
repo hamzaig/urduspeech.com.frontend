@@ -368,7 +368,7 @@ video.local-player {
   overflow: hidden;
   padding: 4px 9px;
   color: white;
-  text-shadow: 0 1px 3px #120b1a;
+  text-shadow: 0 1px 3px #101810;
   border-radius: 4px;
   text-align: center;
   font-size: 14px;
@@ -377,7 +377,7 @@ video.local-player {
 }
 
 .local-caption.boxed p {
-  background: #1f152c;
+  background: #101810;
 }
 
 .editor-preview .field:last-child {

@@ -1,11 +1,9 @@
 .app-shell {
-  --stage: #1c2921;
-  --stage-accent: #dceadd;
   display: flex;
   flex-direction: column;
   min-height: 100dvh;
   color: var(--ink);
-  background: #fcfdf9;
+  background: var(--canvas);
 }
 
 .app-shell .app-main {

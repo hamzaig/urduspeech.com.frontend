@@ -5,29 +5,6 @@
 }
 
 :root {
-  --ink: #261b3d;
-  --muted: #615871;
-  --paper: #f7f6fb;
-  --surface: #fff;
-  --accent: #5736c5;
-  --accent-hover: #4423a7;
-  --wash: #eee9ff;
-  --line: #e1dbea;
-  --control: #9586aa;
-  --stage: #302349;
-  --stage-accent: #dbcaff;
-  --red: #a62c48;
-  --green: #1d6848;
-  --body: "Public Sans Variable", CaptionUrdu, Arial, sans-serif;
-  --display: "Bricolage Grotesque Variable", var(--body);
-  font-family: var(--body);
-  color: var(--ink);
-  background: var(--paper);
-  font-synthesis: none;
-}
-
-.home-site,
-.app-shell {
   --ink: #19231c;
   --muted: #4d5c51;
   --accent: #20583c;
@@ -36,6 +13,18 @@
   --paper: #f4f6f1;
   --line: #d9e1d7;
   --control: #87988a;
+  --canvas: #fcfdf9;
+  --surface: #fff;
+  --stage: #1c2921;
+  --stage-accent: #dceadd;
+  --red: #a62c48;
+  --green: #1d6848;
+  --body: "Public Sans Variable", CaptionUrdu, Arial, sans-serif;
+  --display: "Bricolage Grotesque Variable", var(--body);
+  font-family: var(--body);
+  color: var(--ink);
+  background: var(--canvas);
+  font-synthesis: none;
 }
 
 * {
@@ -979,19 +968,6 @@ a.plan-status {
   overflow-wrap: anywhere;
 }
 
-.auth-wrap {
-  width: min(100% - 36px, 465px);
-  margin: 45px auto;
-  padding: 24px;
-  background: var(--surface);
-  border: 1px solid var(--line);
-  border-radius: 12px;
-}
-
-.auth-wrap p {
-  margin-block: 10px 16px;
-}
-
 .auth-links {
   display: flex;
   flex-wrap: wrap;
@@ -1001,7 +977,6 @@ a.plan-status {
   font-size: 14px;
 }
 
-.auth-back,
 .project-back {
   display: inline-flex;
   align-items: center;
