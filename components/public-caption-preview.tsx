@@ -2,48 +2,24 @@
 
 import { useState } from "react";
 import { Captions, ChevronRight, Copy, Check } from "lucide-react";
-
-const outputs = [
-  { id: "urdu", label: "Urdu" },
-  { id: "romanUrdu", label: "Roman Urdu" },
-  { id: "english", label: "English" },
-  { id: "bilingual", label: "Bilingual" },
-] as const;
-
-const lines = [
-  {
-    time: "00:00",
-    urdu: "آج کچھ نیا بناتے ہیں۔",
-    romanUrdu: "Aaj kuch naya banate hain.",
-    english: "Let’s make something new today.",
-  },
-  {
-    time: "00:04",
-    urdu: "ہر کہانی کی اپنی آواز ہوتی ہے۔",
-    romanUrdu: "Har kahani ki apni awaaz hoti hai.",
-    english: "Every story has a voice of its own.",
-  },
-  {
-    time: "00:08",
-    urdu: "چلیں، شروع کرتے ہیں۔",
-    romanUrdu: "Chalein, shuru karte hain.",
-    english: "Let’s get started.",
-  },
-];
+import {
+  captionCues,
+  captionModes,
+  captionText,
+  captionTime,
+  type CaptionMode,
+} from "@/lib/caption-demo";
 
 export function PublicCaptionPreview() {
-  const [output, setOutput] =
-    useState<(typeof outputs)[number]["id"]>("bilingual");
+  const [output, setOutput] = useState<CaptionMode>("bilingual");
   const [active, setActive] = useState(0);
   const [copyStatus, setCopyStatus] = useState("");
-  const line = lines[active];
-  const outputName = outputs.find(({ id }) => id === output)?.label;
+  const line = captionCues[active];
+  const outputName = captionModes.find(({ id }) => id === output)?.label;
 
   async function copyCaption() {
     try {
-      await navigator.clipboard.writeText(
-        output === "bilingual" ? line.urdu + "\n" + line.english : line[output],
-      );
+      await navigator.clipboard.writeText(captionText(line, output));
       setCopyStatus("Caption copied.");
     } catch {
       setCopyStatus("Couldn’t copy. You can select the caption text.");
@@ -62,7 +38,7 @@ export function PublicCaptionPreview() {
         </h2>
         <fieldset className="sample-options">
           <legend className="sr-only">Caption language</legend>
-          {outputs.map(({ id, label }) => (
+          {captionModes.map(({ id, label }) => (
             <label key={id}>
               <input
                 className="sr-only"
@@ -83,8 +59,8 @@ export function PublicCaptionPreview() {
         <div className="sample-script">
           <h3>Urdu sample</h3>
           <ol role="list">
-            {lines.map((item, index) => (
-              <li key={item.time}>
+            {captionCues.map((item, index) => (
+              <li key={item.start}>
                 <button
                   type="button"
                   className="sample-line"
@@ -94,7 +70,7 @@ export function PublicCaptionPreview() {
                     setCopyStatus("");
                   }}
                 >
-                  <span className="sample-time">{item.time}</span>
+                  <span className="sample-time">{captionTime(item.start)}</span>
                   <span lang="ur" dir="rtl">
                     {item.urdu}
                   </span>
@@ -107,7 +83,7 @@ export function PublicCaptionPreview() {
         <div className="sample-output">
           <div className="sample-output-meta">
             <span>
-              <span className="sample-time">{line.time}</span>{" "}
+              <span className="sample-time">{captionTime(line.start)}</span>{" "}
               <span>{outputName} caption</span>
             </span>
             <button type="button" onClick={copyCaption} className="sample-copy">
