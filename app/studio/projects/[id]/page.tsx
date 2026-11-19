@@ -64,6 +64,7 @@ export default function ProjectEditor({
     [remove, setRemove] = useState(false);
   const [mediaReady, setMediaReady] = useState(false);
   const [uploadId, setUploadId] = useState<string | null>(null);
+  const [previewPosition, setPreviewPosition] = useState<number | null>(null);
   const player = useRef<HTMLMediaElement>(null);
   const previewInput = useRef<HTMLInputElement>(null);
   const pendingCaptionSave = useRef<{
@@ -391,7 +392,9 @@ export default function ProjectEditor({
   }
   const activeCue = cues.find((c) => time >= c.startMs && time < c.endMs);
   const playableMedia = previewError ? null : localMedia;
-  const previewCue = playableMedia ? activeCue : cues[0];
+  const previewCue = playableMedia
+    ? activeCue
+    : (cues.find(({ position }) => position === previewPosition) ?? cues[0]);
   const PreviewPlayer = localMedia?.audio ? "audio" : "video";
   const previewPreset = presets.find(({ id }) => id === preset);
   const hasDraft = !!(track || transcript);
@@ -599,26 +602,29 @@ export default function ProjectEditor({
                   >
                     {cues.map((c, i) => (
                       <div
-                        className={
-                          activeCue === c && localMedia
-                            ? "cue cue-current"
-                            : "cue"
-                        }
+                        className={previewCue === c ? "cue cue-current" : "cue"}
                         key={c.position}
                       >
                         <div className="cue-meta">
                           <button
                             className="text-button"
-                            disabled={!localMedia || previewError}
-                            aria-label={"Play caption " + (i + 1)}
+                            aria-label={`${playableMedia ? "Play" : "Preview"} caption ${i + 1}`}
+                            aria-pressed={
+                              playableMedia ? undefined : previewCue === c
+                            }
                             onClick={() => {
+                              setPreviewPosition(c.position);
                               if (player.current) {
                                 player.current.currentTime = c.startMs / 1000;
                                 player.current.play().catch(() => {});
                               }
                             }}
                           >
-                            <Play size={13} aria-hidden="true" />
+                            {playableMedia ? (
+                              <Play size={13} aria-hidden="true" />
+                            ) : (
+                              <Captions size={13} aria-hidden="true" />
+                            )}
                             {i + 1}
                           </button>
                           <label>
@@ -668,6 +674,7 @@ export default function ProjectEditor({
                           aria-label={"Caption " + (i + 1)}
                           disabled={busy}
                           value={c.text}
+                          onFocus={() => setPreviewPosition(c.position)}
                           onChange={(e) => updateCue(i, "text", e.target.value)}
                           maxLength={5000}
                         />
@@ -727,6 +734,11 @@ export default function ProjectEditor({
                 aria-labelledby="media-preview-title"
               >
                 <h2 id="media-preview-title">Media preview</h2>
+                {!playableMedia && previewCue && (
+                  <p className="sr-only" role="status">
+                    Previewing caption {cues.indexOf(previewCue) + 1}.
+                  </p>
+                )}
                 <div
                   className={
                     "editor-player-frame " +
