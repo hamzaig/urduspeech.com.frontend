@@ -162,7 +162,7 @@ components:
 
 ## Overview
 
-The homepage uses a separate ink and green palette in app/home.css, with a centered masthead and a parallel-text caption demo. The violet workspace and authentication surfaces use the shared tokens below.
+The homepage and Studio share the ink and green tokens scoped to those surfaces in app/globals.css. The homepage uses a centered masthead and a parallel-text caption demo. Studio uses a compact top navigation and keeps the caption list next to preview and export on wide screens. Authentication retains the violet palette documented below.
 
 **Creative North Star: "Post-production screening sheet"**
 

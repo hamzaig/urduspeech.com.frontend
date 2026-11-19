@@ -1,12 +1,4 @@
 .home-site {
-  --ink: #19231c;
-  --muted: #4d5c51;
-  --accent: #20583c;
-  --accent-hover: #16432d;
-  --wash: #eaf2e6;
-  --paper: #f4f6f1;
-  --line: #d9e1d7;
-  --control: #87988a;
   background: #fcfdf9;
   color: var(--ink);
 }

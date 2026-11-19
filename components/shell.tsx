@@ -2,8 +2,6 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
-  ChevronRight,
-  CircleHelp,
   FolderOpen,
   Plus,
   SlidersHorizontal,
@@ -24,9 +22,6 @@ const links = [
 export function Shell({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const router = useRouter();
-  const section =
-    links.find(({ href }) => href === path)?.label ??
-    (path === "/studio/admin" ? "Operations" : "Caption editor");
   const [session, setSession] = useState<Session | null>(null);
   const [error, setError] = useState("");
   const [admin, setAdmin] = useState(false);
@@ -71,69 +66,60 @@ export function Shell({ children }: { children: React.ReactNode }) {
   }
   return (
     <div className="app-shell">
-      <aside className="sidebar">
-        <Brand studio />
-        <nav aria-label="Main navigation">
-          {links.map(({ href, label, icon: Icon }) => {
-            const active =
-              path === href ||
-              (href === "/studio" && path.startsWith("/studio/projects/"));
-            return (
+      <header className="studio-header">
+        <div className="studio-header-inner">
+          <Brand studio />
+          <nav aria-label="Studio navigation">
+            {links.map(({ href, label, icon: Icon }) => {
+              const active =
+                path === href ||
+                (href === "/studio" && path.startsWith("/studio/projects/"));
+              return (
+                <Link
+                  key={href}
+                  href={href}
+                  className={"nav-link " + (active ? "active" : "")}
+                  aria-current={
+                    active ? (path === href ? "page" : "location") : undefined
+                  }
+                >
+                  <Icon size={18} aria-hidden="true" />
+                  {label}
+                </Link>
+              );
+            })}
+            {admin && (
               <Link
-                key={href}
-                href={href}
-                className={"nav-link " + (active ? "active" : "")}
-                aria-current={
-                  active ? (path === href ? "page" : "location") : undefined
+                href="/studio/admin"
+                className={
+                  "nav-link " + (path === "/studio/admin" ? "active" : "")
                 }
+                aria-current={path === "/studio/admin" ? "page" : undefined}
               >
-                <Icon size={18} aria-hidden="true" />
-                {label}
+                <Settings size={18} aria-hidden="true" />
+                Operations
               </Link>
-            );
-          })}
-          {admin && (
-            <Link
-              href="/studio/admin"
-              className={
-                "nav-link " + (path === "/studio/admin" ? "active" : "")
-              }
-              aria-current={path === "/studio/admin" ? "page" : undefined}
-            >
-              <Settings size={18} aria-hidden="true" />
-              Operations
-            </Link>
-          )}
-        </nav>
-        <div className="workspace-account">
-          {session ? (
-            <button
-              className="text-button"
-              disabled={signingOut}
-              onClick={signOut}
-            >
-              <LogOut size={16} aria-hidden="true" />
-              {signingOut ? "Signing out…" : "Sign out"}
-            </button>
-          ) : !checkingSession ? (
-            <Link href="/auth/sign-in" className="text-button">
-              Sign in
-            </Link>
-          ) : null}
-        </div>
-      </aside>
-      <div className="app-main">
-        <div className="workspace-header">
-          <div className="workspace-location">
-            <span>Studio</span>
-            <ChevronRight size={14} aria-hidden="true" />
-            <strong>{section}</strong>
+            )}
+          </nav>
+          <div className="workspace-account">
+            {session ? (
+              <button
+                className="text-button"
+                disabled={signingOut}
+                onClick={signOut}
+              >
+                <LogOut size={16} aria-hidden="true" />
+                {signingOut ? "Signing out…" : "Sign out"}
+              </button>
+            ) : !checkingSession ? (
+              <Link href="/auth/sign-in" className="text-button">
+                Sign in
+              </Link>
+            ) : null}
           </div>
-          <Link href="/supported-formats">
-            <CircleHelp size={16} aria-hidden="true" />
-            Supported formats
-          </Link>
         </div>
+      </header>
+      <div className="app-main">
         {error && (
           <div role="status" className="service-notice">
             {error}

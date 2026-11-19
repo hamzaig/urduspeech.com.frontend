@@ -1,4 +1,5 @@
 import { Shell } from "@/components/shell";
+import "./studio.css";
 export default function StudioLayout({
   children,
 }: {

@@ -446,7 +446,7 @@ video.local-player {
   display: none;
 }
 
-@media (max-width: 1060px) {
+@media (max-width: 880px) {
   .editor-grid {
     grid-template-columns: minmax(0, 1fr);
   }
