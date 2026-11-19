@@ -1,6 +1,8 @@
 @font-face {
   font-family: CaptionUrdu;
-  src: url(/fonts/NotoNastaliqUrdu-Regular.ttf) format("truetype");
+  src:
+    url(/fonts/NotoNastaliqUrdu-Regular.woff2) format("woff2"),
+    url(/fonts/NotoNastaliqUrdu-Regular.ttf) format("truetype");
   font-display: swap;
 }
 

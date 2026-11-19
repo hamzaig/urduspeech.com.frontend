@@ -132,7 +132,7 @@ export function MarketingIntro({
   );
 }
 
-export function Plans() {
+export function Plans({ showStart = true }: { showStart?: boolean }) {
   return (
     <>
       <ul className="public-pricing" role="list" aria-label="Plan comparison">
@@ -167,7 +167,7 @@ export function Plans() {
           Available payment methods appear in Studio. Manual payments activate
           after verification. Download your media before it expires.
         </p>
-        <StartFree />
+        {showStart && <StartFree />}
       </div>
     </>
   );
@@ -175,13 +175,18 @@ export function Plans() {
 
 export function QuestionList({
   questions,
+  openFirst = false,
 }: {
   questions: typeof commonQuestions;
+  openFirst?: boolean;
 }) {
   return (
     <div className="question-list">
-      {questions.map(({ question, answer }) => (
-        <details key={question}>
+      {questions.map(({ question, answer }, index) => (
+        <details
+          key={question}
+          open={openFirst && index === 0 ? true : undefined}
+        >
           <summary>
             {question}
             <Plus size={18} aria-hidden="true" />

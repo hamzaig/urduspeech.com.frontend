@@ -10,6 +10,23 @@ const publicLinks = [
   { href: "/faq", label: "FAQ" },
 ];
 
+const policyLinks = [
+  { href: "/privacy", label: "Privacy" },
+  { href: "/terms", label: "Terms" },
+  { href: "/refunds", label: "Payments & refunds" },
+];
+
+const helpLinks = [
+  { href: "/supported-formats", label: "Supported formats" },
+  { href: "/contact", label: "Contact" },
+];
+
+const footerGroups = [
+  { name: "Product", links: publicLinks.slice(0, 3) },
+  { name: "Support", links: [publicLinks[3], ...helpLinks] },
+  { name: "Policies", links: policyLinks },
+];
+
 function PublicHeader({ current }: { current?: string }) {
   return (
     <header className="public-header">
@@ -38,24 +55,55 @@ function PublicHeader({ current }: { current?: string }) {
   );
 }
 
-function PublicFooter() {
+export function PublicFooter({ intro }: { intro?: ReactNode }) {
   return (
-    <footer className="public-footer">
-      <div className="public-container">
-        <div className="public-footer-top">
-          <div>
-            <Brand />
-            <p>Urdu transcription and captions for creators.</p>
-          </div>
-          <nav aria-label="Service information">
-            <Link href="/privacy">Privacy</Link>
-            <Link href="/terms">Terms</Link>
-            <Link href="/refunds">Payments &amp; refunds</Link>
-            <Link href="/supported-formats">Supported formats</Link>
-            <Link href="/contact">Contact</Link>
-          </nav>
+    <footer
+      className={
+        intro ? "public-footer closing landing-footer" : "public-footer"
+      }
+    >
+      <div className="public-container wrap">
+        {intro}
+        <div className="public-footer-info">
+          {intro ? (
+            <nav
+              className="landing-footer-nav"
+              aria-label="Service information"
+            >
+              <div>
+                <Brand />
+                <p>Urdu transcription and captions for creators.</p>
+              </div>
+              {footerGroups.map(({ name, links }) => (
+                <div key={name}>
+                  <h3>{name}</h3>
+                  {links.map(({ href, label }) => (
+                    <Link key={href} href={href}>
+                      {label}
+                    </Link>
+                  ))}
+                </div>
+              ))}
+            </nav>
+          ) : (
+            <div className="public-footer-top">
+              <div>
+                <Brand />
+                <p>Urdu transcription and captions for creators.</p>
+              </div>
+              <nav aria-label="Service information">
+                {[...policyLinks, ...helpLinks].map(({ href, label }) => (
+                  <Link key={href} href={href}>
+                    {label}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+          )}
+          <small>
+            Operated by MoonSys Ltd. Prices are in Pakistani rupees.
+          </small>
         </div>
-        <small>Operated by MoonSys Ltd. Prices are in Pakistani rupees.</small>
       </div>
     </footer>
   );
