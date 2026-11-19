@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Upload, FileVideo, X, ShieldCheck } from "lucide-react";
 import { api, ApiError, mutation, explain } from "@/lib/api";
 import type {
@@ -12,10 +13,11 @@ import type {
 import { finishUpload } from "@/lib/upload";
 import {
   OutputOptions,
+  outputLabel,
   initialDefaults,
   type Preset,
 } from "@/components/output-options";
-import { PageTitle, ErrorNotice, CaptionExample } from "@/components/common";
+import { PageTitle, ErrorNotice } from "@/components/common";
 export default function NewProject() {
   const router = useRouter();
   const input = useRef<HTMLInputElement>(null);
@@ -136,7 +138,9 @@ export default function NewProject() {
     } catch (e) {
       setError(
         controller.signal.aborted
-          ? "Upload stopped. Your project is saved. Open it to review or delete the incomplete upload."
+          ? project
+            ? "Upload stopped. Open the saved project to resume uploading."
+            : "Upload stopped before the project was created."
           : explain(e),
       );
     } finally {
@@ -183,12 +187,12 @@ export default function NewProject() {
               >
                 <Upload size={30} />
                 <strong>
-                  {file ? file.name : "Drop your file here, or choose a file"}
+                  {file ? file.name : "Choose an audio or video file"}
                 </strong>
                 <span>
                   {file
-                    ? `${(file.size / 1024 ** 2).toFixed(1)} MB`
-                    : "Reels, podcasts and long-form videos are welcome."}
+                    ? `${(file.size / 1024 ** 2).toFixed(1)} MB · Choose a different file`
+                    : "Or drop it here to start your project."}
                 </span>
               </button>
               <input
@@ -198,7 +202,10 @@ export default function NewProject() {
                 aria-label="Choose audio or video"
                 tabIndex={-1}
                 accept=".wav,.flac,.mp3,.m4a,.mp4,.mov,audio/wav,audio/flac,audio/mpeg,audio/mp4,video/mp4,video/quicktime"
-                onChange={(e) => choose(e.target.files?.[0])}
+                onChange={(e) => {
+                  choose(e.currentTarget.files?.[0]);
+                  e.currentTarget.value = "";
+                }}
               />
               {cap && (
                 <p className="field-help">
@@ -213,6 +220,7 @@ export default function NewProject() {
                   required
                   maxLength={200}
                   value={title}
+                  dir="auto"
                   disabled={busy || !!created}
                   onChange={(e) => setTitle(e.target.value)}
                 />
@@ -300,12 +308,29 @@ export default function NewProject() {
               </div>
             </section>
           </div>
-          <aside className="upload-aside">
-            <CaptionExample
-              preset={options.captionPresetVersionId ?? undefined}
-            />
+          <aside className="upload-aside" aria-labelledby="upload-summary">
+            <h2 id="upload-summary">Upload details</h2>
+            <dl>
+              <div>
+                <dt>Recording</dt>
+                <dd>{file ? <bdi>{file.name}</bdi> : "No file selected"}</dd>
+              </div>
+              <div>
+                <dt>Caption output</dt>
+                <dd>{outputLabel(options.outputVariant)}</dd>
+              </div>
+              {usage && (
+                <div>
+                  <dt>Plan</dt>
+                  <dd>{usage.plan.name}</dd>
+                </div>
+              )}
+            </dl>
+            <Link className="text-button" href="/supported-formats">
+              Check supported formats
+            </Link>
             <div className="privacy-note">
-              <ShieldCheck size={20} />
+              <ShieldCheck size={18} aria-hidden="true" />
               <p>
                 Your media stays private. Automatic deletion follows your plan’s
                 retention period.

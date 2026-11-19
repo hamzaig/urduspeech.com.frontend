@@ -1,5 +1,7 @@
 # Public launch pages
 
+This file records the launch design. See [DESIGN.md](../DESIGN.md) for the current interface.
+
 The AI app now owns the public homepage, PKR plan comparison, privacy, terms,
 payment/refund support and supported-format pages. Public Sans and the existing
 ocean/amber palette remain the design authority. The hero reuses the explicitly
