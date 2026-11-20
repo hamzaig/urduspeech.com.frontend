@@ -7,6 +7,8 @@ import {
   ArrowUp,
   ArrowUpRight,
   Captions,
+  Check,
+  Copy,
   Download,
   RotateCcw,
 } from "lucide-react";
@@ -43,6 +45,7 @@ export function CaptionStudioDemo({
   const [selected, setSelected] = useState(1);
   const [styleIndex, setStyleIndex] = useState(0);
   const [edits, setEdits] = useState<CueEdits>({});
+  const [copyStatus, setCopyStatus] = useState("");
   const id = useId();
   const cue = captionCues[selected];
   const style = sampleCaptionStyles[styleIndex];
@@ -60,12 +63,28 @@ export function CaptionStudioDemo({
       .join("\n"),
   );
   const canDownload = exportLines.some(Boolean);
+  const outputName = captionModes.find(({ id }) => id === mode)?.label;
+
+  function selectCue(index: number) {
+    setSelected(index);
+    setCopyStatus("");
+  }
+
+  async function copyCaption() {
+    try {
+      await navigator.clipboard.writeText(exportLines[selected]);
+      setCopyStatus("Caption copied.");
+    } catch {
+      setCopyStatus("Couldn’t copy. You can select the caption text.");
+    }
+  }
 
   function reset() {
     setMode("bilingual");
     setSelected(1);
     setStyleIndex(0);
     setEdits({});
+    setCopyStatus("");
   }
 
   return (
@@ -120,7 +139,7 @@ export function CaptionStudioDemo({
                 key={start}
                 aria-pressed={index === selected}
                 type="button"
-                onClick={() => setSelected(index)}
+                onClick={() => selectCue(index)}
               >
                 <span className="sr-only">Cue {index + 1}, </span>
                 {captionTime(start)}–{captionTime(end)}
@@ -148,7 +167,10 @@ export function CaptionStudioDemo({
                   type="radio"
                   name={id + "-language"}
                   checked={modeId === mode}
-                  onChange={() => setMode(modeId)}
+                  onChange={() => {
+                    setMode(modeId);
+                    setCopyStatus("");
+                  }}
                 />
                 <span>{label}</span>
               </label>
@@ -170,6 +192,7 @@ export function CaptionStudioDemo({
                     value={line(selected, language)}
                     onChange={(event) => {
                       const value = event.target.value;
+                      setCopyStatus("");
                       setEdits((current) => ({
                         ...current,
                         [selected]: { ...current[selected], [language]: value },
@@ -252,6 +275,82 @@ export function CaptionStudioDemo({
           )}
         </div>
       </div>
+      <section
+        className="caption-studio-transcript"
+        aria-labelledby={id + "-transcript-title"}
+      >
+        <header className="caption-transcript-heading">
+          <div>
+            <p>Parallel transcript</p>
+            <h3 id={id + "-transcript-title"}>Read every word</h3>
+          </div>
+          <button
+            type="button"
+            className="caption-transcript-copy"
+            onClick={copyCaption}
+            disabled={!exportLines[selected]}
+          >
+            {copyStatus === "Caption copied." ? (
+              <Check size={16} aria-hidden="true" />
+            ) : (
+              <Copy size={16} aria-hidden="true" />
+            )}
+            {copyStatus === "Caption copied." ? "Copied" : "Copy text"}
+          </button>
+        </header>
+        <div className="caption-transcript-body">
+          <div className="caption-transcript-source">
+            <p>Urdu source cues</p>
+            <ol role="list">
+              {captionCues.map((item, index) => (
+                <li key={item.start}>
+                  <button
+                    type="button"
+                    aria-pressed={index === selected}
+                    onClick={() => selectCue(index)}
+                  >
+                    <span className="caption-transcript-time">
+                      {captionTime(item.start)}
+                    </span>
+                    <span lang="ur" dir="rtl">
+                      {line(index, "urdu")}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ol>
+          </div>
+          <div className="caption-transcript-output">
+            <div className="caption-transcript-meta">
+              <span>{outputName} output</span>
+              <span className="caption-transcript-time">
+                {captionTime(cue.start)}–{captionTime(cue.end)}
+              </span>
+            </div>
+            <div
+              className="caption-transcript-lines"
+              aria-live="polite"
+              aria-atomic="true"
+            >
+              {activeLanguages.map((language) => {
+                const text = line(selected, language);
+                return text.trim() ? (
+                  <span
+                    key={language}
+                    lang={languages[language].lang}
+                    dir={languages[language].dir}
+                  >
+                    {text}
+                  </span>
+                ) : null;
+              })}
+            </div>
+            <p className="caption-transcript-status" role="status">
+              {copyStatus}
+            </p>
+          </div>
+        </div>
+      </section>
     </article>
   );
 }

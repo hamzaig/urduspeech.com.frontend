@@ -5,10 +5,12 @@
 
 .landing-hero-intro {
   display: grid;
-  align-items: end;
-  grid-template-columns: minmax(0, 1.85fr) minmax(0, 1fr);
-  gap: 24px clamp(26px, 5vw, 72px);
-  margin-block-end: clamp(26px, 3.5vw, 50px);
+  grid-template-columns: minmax(0, 940px);
+  justify-content: center;
+  justify-items: center;
+  gap: 26px;
+  margin-block-end: clamp(30px, 4vw, 54px);
+  text-align: center;
 }
 
 .landing-hero h1,
@@ -21,9 +23,12 @@
 }
 
 .landing-hero h1 {
-  font-size: clamp(3.25rem, 6.45vw, 6rem);
-  line-height: 0.94;
-  text-wrap: wrap;
+  max-width: none;
+  font-size: clamp(3.25rem, 7vw, 6rem);
+  font-weight: 730;
+  line-height: 0.98;
+  letter-spacing: -0.04em;
+  text-wrap: balance;
 }
 
 .landing-hero h1 span {
@@ -34,26 +39,13 @@
   position: relative;
   isolation: isolate;
   display: grid;
-  justify-items: start;
-  gap: 15px;
-}
-
-.landing-hero-copy::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: -48px -56px;
-  background: radial-gradient(
-    closest-side,
-    color-mix(in srgb, var(--site-cream) 72%, transparent) 0%,
-    color-mix(in srgb, var(--site-cream) 38%, transparent) 58%,
-    transparent 100%
-  );
-  pointer-events: none;
+  justify-items: center;
+  gap: 18px;
+  max-width: 680px;
 }
 
 .landing-hero-copy p {
-  max-width: 39ch;
+  max-width: 58ch;
   font-size: clamp(1rem, 1.45vw, 1.18rem);
   line-height: 1.58;
   color: color-mix(in srgb, var(--ink) 86%, var(--muted));
@@ -62,6 +54,7 @@
 .landing-hero-actions {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 8px;
 }
 
@@ -374,7 +367,7 @@
 
   .landing-hero h1 {
     font-size: clamp(3rem, 9.3vw, 4.75rem);
-    letter-spacing: -0.059em;
+    letter-spacing: -0.04em;
   }
 
   .landing-hero-copy {
@@ -391,7 +384,12 @@
     font-size: clamp(2.64rem, 10.1vw, 3.38rem);
   }
 
+  .landing-hero-actions {
+    width: 100%;
+  }
+
   .landing-hero-actions .button {
+    flex: 1 1 150px;
     padding-inline: 13px;
   }
 
@@ -573,9 +571,11 @@
 }
 
 .landing-eyebrow {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 10px;
+  width: fit-content;
+  margin-inline: auto;
   margin-block-end: clamp(16px, 2vw, 24px);
   padding: 5px 7px 5px 14px;
   border: 1px solid #20583c26;
