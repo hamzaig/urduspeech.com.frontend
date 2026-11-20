@@ -136,31 +136,40 @@ export function Plans({ showStart = true }: { showStart?: boolean }) {
   return (
     <>
       <ul className="public-pricing" role="list" aria-label="Plan comparison">
-        {plans.map(({ name, price, minutes, media, quality }) => (
-          <li key={name}>
-            <h3>{name}</h3>
-            <p className="public-price">
-              <span>PKR</span> {price}
-            </p>
-            <p className="price-period">
-              {price === "0" ? "One-time allowance" : "Per month"}
-            </p>
-            <dl>
-              <div>
-                <dt>Transcription</dt>
-                <dd>{minutes} minutes</dd>
+        {plans.map(({ name, price, minutes, media, quality }) => {
+          const amount = Number(price.replace(/,/g, ""));
+          const recommended = name === "Creator";
+          return (
+            <li key={name} data-recommended={recommended || undefined}>
+              <div className="plan-name">
+                <h3>{name}</h3>
+                {recommended && <span className="plan-badge">Recommended</span>}
               </div>
-              <div>
-                <dt>Video exports</dt>
-                <dd>{quality}</dd>
-              </div>
-              <div>
-                <dt>Media retention</dt>
-                <dd>{media} days</dd>
-              </div>
-            </dl>
-          </li>
-        ))}
+              <p className="public-price">
+                <span>PKR</span> {price}
+              </p>
+              <p className="price-period">
+                {amount === 0
+                  ? "One-time allowance"
+                  : `Per month · about PKR ${(amount / minutes).toFixed(1)} a minute`}
+              </p>
+              <dl>
+                <div>
+                  <dt>Transcription</dt>
+                  <dd>{minutes} minutes</dd>
+                </div>
+                <div>
+                  <dt>Video exports</dt>
+                  <dd>{quality}</dd>
+                </div>
+                <div>
+                  <dt>Media retention</dt>
+                  <dd>{media} days</dd>
+                </div>
+              </dl>
+            </li>
+          );
+        })}
       </ul>
       <div className="pricing-footnote">
         <p>

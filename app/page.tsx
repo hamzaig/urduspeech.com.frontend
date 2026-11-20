@@ -7,12 +7,15 @@ import {
   Check,
   FileText,
   FileVideo,
+  Languages,
   LockKeyhole,
+  ShieldCheck,
+  Timer,
+  Wallet,
 } from "lucide-react";
 import sampleStill from "@/assets/studio-interview.webp";
 import { CaptionStudioDemo } from "@/components/caption-studio-demo";
 import { CaptionStyleGallery } from "@/components/caption-style-gallery";
-import { GuideCards } from "@/components/guide-cards";
 import { SiteHeader } from "@/components/site-header";
 import {
   Plans,
@@ -93,6 +96,13 @@ const exports = [
   },
 ];
 
+const proof = [
+  { value: "4", label: "Caption scripts, from Urdu to bilingual" },
+  { value: "SRT · VTT · MP4", label: "Exports for editors and socials" },
+  { value: "10 min", label: "Free to try, no card required" },
+  { value: "PKR", label: "Local pricing for Pakistani creators" },
+];
+
 const homeQuestions = [
   commonQuestions[0],
   commonQuestions[1],
@@ -108,6 +118,13 @@ export default function Home() {
       <main id="main" className="home-site" tabIndex={-1}>
         <section className="landing-hero" aria-labelledby="hero-title">
           <div className="public-container">
+            <p className="landing-eyebrow">
+              <span className="landing-eyebrow-dot" aria-hidden="true" />
+              Urdu caption studio for creators
+              <span className="landing-eyebrow-urdu" lang="ur" dir="rtl">
+                اردو
+              </span>
+            </p>
             <div className="landing-hero-intro">
               <h1 id="hero-title">
                 Urdu captions.
@@ -132,6 +149,14 @@ export default function Home() {
               </div>
             </div>
             <CaptionStudioDemo />
+            <ul className="landing-proof" role="list" aria-label="At a glance">
+              {proof.map(({ value, label }) => (
+                <li key={label}>
+                  <strong>{value}</strong>
+                  <span>{label}</span>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
 
@@ -143,6 +168,7 @@ export default function Home() {
         >
           <div className="public-container landing-style-layout">
             <div className="landing-section-heading">
+              <p className="landing-kicker">Caption styles</p>
               <h2 id="caption-styles-title">Make the words fit the frame</h2>
               <p>
                 See how a style reads over your footage. Preview clean,
@@ -158,6 +184,106 @@ export default function Home() {
         </section>
 
         <section
+          id="features"
+          className="landing-section landing-features"
+          aria-labelledby="features-title"
+          tabIndex={-1}
+        >
+          <div className="public-container">
+            <div className="landing-section-heading landing-heading-center">
+              <p className="landing-kicker">Why UrduSpeech</p>
+              <h2 id="features-title">Built for Urdu from the first word</h2>
+              <p>
+                Generic caption tools treat Urdu as an afterthought. UrduSpeech
+                is designed around Nastaliq, right-to-left reading and the way
+                Pakistani creators actually speak.
+              </p>
+            </div>
+            <ul className="bento" role="list">
+              <li className="bento-card bento-nastaliq">
+                <span className="bento-icon">
+                  <Languages size={20} aria-hidden="true" />
+                </span>
+                <h3>Real Nastaliq, not a fallback font</h3>
+                <p>
+                  Urdu captions render in proper Nastaliq with room for every
+                  stroke, so they read naturally on screen.
+                </p>
+                <p className="bento-urdu" lang="ur" dir="rtl">
+                  آپ کی آواز، آپ کے الفاظ
+                </p>
+              </li>
+              <li className="bento-card bento-outputs">
+                <span className="bento-icon">
+                  <Captions size={20} aria-hidden="true" />
+                </span>
+                <h3>Four outputs from one recording</h3>
+                <p>Choose the script that fits your audience.</p>
+                <ul className="bento-chips" role="list">
+                  <li lang="ur" dir="rtl">
+                    اردو
+                  </li>
+                  <li>Roman Urdu</li>
+                  <li>English</li>
+                  <li>Bilingual</li>
+                </ul>
+              </li>
+              <li className="bento-card bento-timing">
+                <span className="bento-icon">
+                  <Timer size={20} aria-hidden="true" />
+                </span>
+                <h3>Edit words and timing</h3>
+                <p>
+                  Fix names and numbers, then nudge each caption&rsquo;s start
+                  and end before you export.
+                </p>
+                <div className="bento-timeline" aria-hidden="true">
+                  <span style={{ inlineSize: "28%" }} />
+                  <span style={{ inlineSize: "18%" }} data-active="" />
+                  <span style={{ inlineSize: "34%" }} />
+                </div>
+              </li>
+              <li className="bento-card bento-dark bento-export">
+                <span className="bento-icon">
+                  <FileVideo size={20} aria-hidden="true" />
+                </span>
+                <h3>Captions burned into MP4</h3>
+                <p>
+                  Render a ready-to-post video in clean, highlighted or boxed
+                  styles, or take SRT and VTT to your editor.
+                </p>
+                <ul className="bento-formats" role="list">
+                  <li>TXT</li>
+                  <li>SRT</li>
+                  <li>VTT</li>
+                  <li>MP4</li>
+                </ul>
+              </li>
+              <li className="bento-card bento-private">
+                <span className="bento-icon">
+                  <ShieldCheck size={20} aria-hidden="true" />
+                </span>
+                <h3>Your media, on your terms</h3>
+                <p>
+                  Recordings expire with your plan&rsquo;s retention period, and
+                  you can delete a project or your account from Studio.
+                </p>
+              </li>
+              <li className="bento-card bento-local">
+                <span className="bento-icon">
+                  <Wallet size={20} aria-hidden="true" />
+                </span>
+                <h3>Priced in rupees</h3>
+                <p>
+                  Plans are billed in PKR. Start with 10 free minutes, no card
+                  required.
+                </p>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section
           id="workflow"
           className="landing-section landing-workflow"
           aria-labelledby="workflow-title"
@@ -165,6 +291,7 @@ export default function Home() {
         >
           <div className="public-container landing-workflow-layout">
             <div className="landing-section-heading">
+              <p className="landing-kicker">How it works</p>
               <h2 id="workflow-title">From recording to final cut</h2>
               <ol className="landing-steps" role="list">
                 {workflow.map(({ title, description }, index) => (
@@ -216,6 +343,7 @@ export default function Home() {
           <div className="public-container">
             <div className="landing-section-heading landing-heading-row">
               <div>
+                <p className="landing-kicker">Pricing</p>
                 <h2 id="pricing-title">Start with 10 free minutes</h2>
                 <p>
                   Compare plans by minutes, video quality and media retention.
@@ -230,26 +358,12 @@ export default function Home() {
         </section>
 
         <section
-          className="landing-section landing-guides"
-          aria-labelledby="creator-guides-title"
-        >
-          <div className="public-container">
-            <div className="landing-section-heading landing-heading-row">
-              <h2 id="creator-guides-title">Creator guides</h2>
-              <Link className="public-inline-link" href="/guides">
-                See all guides <ArrowRight size={17} aria-hidden="true" />
-              </Link>
-            </div>
-            <GuideCards />
-          </div>
-        </section>
-
-        <section
           className="landing-section landing-questions"
           aria-labelledby="home-questions"
         >
           <div className="public-container landing-questions-grid">
             <div className="landing-section-heading">
+              <p className="landing-kicker">FAQ</p>
               <h2 id="home-questions">Common questions</h2>
               <div className="landing-privacy">
                 <LockKeyhole size={23} aria-hidden="true" />
@@ -276,11 +390,30 @@ export default function Home() {
       <PublicFooter
         intro={
           <div className="landing-close">
+            <p
+              className="landing-close-urdu"
+              lang="ur"
+              dir="rtl"
+              aria-hidden="true"
+            >
+              آواز کو الفاظ دیں
+            </p>
             <div>
               <h2>Give your next video Urdu captions</h2>
               <p>
                 Start with a recording. Make the captions your own in Studio.
               </p>
+              <ul className="landing-close-ticks" role="list">
+                <li>
+                  <Check size={15} aria-hidden="true" /> 10 free minutes
+                </li>
+                <li>
+                  <Check size={15} aria-hidden="true" /> No card required
+                </li>
+                <li>
+                  <Check size={15} aria-hidden="true" /> Edit before you publish
+                </li>
+              </ul>
             </div>
             <StartFree />
           </div>
