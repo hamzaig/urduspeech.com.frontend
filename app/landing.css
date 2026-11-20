@@ -31,15 +31,32 @@
 }
 
 .landing-hero-copy {
+  position: relative;
+  isolation: isolate;
   display: grid;
   justify-items: start;
   gap: 15px;
 }
 
+.landing-hero-copy::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -48px -56px;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--site-cream) 72%, transparent) 0%,
+    color-mix(in srgb, var(--site-cream) 38%, transparent) 58%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
 .landing-hero-copy p {
   max-width: 39ch;
   font-size: clamp(1rem, 1.45vw, 1.18rem);
-  color: var(--muted);
+  line-height: 1.58;
+  color: color-mix(in srgb, var(--ink) 86%, var(--muted));
 }
 
 .landing-hero-actions {
@@ -56,7 +73,9 @@
 }
 
 .landing-hero-actions .secondary {
-  background: transparent;
+  background: color-mix(in srgb, var(--surface) 84%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .landing-hero-actions .secondary:hover {
@@ -67,6 +86,8 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
+  color: color-mix(in srgb, var(--ink) 72%, var(--muted));
+  font-weight: 520;
 }
 
 .landing-hero-copy small svg {
@@ -460,12 +481,12 @@
 
 .hero-watermark {
   position: absolute;
-  top: clamp(-36px, -2vw, 0px);
-  right: clamp(20px, 5vw, 108px);
+  top: clamp(-46px, -2.5vw, -8px);
+  right: clamp(14px, 4vw, 84px);
   color: var(--accent);
-  opacity: 0.05;
+  opacity: 0.038;
   font-family: CaptionUrdu, serif;
-  font-size: clamp(6rem, 13.5vw, 12.5rem);
+  font-size: clamp(5.8rem, 12.5vw, 11.5rem);
   line-height: 1.75;
   white-space: nowrap;
 }
@@ -476,17 +497,17 @@
   inset-inline: 0;
   width: 100%;
   height: clamp(340px, 46vw, 620px);
-  opacity: 0.72;
+  opacity: 0.56;
   mask-image: linear-gradient(
     180deg,
     rgb(0 0 0 / 0.92) 0%,
-    rgb(0 0 0 / 0.7) 58%,
+    rgb(0 0 0 / 0.65) 54%,
     transparent 100%
   );
   -webkit-mask-image: linear-gradient(
     180deg,
     rgb(0 0 0 / 0.92) 0%,
-    rgb(0 0 0 / 0.7) 58%,
+    rgb(0 0 0 / 0.65) 54%,
     transparent 100%
   );
 }

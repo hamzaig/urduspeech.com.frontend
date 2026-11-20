@@ -91,47 +91,47 @@ export function HeroBackdrop() {
           <circle cx="1270" cy="48" r="555" strokeWidth="0.9" />
         </g>
 
-        {/* Soft luminous ribbon fill beneath the primary voice contour */}
+        {/* Soft luminous ribbon fill along the upper acoustic horizon */}
         <path
           className="hero-ribbon-area"
-          d="M-40 238 C 190 120, 380 315, 650 205 C 900 105, 1110 290, 1480 148 L 1480 410 L -40 410 Z"
+          d="M-40 164 C 210 56, 440 185, 720 112 C 980 42, 1180 148, 1480 86 L 1480 340 L -40 340 Z"
           fill="url(#us-ribbon-fill)"
         />
 
-        {/* Woven harmonic voice-wave calligraphic curves */}
+        {/* Woven harmonic voice-wave calligraphic curves framing the open sky */}
         <g className="hero-wave-group hero-wave-slow">
           <path
-            d="M-60 250 C 175 110, 365 330, 645 208 C 905 94, 1115 304, 1500 138"
+            d="M-60 174 C 195 54, 420 195, 710 114 C 965 44, 1175 162, 1500 78"
             stroke="url(#us-wave-main)"
-            strokeWidth="1.65"
+            strokeWidth="1.5"
           />
           <path
-            d="M-60 272 C 185 144, 382 346, 660 226 C 920 116, 1125 316, 1500 162"
+            d="M-60 198 C 205 84, 435 212, 725 134 C 980 68, 1190 180, 1500 104"
             stroke="url(#us-wave-soft)"
-            strokeWidth="1.15"
+            strokeWidth="1.05"
           />
           <path
-            d="M-60 228 C 170 90, 355 302, 635 186 C 895 76, 1100 282, 1500 116"
+            d="M-60 150 C 185 36, 405 170, 695 92 C 950 24, 1160 140, 1500 58"
             stroke="url(#us-wave-soft)"
-            strokeWidth="1.1"
+            strokeWidth="1"
           />
         </g>
 
         <g className="hero-wave-group hero-wave-drift">
           <path
-            d="M-60 198 C 210 296, 445 96, 735 224 C 985 334, 1190 124, 1500 218"
+            d="M-60 128 C 235 198, 490 54, 785 136 C 1035 206, 1230 68, 1500 132"
             stroke="url(#us-wave-soft)"
-            strokeWidth="1.1"
+            strokeWidth="1"
           />
           <path
-            d="M-60 298 C 230 185, 460 364, 750 248 C 1010 145, 1210 330, 1500 194"
+            d="M-60 326 C 245 256, 510 382, 810 318 C 1065 264, 1245 362, 1500 296"
             stroke="url(#us-wave-soft)"
             strokeWidth="0.95"
           />
           <path
-            d="M-60 164 C 245 248, 495 74, 795 190 C 1055 292, 1240 100, 1500 176"
+            d="M-60 98 C 260 162, 515 36, 825 110 C 1085 172, 1265 44, 1500 102"
             stroke="url(#us-wave-soft)"
-            strokeWidth="0.85"
+            strokeWidth="0.8"
             strokeDasharray="2 7"
           />
         </g>
@@ -142,32 +142,32 @@ export function HeroBackdrop() {
           stroke="var(--hero-wave-a)"
           strokeLinecap="round"
         >
-          <line x1="628" y1="68" x2="628" y2="82" strokeWidth="2" />
-          <line x1="638" y1="60" x2="638" y2="90" strokeWidth="2" />
-          <line x1="648" y1="50" x2="648" y2="100" strokeWidth="2" />
-          <line x1="658" y1="63" x2="658" y2="87" strokeWidth="2" />
-          <line x1="668" y1="54" x2="668" y2="96" strokeWidth="2" />
-          <line x1="678" y1="44" x2="678" y2="106" strokeWidth="2" />
-          <line x1="688" y1="58" x2="688" y2="92" strokeWidth="2" />
-          <line x1="698" y1="64" x2="698" y2="86" strokeWidth="2" />
-          <line x1="708" y1="53" x2="708" y2="97" strokeWidth="2" />
-          <line x1="718" y1="66" x2="718" y2="84" strokeWidth="2" />
-          <line x1="728" y1="71" x2="728" y2="79" strokeWidth="2" />
+          <line x1="628" y1="62" x2="628" y2="76" strokeWidth="2" />
+          <line x1="638" y1="54" x2="638" y2="84" strokeWidth="2" />
+          <line x1="648" y1="44" x2="648" y2="94" strokeWidth="2" />
+          <line x1="658" y1="57" x2="658" y2="81" strokeWidth="2" />
+          <line x1="668" y1="48" x2="668" y2="90" strokeWidth="2" />
+          <line x1="678" y1="38" x2="678" y2="100" strokeWidth="2" />
+          <line x1="688" y1="52" x2="688" y2="86" strokeWidth="2" />
+          <line x1="698" y1="58" x2="698" y2="80" strokeWidth="2" />
+          <line x1="708" y1="47" x2="708" y2="91" strokeWidth="2" />
+          <line x1="718" y1="60" x2="718" y2="78" strokeWidth="2" />
+          <line x1="728" y1="65" x2="728" y2="73" strokeWidth="2" />
         </g>
 
-        {/* Caption-timing cue nodes pinned along the spoken voice curve */}
+        {/* Caption-timing cue nodes pinned along the upper voice curve */}
         <g className="hero-nodes">
-          <circle cx="286" cy="215" r="11" className="hero-node-halo" />
-          <circle cx="286" cy="215" r="3.2" className="hero-node-core" />
+          <circle cx="332" cy="126" r="10" className="hero-node-halo" />
+          <circle cx="332" cy="126" r="3" className="hero-node-core" />
 
-          <circle cx="645" cy="208" r="14" className="hero-node-halo" />
-          <circle cx="645" cy="208" r="3.8" className="hero-node-core" />
+          <circle cx="710" cy="114" r="13" className="hero-node-halo" />
+          <circle cx="710" cy="114" r="3.5" className="hero-node-core" />
 
-          <circle cx="988" cy="186" r="11" className="hero-node-halo" />
-          <circle cx="988" cy="186" r="3.2" className="hero-node-core" />
+          <circle cx="1040" cy="96" r="10" className="hero-node-halo" />
+          <circle cx="1040" cy="96" r="3" className="hero-node-core" />
 
-          <circle cx="1270" cy="198" r="9" className="hero-node-halo" />
-          <circle cx="1270" cy="198" r="2.8" className="hero-node-core" />
+          <circle cx="1310" cy="116" r="9" className="hero-node-halo" />
+          <circle cx="1310" cy="116" r="2.6" className="hero-node-core" />
         </g>
 
         {/* Whisper-soft starlight specks shown in after-sunset Dark Mode */}

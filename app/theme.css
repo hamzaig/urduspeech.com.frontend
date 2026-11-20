@@ -167,11 +167,29 @@ html[data-theme="dark"] .hero-orb-secondary {
 
 html[data-theme="dark"] .hero-watermark {
   color: var(--site-free);
-  opacity: 0.055;
+  opacity: 0.04;
 }
 
 html[data-theme="dark"] .hero-waves-svg {
-  opacity: 0.85;
+  opacity: 0.64;
+}
+
+html[data-theme="dark"] .landing-hero-copy p {
+  color: #dce8de;
+}
+
+html[data-theme="dark"] .landing-hero-copy small {
+  color: #c2d4c5;
+}
+
+html[data-theme="dark"] .landing-hero-actions .secondary {
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  border-color: var(--control);
+}
+
+html[data-theme="dark"] .landing-hero-actions .secondary:hover {
+  background: var(--site-sage);
+  border-color: var(--accent);
 }
 
 html[data-theme="dark"] .hero-node-core {
