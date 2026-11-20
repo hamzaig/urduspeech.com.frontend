@@ -11,6 +11,7 @@
   --muted: #4c5d52;
   --accent: #204d36;
   --accent-hover: #153b2a;
+  --on-accent: #ffffff;
   --wash: #e8eee1;
   --paper: #f2f3eb;
   --line: #d5ddd0;
@@ -122,7 +123,7 @@ button,
   border: 1px solid transparent;
   border-radius: 9px;
   background: var(--accent);
-  color: white;
+  color: var(--on-accent);
   cursor: pointer;
   font-size: 14px;
   font-weight: 680;
@@ -230,7 +231,7 @@ button.danger:hover {
   height: 35px;
   display: grid;
   place-items: center;
-  color: white;
+  color: var(--on-accent);
   background: var(--accent);
   border-radius: 10px;
 }
@@ -832,7 +833,7 @@ button.danger:hover {
 
 .toggle-row input:checked::after {
   inset-inline-start: 19px;
-  background: white;
+  background: var(--on-accent);
 }
 
 .toggle-row input:disabled {

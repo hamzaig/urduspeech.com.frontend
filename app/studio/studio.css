@@ -39,6 +39,9 @@
 }
 
 .workspace-account {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   min-width: 62px;
   justify-self: end;
   white-space: nowrap;

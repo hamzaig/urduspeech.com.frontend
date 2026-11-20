@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { Brand } from "@/components/brand";
 import { StartFree } from "@/components/marketing";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 const pages = [
   { href: "/video-captions", label: "Video captions" },
@@ -75,6 +76,7 @@ export function SiteHeader() {
           >
             Sign in
           </Link>
+          <ThemeToggle />
           <StartFree />
           <button
             className="site-menu-toggle"
