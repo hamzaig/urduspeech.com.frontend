@@ -6,6 +6,7 @@ import "./editor.css";
 import "./public.css";
 import "./site.css";
 import "./home.css";
+import "./premium.css";
 export const metadata: Metadata = {
   title: {
     default: "UrduSpeech — Creator studio",

@@ -1,0 +1,147 @@
+/* Premium polish layer: shared by the public site. Loaded after site.css. */
+
+:root {
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --shadow-soft:
+    0 1px 2px rgb(17 37 26 / 0.05), 0 8px 24px -12px rgb(17 37 26 / 0.18);
+  --shadow-lift:
+    0 2px 4px rgb(17 37 26 / 0.06), 0 18px 40px -18px rgb(17 37 26 / 0.32);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Buttons: smooth state changes and a gentle lift on hover */
+button,
+.button {
+  transition:
+    background-color 180ms var(--ease-out),
+    border-color 180ms var(--ease-out),
+    color 180ms var(--ease-out),
+    box-shadow 220ms var(--ease-out),
+    transform 220ms var(--ease-out);
+}
+
+.button:not(.secondary):hover {
+  box-shadow: var(--shadow-lift);
+  transform: translateY(-1px);
+}
+
+.button:active,
+button:active {
+  transform: translateY(0) scale(0.985);
+}
+
+.button svg {
+  transition: transform 220ms var(--ease-out);
+}
+
+.button:hover svg {
+  transform: translateX(2px);
+}
+
+/* Header: translucent glass bar */
+.site-header {
+  background: color-mix(in srgb, var(--canvas) 94%, transparent);
+  backdrop-filter: saturate(1.4) blur(14px);
+  -webkit-backdrop-filter: saturate(1.4) blur(14px);
+  border-bottom-color: color-mix(in srgb, var(--line) 75%, transparent);
+}
+
+@media (min-width: 681px) {
+  .site-navigation a {
+    padding-inline: 12px;
+    margin-inline: -12px;
+    border-radius: 999px;
+    transition:
+      background-color 160ms var(--ease-out),
+      color 160ms var(--ease-out);
+  }
+
+  .site-navigation a:hover {
+    background: var(--site-sage);
+    text-decoration: none;
+  }
+}
+
+/* Inline links: animate the arrow */
+.public-inline-link svg {
+  transition: transform 200ms var(--ease-out);
+}
+
+.public-inline-link:hover svg {
+  transform: translateX(3px);
+}
+
+/* Pricing: recommended plan */
+.public-pricing {
+  box-shadow: var(--shadow-soft);
+}
+
+.plan-name {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+}
+
+.plan-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.public-pricing li {
+  position: relative;
+}
+
+.public-pricing li[data-recommended] {
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--site-free) 42%, var(--surface)) 0%,
+    var(--surface) 62%
+  );
+}
+
+.public-pricing li[data-recommended]::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 3px;
+  background: var(--accent);
+}
+
+/* Question list: smoother disclosure affordance */
+.question-list summary svg {
+  transition: transform 220ms var(--ease-out);
+}
+
+.question-list details[open] summary svg {
+  transform: rotate(45deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .button:hover,
+  .button:hover svg {
+    transform: none;
+  }
+}
