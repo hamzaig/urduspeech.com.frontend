@@ -1,7 +1,7 @@
 .sample {
   border: 1px solid var(--line);
   border-radius: 16px;
-  background: #fff;
+  background: var(--surface);
   scroll-margin-top: 17px;
 }
 
@@ -62,7 +62,7 @@
 
 .sample-options input:checked + span {
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .sample-options input:focus-visible + span {

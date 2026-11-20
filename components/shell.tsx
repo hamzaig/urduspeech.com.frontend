@@ -12,6 +12,7 @@ import {
 import { useEffect, useState } from "react";
 import { api, mutation, explain, ApiError } from "@/lib/api";
 import { Brand } from "@/components/brand";
+import { ThemeToggle } from "@/components/theme-toggle";
 import type { Session } from "@/lib/contracts";
 const links = [
   { href: "/studio", label: "My projects", icon: FolderOpen },
@@ -102,6 +103,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
             )}
           </nav>
           <div className="workspace-account">
+            <ThemeToggle />
             {session ? (
               <button
                 className="text-button"

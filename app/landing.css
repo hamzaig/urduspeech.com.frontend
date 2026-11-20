@@ -462,7 +462,7 @@
   padding: 0 10px 3px;
   border-radius: 999px;
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
   font-family: CaptionUrdu, serif;
   font-size: 13px;
   line-height: 1.9;
@@ -664,7 +664,7 @@
 .bento-chips li:last-child {
   border-color: var(--accent);
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .bento-chips li[lang="ur"] {

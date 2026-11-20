@@ -241,7 +241,7 @@
 .caption-studio-controls input:checked + span {
   border-color: var(--accent);
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 
 .caption-studio-controls input:focus-visible + span {
