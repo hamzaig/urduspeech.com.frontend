@@ -16,6 +16,7 @@ import {
 import sampleStill from "@/assets/studio-interview.webp";
 import { CaptionStudioDemo } from "@/components/caption-studio-demo";
 import { CaptionStyleGallery } from "@/components/caption-style-gallery";
+import { HeroBackdrop } from "@/components/hero-backdrop";
 import { SiteHeader } from "@/components/site-header";
 import {
   Plans,
@@ -117,6 +118,7 @@ export default function Home() {
       <SiteHeader />
       <main id="main" className="home-site" tabIndex={-1}>
         <section className="landing-hero" aria-labelledby="hero-title">
+          <HeroBackdrop />
           <div className="public-container">
             <p className="landing-eyebrow">
               <span className="landing-eyebrow-dot" aria-hidden="true" />

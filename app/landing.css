@@ -407,31 +407,148 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  background:
-    radial-gradient(60% 55% at 85% 0%, #deebaa66 0%, transparent 70%),
-    radial-gradient(45% 50% at 0% 30%, #cfe0c855 0%, transparent 70%),
-    var(--site-cream);
+  --hero-wave-a: #204d36;
+  --hero-wave-b: #9a7b32;
+  --hero-ribbon: #b7cca8;
+  --hero-arc: #204d36;
+  background: var(--site-cream);
 }
 
-.landing-hero::before {
-  content: "";
+.hero-backdrop {
   position: absolute;
   inset: 0;
   z-index: -1;
-  background-image:
-    linear-gradient(#17282010 1px, transparent 1px),
-    linear-gradient(90deg, #17282010 1px, transparent 1px);
-  background-size: 56px 56px;
-  mask-image: radial-gradient(
-    ellipse 70% 60% at 50% 0%,
-    #000 20%,
-    transparent 75%
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+}
+
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(56px);
+  will-change: transform;
+}
+
+.hero-orb-primary {
+  inset-block-start: -150px;
+  inset-inline-end: -80px;
+  width: min(62vw, 760px);
+  height: min(44vw, 500px);
+  background: radial-gradient(
+    ellipse at center,
+    #e5dfa8a8 0%,
+    #d6e6be70 46%,
+    transparent 74%
   );
-  -webkit-mask-image: radial-gradient(
-    ellipse 70% 60% at 50% 0%,
-    #000 20%,
-    transparent 75%
+  animation: hero-orb-drift 16s ease-in-out infinite alternate;
+}
+
+.hero-orb-secondary {
+  inset-block-start: 60px;
+  inset-inline-start: -160px;
+  width: min(50vw, 620px);
+  height: min(40vw, 440px);
+  background: radial-gradient(
+    ellipse at center,
+    #c6dec07a 0%,
+    #e2e9c742 52%,
+    transparent 74%
   );
+  animation: hero-orb-drift 20s ease-in-out infinite alternate-reverse;
+}
+
+.hero-watermark {
+  position: absolute;
+  top: clamp(-36px, -2vw, 0px);
+  right: clamp(20px, 5vw, 108px);
+  color: var(--accent);
+  opacity: 0.05;
+  font-family: CaptionUrdu, serif;
+  font-size: clamp(6rem, 13.5vw, 12.5rem);
+  line-height: 1.75;
+  white-space: nowrap;
+}
+
+.hero-waves-svg {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline: 0;
+  width: 100%;
+  height: clamp(340px, 46vw, 620px);
+  opacity: 0.72;
+  mask-image: linear-gradient(
+    180deg,
+    rgb(0 0 0 / 0.92) 0%,
+    rgb(0 0 0 / 0.7) 58%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    180deg,
+    rgb(0 0 0 / 0.92) 0%,
+    rgb(0 0 0 / 0.7) 58%,
+    transparent 100%
+  );
+}
+
+.hero-arcs {
+  opacity: 0.42;
+}
+
+.hero-wave-slow {
+  animation: hero-wave-breathe 13s ease-in-out infinite alternate;
+  transform-origin: center;
+}
+
+.hero-wave-drift {
+  animation: hero-wave-breathe 17s ease-in-out infinite alternate-reverse;
+  transform-origin: center;
+}
+
+.hero-spectrum {
+  opacity: 0.22;
+}
+
+.hero-node-halo {
+  fill: var(--hero-wave-b);
+  opacity: 0.14;
+}
+
+.hero-node-core {
+  fill: var(--hero-wave-a);
+  opacity: 0.6;
+}
+
+.hero-stars {
+  opacity: 0;
+  transition: opacity 400ms var(--ease-out);
+}
+
+@keyframes hero-orb-drift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  to {
+    transform: translate3d(-24px, 18px, 0) scale(1.06);
+  }
+}
+
+@keyframes hero-wave-breathe {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 8px, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-orb-primary,
+  .hero-orb-secondary,
+  .hero-wave-slow,
+  .hero-wave-drift {
+    animation: none;
+  }
 }
 
 .landing-eyebrow {
