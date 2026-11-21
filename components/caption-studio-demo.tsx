@@ -15,7 +15,9 @@ import {
 import sampleStill from "@/assets/studio-interview.webp";
 import {
   captionCues,
+  captionLanguageMeta,
   captionModes,
+  captionOutputLanguages,
   captionTime,
   sampleCaptionStyles,
   sampleExport,
@@ -24,13 +26,6 @@ import {
 } from "@/lib/caption-demo";
 import "./caption-studio-demo.css";
 
-const languages = {
-  urdu: { label: "Urdu", lang: "ur", dir: "rtl" },
-  romanUrdu: { label: "Roman Urdu", lang: "ur-Latn", dir: "ltr" },
-  english: { label: "English", lang: "en", dir: "ltr" },
-} as const;
-
-const bilingualLanguages = ["urdu", "english"] as const;
 const formats = ["srt", "vtt", "txt"] as const;
 type CueEdits = Partial<
   Record<number, Partial<Record<CaptionLanguage, string>>>
@@ -49,7 +44,7 @@ export function CaptionStudioDemo({
   const id = useId();
   const cue = captionCues[selected];
   const style = sampleCaptionStyles[styleIndex];
-  const activeLanguages = mode === "bilingual" ? bilingualLanguages : [mode];
+  const activeLanguages = captionOutputLanguages(mode);
   const visibleFormats = editable ? formats : (["srt"] as const);
 
   function line(index: number, language: CaptionLanguage) {
@@ -108,7 +103,6 @@ export function CaptionStudioDemo({
           <span className="caption-studio-frame-label">Sample frame</span>
           <div
             className="caption-studio-subtitles"
-            aria-live={editable ? undefined : "polite"}
             style={{ color: style.color }}
           >
             {activeLanguages.map((language) => {
@@ -116,8 +110,8 @@ export function CaptionStudioDemo({
               return text.trim() ? (
                 <span
                   key={language}
-                  lang={languages[language].lang}
-                  dir={languages[language].dir}
+                  lang={captionLanguageMeta[language].lang}
+                  dir={captionLanguageMeta[language].dir}
                   data-box={style.box || undefined}
                 >
                   {text}
@@ -183,12 +177,12 @@ export function CaptionStudioDemo({
               <legend>Edit cue {selected + 1}</legend>
               {activeLanguages.map((language) => (
                 <label key={language}>
-                  <span>{languages[language].label}</span>
+                  <span>{captionLanguageMeta[language].label}</span>
                   <input
                     type="text"
                     maxLength={120}
-                    lang={languages[language].lang}
-                    dir={languages[language].dir}
+                    lang={captionLanguageMeta[language].lang}
+                    dir={captionLanguageMeta[language].dir}
                     value={line(selected, language)}
                     onChange={(event) => {
                       const value = event.target.value;
@@ -329,16 +323,16 @@ export function CaptionStudioDemo({
             </div>
             <div
               className="caption-transcript-lines"
-              aria-live="polite"
-              aria-atomic="true"
+              aria-live={editable ? undefined : "polite"}
+              aria-atomic={editable ? undefined : "true"}
             >
               {activeLanguages.map((language) => {
                 const text = line(selected, language);
                 return text.trim() ? (
                   <span
                     key={language}
-                    lang={languages[language].lang}
-                    dir={languages[language].dir}
+                    lang={captionLanguageMeta[language].lang}
+                    dir={captionLanguageMeta[language].dir}
                   >
                     {text}
                   </span>

@@ -4,7 +4,9 @@ import { useState } from "react";
 import { Captions, ChevronRight, Copy, Check } from "lucide-react";
 import {
   captionCues,
+  captionLanguageMeta,
   captionModes,
+  captionOutputLanguages,
   captionText,
   captionTime,
   type CaptionMode,
@@ -96,16 +98,15 @@ export function PublicCaptionPreview() {
             </button>
           </div>
           <div className="sample-lines" aria-live="polite" aria-atomic="true">
-            {(output === "urdu" || output === "bilingual") && (
-              <span lang="ur" dir="rtl">
-                {line.urdu}
+            {captionOutputLanguages(output).map((language) => (
+              <span
+                key={language}
+                lang={captionLanguageMeta[language].lang}
+                dir={captionLanguageMeta[language].dir}
+              >
+                {line[language]}
               </span>
-            )}
-            {output !== "urdu" && (
-              <span>
-                {output === "bilingual" ? line.english : line[output]}
-              </span>
-            )}
+            ))}
           </div>
           <p className="sample-copy-status" role="status">
             {copyStatus}

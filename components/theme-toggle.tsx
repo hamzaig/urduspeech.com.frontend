@@ -11,6 +11,7 @@ import {
   Sunset,
 } from "lucide-react";
 import type { DaylightInfo, ThemeMode } from "@/lib/daylight";
+import { nextRadioIndex } from "@/lib/public-a11y";
 import { useTheme } from "@/components/theme-provider";
 
 const MODES: {
@@ -90,6 +91,12 @@ export function ThemeToggle() {
   useEffect(() => {
     if (!open) return;
 
+    const checked =
+      menuRef.current?.querySelector<HTMLButtonElement>(
+        '[role="radio"][aria-checked="true"]',
+      ) ?? menuRef.current?.querySelector<HTMLButtonElement>('[role="radio"]');
+    checked?.focus();
+
     function handlePointerDown(event: PointerEvent) {
       if (!rootRef.current?.contains(event.target as Node)) {
         setOpen(false);
@@ -135,20 +142,24 @@ export function ThemeToggle() {
       ? `Theme: Auto (${resolvedTheme === "dark" ? "Dark, after sunset" : "Light, daytime"}). Change theme`
       : `Theme: ${mode === "dark" ? "Dark" : "Light"}. Change theme`;
 
+  const activeIndex = Math.max(
+    0,
+    MODES.findIndex(({ id }) => id === mode),
+  );
+
   function handleOptionKeyDown(
     event: React.KeyboardEvent<HTMLButtonElement>,
     index: number,
   ) {
-    if (event.key !== "ArrowDown" && event.key !== "ArrowUp") return;
+    const nextIndex = nextRadioIndex(event.key, index, MODES.length);
+    if (nextIndex === null) return;
     event.preventDefault();
+    const nextMode = MODES[nextIndex];
+    if (!nextMode) return;
+    setMode(nextMode.id);
     const buttons =
       menuRef.current?.querySelectorAll<HTMLButtonElement>('[role="radio"]');
-    if (!buttons || buttons.length === 0) return;
-    const nextIndex =
-      event.key === "ArrowDown"
-        ? (index + 1) % buttons.length
-        : (index - 1 + buttons.length) % buttons.length;
-    buttons[nextIndex]?.focus();
+    buttons?.[nextIndex]?.focus();
   }
 
   return (
@@ -203,10 +214,12 @@ export function ThemeToggle() {
               <div className="theme-sun-times">
                 <span>
                   <Sunrise size={13} aria-hidden="true" />
+                  <span className="sr-only">Sunrise </span>
                   {sunriseText}
                 </span>
                 <span>
                   <Sunset size={13} aria-hidden="true" />
+                  <span className="sr-only">Sunset </span>
                   {sunsetText}
                 </span>
               </div>
@@ -230,6 +243,7 @@ export function ThemeToggle() {
                   type="button"
                   role="radio"
                   aria-checked={selected}
+                  tabIndex={index === activeIndex ? 0 : -1}
                   className="theme-option"
                   onClick={() => {
                     setMode(id);

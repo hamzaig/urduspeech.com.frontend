@@ -35,7 +35,7 @@ html[data-theme="dark"] {
   --paper: #17271f;
   --wash: #1b3125;
   --line: #263d30;
-  --control: #4e6d5b;
+  --control: #698473;
   --ink: #f1f6ee;
   --muted: #a6baa9;
   --accent: #cbe498;
@@ -364,6 +364,10 @@ html[data-theme="dark"] .theme-auto-dot {
   inset-inline-end: 0;
   width: 280px;
   max-width: calc(100vw - 24px);
+  max-block-size: calc(100vh - var(--site-nav-height) - 20px);
+  max-block-size: calc(100dvh - var(--site-nav-height) - 20px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 10px;
   border: 1px solid var(--line);
   border-radius: 16px;
@@ -446,7 +450,7 @@ html[data-theme="dark"] .theme-sun-card[data-day="true"] .theme-sun-badge svg {
   font-variant-numeric: tabular-nums;
 }
 
-.theme-sun-times span {
+.theme-sun-times > span {
   display: inline-flex;
   align-items: center;
   gap: 5px;

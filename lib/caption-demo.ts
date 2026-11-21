@@ -8,6 +8,20 @@ export const captionModes = [
 export type CaptionMode = (typeof captionModes)[number]["id"];
 export type CaptionLanguage = Exclude<CaptionMode, "bilingual">;
 
+export const captionLanguageMeta = {
+  urdu: { label: "Urdu", lang: "ur", dir: "rtl" },
+  romanUrdu: { label: "Roman Urdu", lang: "ur-Latn", dir: "ltr" },
+  english: { label: "English", lang: "en", dir: "ltr" },
+} as const;
+
+const bilingualLanguages: readonly CaptionLanguage[] = ["urdu", "english"];
+
+export function captionOutputLanguages(
+  mode: CaptionMode,
+): readonly CaptionLanguage[] {
+  return mode === "bilingual" ? bilingualLanguages : [mode];
+}
+
 export const sampleCaptionStyles = [
   {
     name: "Clean",

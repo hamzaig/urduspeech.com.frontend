@@ -54,12 +54,14 @@ export default function Auth({
   if (!config)
     return (
       <PublicPage mainClassName="account-page">
-        <section className="account-panel">
-          <h1>Page not found</h1>
-          <Link className="button" href="/auth/sign-in">
-            Sign in
-          </Link>
-        </section>
+        <div className="public-container account-compact">
+          <section className="account-panel">
+            <h1>Page not found</h1>
+            <Link className="button" href="/auth/sign-in">
+              Sign in
+            </Link>
+          </section>
+        </div>
       </PublicPage>
     );
   async function submit(e: React.FormEvent<HTMLFormElement>) {
