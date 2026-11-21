@@ -7,6 +7,7 @@ import { Menu, X } from "lucide-react";
 import { Brand } from "@/components/brand";
 import { StartFree } from "@/components/marketing";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { getNavCurrent } from "@/lib/public-a11y";
 
 const pages = [
   { href: "/video-captions", label: "Video captions" },
@@ -45,28 +46,34 @@ export function SiteHeader() {
           data-open={open}
           ref={navigation}
         >
-          {pages.map(({ href, label }) => (
-            <Link
-              key={href}
-              href={href}
-              onClick={() => setOpen(false)}
-              aria-current={pathname === href ? "page" : undefined}
-              className={
-                pathname?.startsWith(href + "/")
-                  ? "site-nav-section"
-                  : undefined
-              }
-            >
-              {label}
-            </Link>
-          ))}
+          {pages.map(({ href, label }) => {
+            const current = getNavCurrent(pathname, href);
+            return (
+              <Link
+                key={href}
+                href={href}
+                onClick={() => setOpen(false)}
+                aria-current={current}
+                className={
+                  current === "location" ? "site-nav-section" : undefined
+                }
+              >
+                {label}
+              </Link>
+            );
+          })}
           <Link
             href="/auth/sign-in"
             className="site-mobile-sign-in"
+            aria-current={pathname === "/auth/sign-in" ? "page" : undefined}
             onClick={() => setOpen(false)}
           >
             Sign in
           </Link>
+          <StartFree
+            className="site-mobile-start-free"
+            onClick={() => setOpen(false)}
+          />
         </nav>
         <div className="site-header-actions">
           <Link
@@ -77,7 +84,7 @@ export function SiteHeader() {
             Sign in
           </Link>
           <ThemeToggle />
-          <StartFree />
+          <StartFree className="site-header-start-free" />
           <button
             className="site-menu-toggle"
             type="button"

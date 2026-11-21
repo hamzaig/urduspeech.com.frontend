@@ -60,13 +60,15 @@
   white-space: nowrap;
 }
 
-.site-header :is(a[aria-current="page"], .site-nav-section) {
+.site-header
+  :is(a[aria-current="page"], a[aria-current="location"], .site-nav-section) {
   text-decoration: underline;
   text-underline-offset: 5px;
   text-decoration-color: var(--accent);
 }
 
 .site-header .site-mobile-sign-in,
+.site-header .site-mobile-start-free,
 .site-menu-toggle {
   display: none;
 }
@@ -79,6 +81,8 @@
 
 .site-header .button {
   border-radius: 999px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
 .landing-footer .button:hover {
@@ -444,6 +448,22 @@
   color: var(--site-on-dark);
 }
 
+@media (min-width: 961px) and (max-width: 1180px) {
+  .site-header-inner {
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    gap: 16px;
+  }
+
+  .site-navigation {
+    justify-content: center;
+    gap: clamp(12px, 1.5vw, 22px);
+  }
+
+  .site-header-actions {
+    gap: 12px;
+  }
+}
+
 @media (max-width: 960px) {
   :root {
     --site-nav-height: 62px;
@@ -469,6 +489,10 @@
     inset: 100% 0 auto;
     display: grid;
     gap: 2px;
+    max-block-size: calc(100vh - var(--site-nav-height));
+    max-block-size: calc(100dvh - var(--site-nav-height));
+    overflow-y: auto;
+    overscroll-behavior: contain;
     padding: 10px 20px 16px;
     border-bottom: 1px solid var(--line);
     background: var(--canvas);
@@ -559,7 +583,7 @@
     height: 29px;
   }
 
-  .site-header .button svg {
+  .site-header .site-header-start-free svg {
     display: none;
   }
 
@@ -573,6 +597,32 @@
 
   .guide-link-row {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 420px) {
+  .site-header-inner {
+    gap: 8px;
+  }
+
+  .site-header .site-header-start-free {
+    display: none;
+  }
+
+  .site-header .site-mobile-start-free {
+    display: inline-flex;
+    justify-content: center;
+    margin-block-start: 8px;
+    padding-inline: 18px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .site-header .site-mobile-start-free:hover {
+    background: var(--accent-hover);
+    color: var(--on-accent);
+    text-decoration: none;
   }
 }
 
@@ -917,6 +967,7 @@
 
 .product-hero .sample-toolbar {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 10px;
 }
 

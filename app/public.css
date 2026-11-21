@@ -224,6 +224,21 @@
   }
 }
 
+@media (max-width: 440px) {
+  .public-pricing {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .public-pricing li {
+    padding: 18px 16px;
+  }
+
+  .public-pricing li + li {
+    border-block-start: 1px solid var(--line);
+    border-inline-start: 0;
+  }
+}
+
 .marketing-page {
   padding-block: clamp(42px, 6vw, 86px);
 }

@@ -109,9 +109,19 @@ export const commonQuestions = [
   },
 ];
 
-export function StartFree() {
+export function StartFree({
+  className,
+  onClick,
+}: {
+  className?: string;
+  onClick?: () => void;
+} = {}) {
   return (
-    <Link className="button" href="/auth/register">
+    <Link
+      className={className ? `button ${className}` : "button"}
+      href="/auth/register"
+      onClick={onClick}
+    >
       Start free <ArrowRight size={17} aria-hidden="true" />
     </Link>
   );
