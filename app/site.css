@@ -1074,3 +1074,247 @@
   font-family: var(--display);
   font-size: clamp(1.3rem, 2.7vw, 1.75rem);
 }
+
+.free-note {
+  margin-block-start: 12px;
+  color: var(--muted);
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.free-note a {
+  font-weight: 640;
+  text-decoration: underline;
+}
+
+.product-points.two-col {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.guide-breadcrumbs {
+  margin-block-end: 18px;
+}
+
+.guide-breadcrumbs ol {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 13.5px;
+  color: var(--muted);
+}
+
+.guide-breadcrumbs li {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.guide-breadcrumbs li + li::before {
+  content: "/";
+  color: var(--muted);
+}
+
+.guide-breadcrumbs a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  font-weight: 640;
+}
+
+.guide-breadcrumbs .guide-back {
+  margin-bottom: 0;
+}
+
+.script-example-card {
+  display: grid;
+  gap: 14px;
+  min-width: 0;
+  padding: clamp(18px, 2.8vw, 28px);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--surface);
+  box-shadow: var(--shadow-soft);
+}
+
+.script-example-header {
+  display: grid;
+  gap: 6px;
+}
+
+.script-example-badge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: var(--site-sage);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.script-example-header h2 {
+  font-family: var(--display);
+  font-size: clamp(1.2rem, 2vw, 1.5rem);
+  line-height: 1.2;
+}
+
+.script-pair-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.script-pair-item {
+  display: grid;
+  gap: 6px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+}
+
+.script-pair-lines {
+  display: grid;
+  gap: 6px;
+}
+
+.script-line-urdu {
+  margin: 0;
+  color: var(--ink);
+  font:
+    400 clamp(1.28rem, 2.2vw, 1.65rem) / 2.08 CaptionUrdu,
+    serif;
+}
+
+.script-line-latin {
+  margin: 0;
+  color: var(--ink);
+  font-size: 15px;
+  font-weight: 620;
+  line-height: 1.5;
+}
+
+.script-example-footer {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13.5px;
+}
+
+.script-example-footer a {
+  font-weight: 640;
+  text-decoration: underline;
+}
+
+.pricing-scroll {
+  overflow-x: auto;
+  margin-block-start: 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+table.public-pricing,
+.comparison-table {
+  display: table;
+  width: 100%;
+  min-width: 520px;
+  border-collapse: collapse;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: 14px;
+  text-align: start;
+}
+
+table.public-pricing th,
+table.public-pricing td,
+.comparison-table th,
+.comparison-table td {
+  padding: 13px 16px;
+  vertical-align: top;
+  text-align: start;
+  border-block-start: 1px solid var(--line);
+  line-height: 1.5;
+}
+
+table.public-pricing thead th,
+.comparison-table thead th {
+  border-block-start: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+table.public-pricing tbody th,
+.comparison-table tbody th {
+  color: var(--ink);
+  font-weight: 680;
+  white-space: nowrap;
+}
+
+.comparison-table td [lang="ur"] {
+  font:
+    400 1.2rem / 2.05 CaptionUrdu,
+    serif;
+}
+
+.code-comparison {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-block: 18px;
+}
+
+.code-sample {
+  min-width: 0;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+}
+
+.code-sample h3 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.code-sample pre {
+  overflow-x: auto;
+  margin: 10px 0 0;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--surface);
+  color: var(--ink);
+  font:
+    13px / 1.75 ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+}
+
+.code-sample pre.urdu-pre,
+.code-sample pre [lang="ur"] {
+  display: block;
+  font:
+    400 1.2rem / 2.1 CaptionUrdu,
+    serif;
+}
+
+@media (max-width: 760px) {
+  .product-points.two-col,
+  .code-comparison {
+    grid-template-columns: 1fr;
+  }
+}

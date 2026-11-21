@@ -3,12 +3,14 @@ import Link from "next/link";
 import { Mail, ArrowRight } from "lucide-react";
 import { PublicPage } from "@/components/public-site";
 import { MarketingIntro } from "@/components/marketing";
+import { publicMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = publicMetadata({
   title: "Contact UrduSpeech",
   description:
     "Contact UrduSpeech about account, upload, export or payment issues.",
-};
+  path: "/contact",
+});
 
 export default function Contact() {
   return (

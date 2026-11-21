@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PolicyPage } from "@/components/public-site";
 import { publicDocuments } from "@/lib/public-documents";
+import { publicMetadata } from "@/lib/seo";
 
 type Params = { params: Promise<{ document: string }> };
 export const dynamicParams = false;
@@ -13,8 +14,13 @@ function getDocument(name: string) {
   return publicDocuments[name as keyof typeof publicDocuments];
 }
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
-  const document = getDocument((await params).document);
-  return { title: document.title, description: document.description };
+  const { document: name } = await params;
+  const document = getDocument(name);
+  return publicMetadata({
+    title: document.title,
+    description: document.description,
+    path: `/${name}`,
+  });
 }
 export default async function Document({ params }: Params) {
   const { document: name } = await params;

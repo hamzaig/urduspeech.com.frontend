@@ -1,11 +1,20 @@
 import Link from "next/link";
-import { ArrowUpRight, Captions, FileText, Languages } from "lucide-react";
+import {
+  ArrowUpRight,
+  Captions,
+  FileText,
+  FileVideo,
+  Languages,
+  Mic,
+} from "lucide-react";
 import { publicGuides, type PublicGuide } from "@/lib/public-guides";
 
 const guideIcons = {
   "make-urdu-video-captions": Captions,
   "urdu-roman-urdu-and-english": Languages,
   "subtitle-and-video-exports": FileText,
+  "voice-notes-to-text": Mic,
+  "urdu-subtitles-for-youtube": FileVideo,
 };
 
 export function GuideCards({

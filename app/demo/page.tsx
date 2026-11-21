@@ -4,13 +4,14 @@ import { ArrowRight } from "lucide-react";
 import { CaptionStudioDemo } from "@/components/caption-studio-demo";
 import { StartFree } from "@/components/marketing";
 import { PublicPage } from "@/components/public-site";
+import { publicMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = publicMetadata({
   title: "Try the Urdu caption editor",
   description:
     "Edit sample Urdu, Roman Urdu, English and bilingual captions in your browser. Preview a style and download your edits as SRT, VTT or TXT.",
-  alternates: { canonical: "https://urduspeech.com/demo" },
-};
+  path: "/demo",
+});
 
 export default function CaptionDemo() {
   return (
