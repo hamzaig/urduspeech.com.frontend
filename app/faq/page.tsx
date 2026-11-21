@@ -7,12 +7,14 @@ import {
   QuestionList,
   commonQuestions,
 } from "@/components/marketing";
+import { publicMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = publicMetadata({
   title: "Frequently asked questions",
   description:
     "Answers about UrduSpeech uploads, caption languages, file exports, minutes and retention.",
-};
+  path: "/faq",
+});
 
 export default function Faq() {
   return (

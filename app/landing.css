@@ -799,6 +799,10 @@
   font-weight: 640;
 }
 
+.bento-chips a {
+  color: inherit;
+}
+
 .bento-chips li:last-child {
   border-color: var(--accent);
   background: var(--accent);

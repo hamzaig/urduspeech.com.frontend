@@ -7,8 +7,10 @@ const footerGroups = [
   {
     name: "Product",
     links: [
+      { href: "/urdu-transcription", label: "Urdu transcription" },
       { href: "/video-captions", label: "Video captions" },
-      { href: "/urdu-transcription", label: "Transcription" },
+      { href: "/urdu-audio-to-roman-urdu", label: "Roman Urdu text" },
+      { href: "/urdu-audio-to-english-text", label: "English translation" },
       { href: "/demo", label: "Caption demo" },
       { href: "/pricing", label: "Pricing" },
     ],
@@ -17,6 +19,11 @@ const footerGroups = [
     name: "Resources",
     links: [
       { href: "/guides", label: "Creator guides" },
+      { href: "/guides/voice-notes-to-text", label: "Voice notes to text" },
+      {
+        href: "/guides/urdu-subtitles-for-youtube",
+        label: "YouTube subtitles",
+      },
       { href: "/supported-formats", label: "Supported formats" },
       { href: "/faq", label: "FAQ" },
       { href: "/contact", label: "Contact" },

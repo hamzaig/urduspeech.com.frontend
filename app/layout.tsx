@@ -12,6 +12,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { THEME_INIT_SCRIPT } from "@/lib/theme-script";
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://urduspeech.com"),
   title: {
     default: "UrduSpeech — Creator studio",
     template: "%s | UrduSpeech",

@@ -8,12 +8,14 @@ import {
   QuestionList,
   commonQuestions,
 } from "@/components/marketing";
+import { publicMetadata } from "@/lib/seo";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = publicMetadata({
   title: "Pricing for Urdu transcription and captions",
   description:
     "Compare UrduSpeech plans in Pakistani rupees, including minutes, video exports and media retention.",
-};
+  path: "/pricing",
+});
 
 const included = [
   "Urdu, Roman Urdu, English and bilingual output",

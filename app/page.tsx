@@ -16,6 +16,7 @@ import {
 import sampleStill from "@/assets/studio-interview.webp";
 import { CaptionStudioDemo } from "@/components/caption-studio-demo";
 import { CaptionStyleGallery } from "@/components/caption-style-gallery";
+import { GuideCards } from "@/components/guide-cards";
 import { HeroBackdrop } from "@/components/hero-backdrop";
 import { SiteHeader } from "@/components/site-header";
 import {
@@ -25,6 +26,13 @@ import {
   commonQuestions,
 } from "@/components/marketing";
 import { PublicFooter } from "@/components/public-site";
+import { StructuredData } from "@/components/structured-data";
+import { publicGuides } from "@/lib/public-guides";
+import {
+  buildOrganizationJsonLd,
+  buildSoftwareApplicationJsonLd,
+  buildWebSiteJsonLd,
+} from "@/lib/seo";
 import "./landing.css";
 
 const title = "Urdu captions and transcripts for creators";
@@ -113,8 +121,25 @@ const homeQuestions = [
 ];
 
 export default function Home() {
+  const jsonLd = [
+    buildOrganizationJsonLd(),
+    buildWebSiteJsonLd(),
+    buildSoftwareApplicationJsonLd({
+      name: "UrduSpeech",
+      description,
+      path: "/",
+      featureList: [
+        "AI-assisted Urdu speech-to-text transcription for uploaded audio and video",
+        "Editable Urdu script (Nastaliq), Roman Urdu, English translation, and stacked bilingual captions",
+        "Optional AI text correction with reviewable accept/reject suggestions",
+        "UTF-8 TXT transcripts, SRT and VTT subtitle files, and burned-in captioned MP4 exports",
+      ],
+    }),
+  ];
+
   return (
     <>
+      <StructuredData data={jsonLd} />
       <SiteHeader />
       <main id="main" className="home-site" tabIndex={-1}>
         <section className="landing-hero" aria-labelledby="hero-title">
@@ -220,14 +245,22 @@ export default function Home() {
                   <Captions size={20} aria-hidden="true" />
                 </span>
                 <h3>Four outputs from one recording</h3>
-                <p>Choose the script that fits your audience.</p>
+                <p>Choose the script or translation that fits your audience.</p>
                 <ul className="bento-chips" role="list">
                   <li lang="ur" dir="rtl">
-                    اردو
+                    <Link href="/urdu-transcription">اردو</Link>
                   </li>
-                  <li>Roman Urdu</li>
-                  <li>English</li>
-                  <li>Bilingual</li>
+                  <li>
+                    <Link href="/urdu-audio-to-roman-urdu">Roman Urdu</Link>
+                  </li>
+                  <li>
+                    <Link href="/urdu-audio-to-english-text">English</Link>
+                  </li>
+                  <li>
+                    <Link href="/guides/urdu-roman-urdu-and-english">
+                      Bilingual
+                    </Link>
+                  </li>
                 </ul>
               </li>
               <li className="bento-card bento-timing">
@@ -356,6 +389,31 @@ export default function Home() {
               </Link>
             </div>
             <Plans showStart={false} />
+          </div>
+        </section>
+
+        <section
+          id="guides"
+          className="landing-section landing-guides"
+          aria-labelledby="home-guides"
+        >
+          <div className="public-container">
+            <div className="landing-section-heading landing-heading-row">
+              <div>
+                <p className="landing-kicker">Creator guides</p>
+                <h2 id="home-guides">
+                  Practical workflows for Urdu audio &amp; video
+                </h2>
+                <p>
+                  Compare scripts, convert saved voice notes to text, and
+                  prepare SRT, VTT, or MP4 exports for YouTube and social feeds.
+                </p>
+              </div>
+              <Link className="public-inline-link" href="/guides">
+                All creator guides <ArrowRight size={17} aria-hidden="true" />
+              </Link>
+            </div>
+            <GuideCards guides={publicGuides.slice(0, 3)} />
           </div>
         </section>
 
