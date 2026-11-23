@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import "@fontsource-variable/public-sans";
 import "@fontsource-variable/bricolage-grotesque";
+import "./tokens.css";
+import "./base.css";
 import "./globals.css";
 import "./public.css";
 import "./site.css";

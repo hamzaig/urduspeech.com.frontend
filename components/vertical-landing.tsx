@@ -60,7 +60,7 @@ export function VerticalLandingView({ spec }: { spec: VerticalPageSpec }) {
             </Link>
           </div>
           <p className="free-note">
-            One-time 10-minute free allowance · No card required ·{" "}
+            One-time 10-minute free allowance, no card required.{" "}
             <Link href="/pricing">Compare PKR plans</Link>
           </p>
         </MarketingIntro>
@@ -70,7 +70,6 @@ export function VerticalLandingView({ spec }: { spec: VerticalPageSpec }) {
           aria-labelledby={`${spec.slug}-sample-heading`}
         >
           <header className="script-example-header">
-            <span className="script-example-badge">Illustrative sample</span>
             <h2 id={`${spec.slug}-sample-heading`}>{spec.sampleLabel}</h2>
           </header>
           <ol className="script-pair-list" role="list">

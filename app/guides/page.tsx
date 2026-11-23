@@ -101,7 +101,7 @@ export default function Guides() {
         <h2 id="all-guides-heading">Step-by-step Urdu production playbooks</h2>
         <p>
           Every guide documents real Studio behavior, exact codec limits, and
-          reproducible UTF-8 subtitle formatting—with no fabricated accuracy
+          reproducible UTF-8 subtitle formatting, with no fabricated accuracy
           promises or hidden steps.
         </p>
         <GuideCards guides={guides} />

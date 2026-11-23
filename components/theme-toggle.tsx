@@ -182,7 +182,9 @@ export function ThemeToggle() {
       >
         <Sun size={18} className="theme-icon-light" aria-hidden="true" />
         <Moon size={18} className="theme-icon-dark" aria-hidden="true" />
-        <span className="theme-auto-dot" aria-hidden="true" />
+        {mode === "auto" && (
+          <span className="theme-auto-dot" aria-hidden="true" />
+        )}
       </button>
 
       {open && (

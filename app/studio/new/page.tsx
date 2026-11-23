@@ -194,7 +194,7 @@ export default function NewProject() {
                 <ErrorNotice message={error} />
                 {oversizeUpgradeHint && (
                   <p className="field-help">
-                    Need larger uploads up to 1–2 GiB and 1080p clean video?{" "}
+                    Need larger uploads up to 1 to 2 GiB and 1080p clean video?{" "}
                     <Link href="/studio/billing">
                       Compare Starter, Creator, and Studio in Billing
                     </Link>
@@ -221,7 +221,7 @@ export default function NewProject() {
                 </strong>
                 <span>
                   {file
-                    ? `${(file.size / 1024 ** 2).toFixed(1)} MB · Choose a different file`
+                    ? `${(file.size / 1024 ** 2).toFixed(1)} MB, choose a different file`
                     : "Or drop it here to start your project."}
                 </span>
               </button>

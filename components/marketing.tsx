@@ -1,6 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { ArrowRight, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { PLANS } from "@/lib/plans";
 
 export type QuestionItem = {
@@ -158,7 +158,7 @@ export function StartFree({
       href="/auth/register"
       onClick={onClick}
     >
-      {label} <ArrowRight size={17} aria-hidden="true" />
+      {label}
     </Link>
   );
 }
@@ -203,7 +203,7 @@ export function Plans({
               <p className="price-period">
                 {plan.pricePkr === 0
                   ? "One-time allowance"
-                  : `Per month · about PKR ${(plan.pricePkr / plan.minutes).toFixed(1)} a minute`}
+                  : `Per month, about PKR ${(plan.pricePkr / plan.minutes).toFixed(1)} a minute`}
               </p>
               <dl>
                 <div>
@@ -213,7 +213,7 @@ export function Plans({
                 <div>
                   <dt>Max file &amp; duration</dt>
                   <dd>
-                    {plan.maxDurationMinutes} min · {plan.maxUploadLabel}
+                    {plan.maxDurationMinutes} min, {plan.maxUploadLabel}
                   </dd>
                 </div>
                 <div>
@@ -238,10 +238,7 @@ export function Plans({
                       : "button secondary plan-cta"
                   }
                 >
-                  {plan.pricePkr === 0
-                    ? "Try 10 free minutes"
-                    : `Start free, pick ${plan.name}`}
-                  <ArrowRight size={16} aria-hidden="true" />
+                  {plan.pricePkr === 0 ? "Try free" : `Pick ${plan.name}`}
                 </Link>
               )}
             </li>

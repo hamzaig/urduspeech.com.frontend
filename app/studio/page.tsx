@@ -111,7 +111,7 @@ export default function Studio() {
             </strong>
             <p>
               {usage.plan.slug === "free"
-                ? "Upgrade to Starter (PKR 999 for 60 min) or Creator (PKR 2,499 for 200 min) to unlock clean 1080p MP4 exports without watermarks and longer recordings. Existing TXT, SRT, and VTT transcripts remain downloadable."
+                ? "Upgrade to Starter (PKR 999 for 60 min) or Creator (PKR 2,499 for 200 min) for clean 1080p MP4 exports without watermarks and longer recordings. Existing TXT, SRT, and VTT transcripts remain downloadable."
                 : "Renew or upgrade in Studio Billing via card checkout or local Pakistani transfer to continue transcribing new recordings."}
             </p>
           </div>
@@ -190,7 +190,7 @@ export default function Studio() {
             <div className="studio-onboarding-header">
               <span className="studio-onboarding-badge">
                 <Sparkles size={15} aria-hidden="true" />
-                Quick start · 1 of 4 steps done (25%)
+                Quick start: 1 of 4 steps done (25%)
               </span>
               <h3>Create your first Urdu transcript or captioned video</h3>
               <p>
@@ -208,28 +208,28 @@ export default function Studio() {
               <li className="done">
                 <CheckCircle2 size={18} aria-hidden="true" />
                 <span>
-                  <strong>Account verified</strong> — workspace &amp; allowance
+                  <strong>Account verified:</strong> workspace &amp; allowance
                   ready
                 </span>
               </li>
               <li>
                 <Circle size={18} aria-hidden="true" />
                 <span>
-                  <strong>Upload a recording</strong> — start with a 1 to 10
+                  <strong>Upload a recording:</strong> start with a 1 to 10
                   minute clip for fastest preview
                 </span>
               </li>
               <li>
                 <Circle size={18} aria-hidden="true" />
                 <span>
-                  <strong>Review words &amp; timing</strong> — accept or reject
+                  <strong>Review words &amp; timing:</strong> accept or reject
                   AI suggestions alongside local playback
                 </span>
               </li>
               <li>
                 <Circle size={18} aria-hidden="true" />
                 <span>
-                  <strong>Export</strong> — download UTF-8 TXT, SRT, VTT, or a
+                  <strong>Export:</strong> download UTF-8 TXT, SRT, VTT, or a
                   burned-in Nastaliq MP4
                 </span>
               </li>

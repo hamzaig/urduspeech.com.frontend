@@ -156,8 +156,8 @@ export default function UrduAudioToEnglishText() {
             </Link>
           </div>
           <p className="free-note">
-            One-time 10-minute free allowance · No card required · Free MP4
-            renders up to 720p with watermark
+            One-time 10-minute free allowance, no card required. Free MP4
+            renders up to 720p with watermark.
           </p>
         </MarketingIntro>
 
@@ -166,7 +166,6 @@ export default function UrduAudioToEnglishText() {
           aria-labelledby="english-sample-heading"
         >
           <header className="script-example-header">
-            <span className="script-example-badge">Illustrative sample</span>
             <h2 id="english-sample-heading">
               Spoken Urdu paired with English translation
             </h2>
@@ -175,7 +174,7 @@ export default function UrduAudioToEnglishText() {
             {captionCues.map((cue) => (
               <li key={cue.start} className="script-pair-item">
                 <span className="sample-time">
-                  {captionTime(cue.start)}–{captionTime(cue.end)}
+                  {captionTime(cue.start)} to {captionTime(cue.end)}
                 </span>
                 <div className="script-pair-lines">
                   <p className="script-line-urdu" lang="ur" dir="rtl">
@@ -200,7 +199,7 @@ export default function UrduAudioToEnglishText() {
         aria-labelledby="translation-vs-transcription"
       >
         <h2 id="translation-vs-transcription">
-          Transcription vs translation — and English-only vs bilingual output
+          Transcription vs translation, and English-only vs bilingual output
         </h2>
         <p>
           Every English or bilingual project in UrduSpeech starts from the
@@ -322,7 +321,7 @@ export default function UrduAudioToEnglishText() {
             <p>
               Check the English phrasing against your local media preview in
               Studio. Verify proper nouns, figures, and idioms, and adjust start
-              and end timestamps in seconds—especially on bilingual cues where
+              and end timestamps in seconds, especially on bilingual cues where
               viewers read two lines.
             </p>
           </li>

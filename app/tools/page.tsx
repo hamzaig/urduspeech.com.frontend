@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowRight,
-  ArrowUpRight,
   BookOpen,
   Calculator,
   Captions,
@@ -109,34 +108,31 @@ export default function ToolsHubPage() {
   return (
     <PublicPage mainClassName="public-container marketing-page">
       <StructuredData data={jsonLd} />
-      <Breadcrumbs
-        items={[{ name: "Home", href: "/" }, { name: "Free Tools" }]}
-      />
-      <MarketingIntro title="Free browser tools for Urdu video and subtitle workflows">
-        <p>
-          Every utility below runs directly in your browser with no account
-          required and zero file uploads. Fix broken Arabic kaf and yeh Unicode
-          in existing Urdu subtitle files, check Reels and YouTube reading
-          speed, convert SRT to WebVTT, or calculate your monthly captioning
-          minutes in PKR.
-        </p>
-      </MarketingIntro>
-
-      <section className="product-section" aria-labelledby="tools-directory">
-        <h2 id="tools-directory">Available creator utilities</h2>
+      <section className="page-hero" aria-labelledby="tools-directory">
+        <Breadcrumbs
+          items={[{ name: "Home", href: "/" }, { name: "Free Tools" }]}
+        />
+        <MarketingIntro title="Free browser tools for Urdu video and subtitle workflows">
+          <p>
+            Every utility below runs directly in your browser with no account
+            required and zero file uploads. Fix broken Arabic kaf and yeh
+            Unicode in existing Urdu subtitle files, check Reels and YouTube
+            reading speed, convert SRT to WebVTT, or calculate your monthly
+            captioning minutes in PKR.
+          </p>
+        </MarketingIntro>
+        <h2 id="tools-directory" className="sr-only">
+          Available creator utilities
+        </h2>
         <ul className="guide-cards" role="list">
           {toolCards.map((item) => {
             const Icon = item.icon;
             return (
               <li key={item.href}>
                 <Link href={item.href}>
-                  <span className="guide-card-icon">
-                    <Icon size={24} aria-hidden="true" />
-                  </span>
-                  <span className="guide-card-topic">{item.topic}</span>
-                  <span className="guide-card-title">
+                  <span className="guide-card-head">
+                    <Icon size={18} aria-hidden="true" />
                     <strong>{item.title}</strong>
-                    <ArrowUpRight size={18} aria-hidden="true" />
                   </span>
                   <span className="guide-card-summary">{item.summary}</span>
                 </Link>
@@ -146,23 +142,28 @@ export default function ToolsHubPage() {
         </ul>
       </section>
 
-      <div className="guide-link-row">
-        <Link href="/video-captions">
-          Generate Nastaliq MP4 captions automatically{" "}
-          <ArrowRight size={17} aria-hidden="true" />
-        </Link>
-        <Link href="/urdu-transcription">
-          Transcribe Urdu audio to UTF-8 text{" "}
-          <ArrowRight size={17} aria-hidden="true" />
-        </Link>
-        <Link href="/compare">
-          Compare Urdu caption tools side by side{" "}
-          <ArrowRight size={17} aria-hidden="true" />
-        </Link>
-        <Link href="/pricing">
-          View monthly PKR plans <ArrowRight size={17} aria-hidden="true" />
-        </Link>
-      </div>
+      <section
+        className="product-section"
+        aria-label="Related Studio workflows"
+      >
+        <div className="guide-link-row">
+          <Link href="/video-captions">
+            Generate Nastaliq MP4 captions automatically{" "}
+            <ArrowRight size={17} aria-hidden="true" />
+          </Link>
+          <Link href="/urdu-transcription">
+            Transcribe Urdu audio to UTF-8 text{" "}
+            <ArrowRight size={17} aria-hidden="true" />
+          </Link>
+          <Link href="/compare">
+            Compare Urdu caption tools side by side{" "}
+            <ArrowRight size={17} aria-hidden="true" />
+          </Link>
+          <Link href="/pricing">
+            View monthly PKR plans <ArrowRight size={17} aria-hidden="true" />
+          </Link>
+        </div>
+      </section>
 
       <section className="demo-next" aria-labelledby="tools-studio-cta">
         <div>
@@ -175,7 +176,7 @@ export default function ToolsHubPage() {
             TXT, SRT, VTT, or burned-in Nastaliq MP4.
           </p>
         </div>
-        <StartFree label="Try 10 free minutes" />
+        <StartFree label="Try 10 free min" />
       </section>
     </PublicPage>
   );

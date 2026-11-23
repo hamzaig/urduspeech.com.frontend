@@ -84,17 +84,18 @@ export default function Pricing() {
   return (
     <PublicPage mainClassName="public-container marketing-page pricing-page">
       <StructuredData data={jsonLd} />
-      <Breadcrumbs items={[{ name: "Home", href: "/" }, { name: "Pricing" }]} />
-      <MarketingIntro title="Simple pricing, in rupees">
-        <p>
-          Audio and video share one duration-based minute allowance. Start with
-          10 free minutes (no card required), then choose a monthly plan based
-          on how many minutes you publish, your longest single recording, and
-          how long you need original media stored.
-        </p>
-      </MarketingIntro>
-
-      <section aria-labelledby="compare-plans">
+      <section className="page-hero" aria-labelledby="compare-plans">
+        <Breadcrumbs
+          items={[{ name: "Home", href: "/" }, { name: "Pricing" }]}
+        />
+        <MarketingIntro title="Simple pricing, in rupees">
+          <p>
+            Audio and video share one duration-based minute allowance. Start
+            with 10 free minutes (no card required), then choose a monthly plan
+            based on how many minutes you publish, your longest single
+            recording, and how long you need original media stored.
+          </p>
+        </MarketingIntro>
         <h2 className="sr-only" id="compare-plans">
           Compare plans
         </h2>
@@ -225,7 +226,7 @@ export default function Pricing() {
         <h2 id="choose-a-plan">Which plan fits your publishing schedule?</h2>
         <ul className="product-points two-col" role="list">
           <li>
-            <h3>Free &amp; Starter (PKR 0 – 999)</h3>
+            <h3>Free &amp; Starter (PKR 0 to 999)</h3>
             <p>
               Use <strong>Free</strong> to test Nastaliq accuracy and caption
               rendering on a real clip up to 10 minutes. Upgrade to{" "}
@@ -234,7 +235,7 @@ export default function Pricing() {
             </p>
           </li>
           <li>
-            <h3>Creator &amp; Studio (PKR 2,499 – 5,999)</h3>
+            <h3>Creator &amp; Studio (PKR 2,499 to 5,999)</h3>
             <p>
               <strong>Creator (200 min/mo)</strong> is built for weekly YouTube
               channels, bilingual educators, and podcasters with recordings up
@@ -279,14 +280,15 @@ export default function Pricing() {
         <div>
           <h2 id="pricing-cta">Test UrduSpeech with 10 free minutes</h2>
           <p>
-            No credit card required. Create an account, upload an Urdu recording
-            up to 10 minutes, and inspect the transcript and captions yourself.
+            Start free with no card needed. Create an account, upload an Urdu
+            recording up to 10 minutes, and inspect the transcript and captions
+            yourself.
           </p>
         </div>
         <div className="product-actions">
-          <StartFree label="Try 10 free minutes" />
+          <StartFree label="Try 10 free min" />
           <Link href="/demo" className="button secondary">
-            Try the browser demo
+            Try the demo
           </Link>
         </div>
       </section>

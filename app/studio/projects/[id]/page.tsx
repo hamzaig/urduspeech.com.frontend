@@ -513,7 +513,7 @@ export default function ProjectEditor({
                         })
                       }
                     >
-                      Make project choices my defaults
+                      Save as defaults
                     </button>
                   </div>
                 </section>
@@ -773,7 +773,7 @@ export default function ProjectEditor({
                         onClick={() => previewInput.current?.click()}
                       >
                         <FolderOpen size={17} aria-hidden="true" /> Choose
-                        original recording
+                        recording
                       </button>
                       <small>Preview stays on this device.</small>
                     </div>

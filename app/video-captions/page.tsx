@@ -163,8 +163,8 @@ export default function VideoCaptions() {
             </Link>
           </div>
           <p className="free-note">
-            10 free minutes once per account (no card required) · Free MP4
-            exports up to 720p with watermark ·{" "}
+            10 free minutes once per account, no card required. Free MP4 exports
+            up to 720p with watermark.{" "}
             <Link href="/pricing">See 1080p unwatermarked plans</Link>
           </p>
         </MarketingIntro>
@@ -273,7 +273,7 @@ export default function VideoCaptions() {
             <p>
               Renders visible captions directly into an H.264 MP4 video with AAC
               audio so the text travels with the picture on reels, shorts, and
-              social feeds—without relying on a player’s built-in Urdu font.
+              social feeds, without relying on a player’s built-in Urdu font.
             </p>
           </li>
         </ul>

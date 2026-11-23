@@ -65,7 +65,7 @@ export default function SecurityPage() {
             <LockKeyhole size={24} aria-hidden="true" />
             <h3>Automated processing, zero model training</h3>
             <p>
-              Processing is strictly automated—there are no human
+              Processing is strictly automated: there are no human
               transcriptionists listening to your uploads, and UrduSpeech does
               not train its own AI models on your audio, video, or transcripts.
               Browser sessions use necessary authentication cookies with zero

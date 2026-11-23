@@ -1,12 +1,5 @@
 import Link from "next/link";
-import {
-  ArrowUpRight,
-  Captions,
-  FileText,
-  FileVideo,
-  Languages,
-  Mic,
-} from "lucide-react";
+import { Captions, FileText, FileVideo, Languages, Mic } from "lucide-react";
 import { publicGuides, type PublicGuide } from "@/lib/public-guides";
 
 const guideIcons = {
@@ -30,13 +23,9 @@ export function GuideCards({
         return (
           <li key={guide.slug}>
             <Link href={`/guides/${guide.slug}`}>
-              <span className="guide-card-icon">
-                <Icon size={26} aria-hidden="true" />
-              </span>
-              <span className="guide-card-topic">{guide.topic}</span>
-              <span className="guide-card-title">
+              <span className="guide-card-head">
+                <Icon size={18} aria-hidden="true" />
                 <strong>{guide.title}</strong>
-                <ArrowUpRight size={18} aria-hidden="true" />
               </span>
               <span className="guide-card-summary">{guide.summary}</span>
             </Link>

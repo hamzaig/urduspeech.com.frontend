@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Calculator, Check } from "lucide-react";
+import { Calculator, Check } from "lucide-react";
 import { trackEvent } from "@/lib/analytics";
 import {
   calculateRecommendedPlan,
@@ -249,10 +249,9 @@ export function PlanCalculator({
           aria-live="polite"
           aria-label="Recommended UrduSpeech plan"
         >
-          <span className="script-example-badge">Recommended match</span>
           <h3>
-            {plan.name} plan — PKR {plan.priceDisplay}
-            {plan.billingPeriod === "monthly" ? "/mo" : " once"}
+            Recommended: {plan.name} (PKR {plan.priceDisplay}
+            {plan.billingPeriod === "monthly" ? "/mo" : " once"})
           </h3>
           <dl className="calc-metrics">
             <div>
@@ -300,8 +299,7 @@ export function PlanCalculator({
                 })
               }
             >
-              Start with 10 free minutes{" "}
-              <ArrowRight size={16} aria-hidden="true" />
+              Try 10 free min
             </Link>
             <small>
               Every account starts free (no card required). Upgrade to{" "}

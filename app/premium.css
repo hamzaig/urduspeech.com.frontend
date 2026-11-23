@@ -1,81 +1,39 @@
-/* Premium polish layer: shared by the public site. Loaded after site.css. */
+/* Interaction states & plan emphasis layer (Hallmark craft rules). */
 
-:root {
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --shadow-soft:
-    0 1px 2px rgb(17 37 26 / 0.05), 0 8px 24px -12px rgb(17 37 26 / 0.18);
-  --shadow-lift:
-    0 2px 4px rgb(17 37 26 / 0.06), 0 18px 40px -18px rgb(17 37 26 / 0.32);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
-
-/* Buttons: smooth state changes and a gentle lift on hover */
 button,
 .button {
   transition:
-    background-color 180ms var(--ease-out),
-    border-color 180ms var(--ease-out),
-    color 180ms var(--ease-out),
-    box-shadow 220ms var(--ease-out),
-    transform 220ms var(--ease-out);
+    background-color var(--dur-short) var(--ease-out),
+    border-color var(--dur-short) var(--ease-out),
+    color var(--dur-short) var(--ease-out),
+    transform var(--dur-micro) var(--ease-out);
 }
 
-.button:not(.secondary):hover {
-  box-shadow: var(--shadow-lift);
-  transform: translateY(-1px);
+button:active:not(:disabled),
+.button:active {
+  transform: translateY(1px);
 }
 
-.button:active,
-button:active {
-  transform: translateY(0) scale(0.985);
-}
-
-.button svg {
-  transition: transform 220ms var(--ease-out);
-}
-
-.button:hover svg {
-  transform: translateX(2px);
-}
-
-/* Header: translucent glass bar */
 .site-header {
-  background: color-mix(in srgb, var(--canvas) 94%, transparent);
-  -webkit-backdrop-filter: saturate(1.4) blur(14px);
-  backdrop-filter: saturate(1.4) blur(14px);
-  border-bottom-color: color-mix(in srgb, var(--line) 75%, transparent);
+  background: color-mix(in oklab, var(--color-paper) 94%, transparent);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-bottom-color: var(--color-rule);
 }
 
-@media (min-width: 681px) {
+@media (min-width: 961px) {
   .site-navigation a {
-    padding-inline: 12px;
-    margin-inline: -12px;
-    border-radius: 999px;
+    padding-inline: var(--space-sm);
+    border-radius: var(--radius-control);
     transition:
-      background-color 160ms var(--ease-out),
-      color 160ms var(--ease-out);
+      background-color var(--dur-short) var(--ease-out),
+      color var(--dur-short) var(--ease-out);
   }
 
   .site-navigation a:hover {
-    background: var(--site-sage);
+    background: var(--color-paper-3);
     text-decoration: none;
   }
-}
-
-/* Inline links: animate the arrow */
-.public-inline-link svg {
-  transition: transform 200ms var(--ease-out);
-}
-
-.public-inline-link:hover svg {
-  transform: translateX(3px);
-}
-
-/* Pricing: recommended plan */
-.public-pricing {
-  box-shadow: var(--shadow-soft);
 }
 
 .plan-name {
@@ -83,34 +41,26 @@ button:active {
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 6px 10px;
+  gap: var(--space-xs);
 }
 
+/* Sentence-case, untracked plan badge (Hallmark Gate 67) */
 .plan-badge {
   display: inline-flex;
   align-items: center;
   min-height: 24px;
-  padding: 2px 10px;
-  border-radius: 999px;
-  background: var(--accent);
-  color: var(--on-accent);
-  font-size: 11px;
+  padding: var(--space-3xs) var(--space-sm);
+  border-radius: var(--radius-pill);
+  background: var(--color-paper-3);
+  color: var(--color-accent);
+  font-size: var(--text-xs);
   font-weight: 700;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 .public-pricing li {
   position: relative;
-}
-
-.public-pricing li[data-recommended] {
-  overflow: hidden;
-  background: linear-gradient(
-    180deg,
-    color-mix(in srgb, var(--site-free) 42%, var(--surface)) 0%,
-    var(--surface) 62%
-  );
 }
 
 .public-pricing li[data-recommended]::before {
@@ -118,12 +68,11 @@ button:active {
   position: absolute;
   inset: 0 0 auto;
   height: 3px;
-  background: var(--accent);
+  background: var(--color-accent);
 }
 
-/* Question list: smoother disclosure affordance */
 .question-list summary svg {
-  transition: transform 220ms var(--ease-out);
+  transition: transform var(--dur-short) var(--ease-out);
 }
 
 .question-list details[open] summary svg {
@@ -131,17 +80,10 @@ button:active {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
-  }
-
-  .button:hover,
-  .button:hover svg {
-    transform: none;
+  button,
+  .button,
+  .site-navigation a,
+  .question-list summary svg {
+    transition: none;
   }
 }

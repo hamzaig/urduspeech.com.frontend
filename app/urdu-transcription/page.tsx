@@ -132,31 +132,35 @@ export default function UrduTranscription() {
   return (
     <PublicPage mainClassName="public-container marketing-page">
       <StructuredData data={jsonLd} />
-      <Breadcrumbs
-        items={[{ name: "Home", href: "/" }, { name: "Urdu transcription" }]}
-      />
-      <section className="product-hero" aria-label="Urdu speech to text">
-        <MarketingIntro title="Convert Urdu speech into editable text">
-          <p>
-            Upload spoken Urdu audio or video recordings to generate an editable
-            transcript in Studio. Keep right-to-left Urdu script in Nastaliq,
-            switch to <Link href="/urdu-audio-to-roman-urdu">Roman Urdu</Link>,
-            or translate into{" "}
-            <Link href="/urdu-audio-to-english-text">English</Link>, then review
-            the draft and export UTF-8 <strong>TXT</strong> or timed subtitles.
-          </p>
-          <div className="product-actions">
-            <StartFree />
-            <Link href="/demo" className="button secondary">
-              Try the editor
-            </Link>
-          </div>
-          <p className="free-note">
-            One-time 10-minute free allowance per account · No card required ·{" "}
-            <Link href="/pricing">Compare PKR plans</Link>
-          </p>
-        </MarketingIntro>
-        <PublicCaptionPreview />
+      <section className="page-hero" aria-label="Urdu speech to text">
+        <Breadcrumbs
+          items={[{ name: "Home", href: "/" }, { name: "Urdu transcription" }]}
+        />
+        <div className="product-hero">
+          <MarketingIntro title="Convert Urdu speech into editable text">
+            <p>
+              Upload spoken Urdu audio or video recordings to generate an
+              editable transcript in Studio. Keep right-to-left Urdu script in
+              Nastaliq, switch to{" "}
+              <Link href="/urdu-audio-to-roman-urdu">Roman Urdu</Link>, or
+              translate into{" "}
+              <Link href="/urdu-audio-to-english-text">English</Link>, then
+              review the draft and export UTF-8 <strong>TXT</strong> or timed
+              subtitles.
+            </p>
+            <div className="product-actions">
+              <StartFree />
+              <Link href="/demo" className="button secondary">
+                Try the editor
+              </Link>
+            </div>
+            <p className="free-note">
+              One-time 10-minute free allowance per account, no card required.{" "}
+              <Link href="/pricing">Compare PKR plans</Link>
+            </p>
+          </MarketingIntro>
+          <PublicCaptionPreview />
+        </div>
       </section>
 
       <section
@@ -288,7 +292,7 @@ export default function UrduTranscription() {
               <code>
                 {captionCues.map((cue, index) => (
                   <span key={cue.start}>
-                    {`${captionTime(cue.start)}–${captionTime(cue.end)}\n`}
+                    {`${captionTime(cue.start)} to ${captionTime(cue.end)}\n`}
                     <span lang="ur" dir="rtl">
                       {cue.urdu}
                     </span>
@@ -340,7 +344,7 @@ export default function UrduTranscription() {
                 </td>
                 <td>
                   An audio-only transcription pipeline has no screen or OCR
-                  input—add unsaid visual titles manually in the editor.
+                  input; add unsaid visual titles manually in the editor.
                 </td>
               </tr>
               <tr>
@@ -382,7 +386,7 @@ export default function UrduTranscription() {
             <FileText size={24} aria-hidden="true" />
             <h3>Lectures, talks, and seminars</h3>
             <p>
-              Turn classroom recordings and long-form talks (up to 60–360
+              Turn classroom recordings and long-form talks (up to 60 to 360
               minutes on paid plans) into readable Urdu script, Roman Urdu
               notes, or English study text.
             </p>
@@ -392,7 +396,7 @@ export default function UrduTranscription() {
             <h3>Podcasts and video episodes</h3>
             <p>
               Produce plain-text show notes in <strong>TXT</strong> alongside
-              timed <strong>SRT</strong> or <strong>VTT</strong> files—see our{" "}
+              timed <strong>SRT</strong> or <strong>VTT</strong> files. See our{" "}
               <Link href="/urdu-podcast-transcription">
                 Urdu podcast transcription workflow
               </Link>

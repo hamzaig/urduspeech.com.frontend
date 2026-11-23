@@ -64,8 +64,8 @@ export default function AboutPage() {
           <strong>UrduSpeech</strong> (<code>urduspeech.com</code>) is a
           browser-based, automated AI transcription and video captioning studio
           operated by <strong>MoonSys Ltd</strong>. We built it because Urdu
-          speakers—podcasters, journalists, educators, and social video
-          creators—deserve software that treats right-to-left Nastaliq script,
+          speakers (podcasters, journalists, educators, and social video
+          creators) deserve software that treats right-to-left Nastaliq script,
           Roman Urdu, Urdu-English code-switching, and Pakistani rupee pricing
           as first-class citizens.
         </p>
@@ -76,7 +76,7 @@ export default function AboutPage() {
         aria-labelledby="disambiguation-title"
       >
         <h2 id="disambiguation-title">
-          What UrduSpeech is — and what it is not
+          What UrduSpeech is, and what it is not
         </h2>
         <p>
           Clear entity boundaries help both creators and search systems
@@ -175,7 +175,7 @@ export default function AboutPage() {
           comparisons published on <code>urduspeech.com</code> are written and
           reviewed by the{" "}
           <strong>UrduSpeech Editorial &amp; Engineering Team</strong> at
-          MoonSys Ltd—the engineers and product specialists who build and
+          MoonSys Ltd, the engineers and product specialists who build and
           maintain the speech-processing, Unicode normalization, subtitle
           export, and video-rendering pipeline.
         </p>
