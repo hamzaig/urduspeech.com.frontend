@@ -11,6 +11,7 @@ import {
   captionTime,
   type CaptionMode,
 } from "@/lib/caption-demo";
+import "../app/home.css";
 
 export function PublicCaptionPreview() {
   const [output, setOutput] = useState<CaptionMode>("bilingual");
@@ -113,6 +114,35 @@ export function PublicCaptionPreview() {
           </p>
         </div>
       </div>
+      <table className="sr-only">
+        <caption>Sample Urdu, Roman Urdu, and English transcript cues</caption>
+        <thead>
+          <tr>
+            <th scope="col">Timestamp</th>
+            <th scope="col">Urdu</th>
+            <th scope="col">Roman Urdu</th>
+            <th scope="col">English</th>
+          </tr>
+        </thead>
+        <tbody>
+          {captionCues.map((item) => (
+            <tr key={item.start}>
+              <td>
+                {captionTime(item.start)}–{captionTime(item.end)}
+              </td>
+              <td lang="ur" dir="rtl">
+                {item.urdu}
+              </td>
+              <td lang="ur-Latn" dir="ltr">
+                {item.romanUrdu}
+              </td>
+              <td lang="en" dir="ltr">
+                {item.english}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </section>
   );
 }

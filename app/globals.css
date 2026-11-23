@@ -4,6 +4,8 @@
     url(/fonts/NotoNastaliqUrdu-Regular.woff2) format("woff2"),
     url(/fonts/NotoNastaliqUrdu-Regular.ttf) format("truetype");
   font-display: swap;
+  unicode-range:
+    U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200D;
 }
 
 :root {
@@ -1237,4 +1239,154 @@ a.plan-status {
   .plans {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+/* Studio onboarding checklist & respectful billing cues */
+
+.studio-onboarding-card {
+  display: grid;
+  gap: 18px;
+  padding: clamp(20px, 3vw, 28px);
+  border: 1px solid var(--control);
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.studio-onboarding-header {
+  display: grid;
+  gap: 8px;
+}
+
+.studio-onboarding-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--wash);
+  color: var(--accent);
+  font-size: 12.5px;
+  font-weight: 680;
+}
+
+.studio-onboarding-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.studio-onboarding-header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 14.5px;
+  line-height: 1.55;
+}
+
+.studio-checklist {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 14px 16px;
+  list-style: none;
+  border-radius: 10px;
+  background: var(--paper);
+}
+
+.studio-checklist li {
+  display: flex;
+  align-items: start;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--muted);
+  line-height: 1.45;
+}
+
+.studio-checklist li strong {
+  color: var(--ink);
+}
+
+.studio-checklist li.done {
+  color: var(--ink);
+}
+
+.studio-checklist li.done svg {
+  color: var(--accent);
+  flex-shrink: 0;
+  margin-block-start: 2px;
+}
+
+.studio-checklist li:not(.done) svg {
+  color: var(--control);
+  flex-shrink: 0;
+  margin-block-start: 2px;
+}
+
+.studio-onboarding-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px 20px;
+}
+
+.studio-upgrade-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px 20px;
+  margin-block-end: 20px;
+  padding: 16px 20px;
+  border: 1px solid var(--control);
+  border-radius: 12px;
+  background: var(--wash);
+}
+
+.studio-upgrade-banner strong {
+  display: block;
+  margin-block-end: 4px;
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.studio-upgrade-banner p {
+  margin: 0;
+  max-width: 68ch;
+  font-size: 13.5px;
+  color: var(--muted);
+  line-height: 1.5;
+}
+
+.studio-upgrade-benefits {
+  margin-block: 16px 4px;
+  padding: 16px 20px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+  font-size: 13.5px;
+}
+
+.studio-upgrade-benefits strong {
+  display: block;
+  margin-block-end: 8px;
+  font-size: 14px;
+}
+
+.studio-upgrade-benefits ul {
+  margin: 0;
+  padding-inline-start: 18px;
+  display: grid;
+  gap: 4px;
+  color: var(--muted);
+}
+
+.plan-header-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+
+.plan.recommended:not(.current) {
+  border-color: var(--accent);
 }

@@ -9,7 +9,7 @@ import {
   PencilLine,
   Upload,
 } from "lucide-react";
-import { PublicPage } from "@/components/public-site";
+import { Breadcrumbs, PublicPage } from "@/components/public-site";
 import {
   MarketingIntro,
   QuestionList,
@@ -18,18 +18,26 @@ import {
 import { StructuredData } from "@/components/structured-data";
 import { captionCues, captionTime } from "@/lib/caption-demo";
 import {
+  SITE_URL,
+  buildBreadcrumbJsonLd,
+  buildGraphJsonLd,
   buildOrganizationJsonLd,
   buildSoftwareApplicationJsonLd,
+  buildWebPageJsonLd,
+  buildWebSiteJsonLd,
   publicMetadata,
 } from "@/lib/seo";
 
+const title = "Urdu Audio to Roman Urdu Text";
 const description =
-  "Convert uploaded Urdu audio and video into editable Roman Urdu transcripts and subtitles. Review spelling and timing in Studio, then export TXT, SRT, VTT or MP4.";
+  "Convert uploaded Urdu audio and video into editable Roman Urdu transcripts and timed captions. Refine spellings and export TXT, SRT, VTT, or MP4.";
 
 export const metadata: Metadata = publicMetadata({
-  title: "Urdu Audio to Roman Urdu Text",
+  title,
   description,
   path: "/urdu-audio-to-roman-urdu",
+  ogImage: "roman-urdu",
+  markdownPath: "/urdu-audio-to-roman-urdu.md",
 });
 
 const romanUrduQuestions = [
@@ -89,12 +97,27 @@ const romanUrduQuestions = [
 ];
 
 export default function UrduAudioToRomanUrdu() {
-  const jsonLd = [
+  const path = "/urdu-audio-to-roman-urdu" as const;
+  const jsonLd = buildGraphJsonLd([
     buildOrganizationJsonLd(),
+    buildWebSiteJsonLd(),
+    buildWebPageJsonLd({
+      name: `${title} | UrduSpeech`,
+      description,
+      path,
+      primaryImage: "/og/roman-urdu.png",
+      mainEntityId: `${SITE_URL}${path}#app`,
+      dateModified: "2026-11-22",
+    }),
+    buildBreadcrumbJsonLd([
+      { name: "Home", path: "/" },
+      { name: "Roman Urdu text", path },
+    ]),
     buildSoftwareApplicationJsonLd({
       name: "UrduSpeech — Urdu Audio to Roman Urdu Text & Subtitles",
       description,
-      path: "/urdu-audio-to-roman-urdu",
+      path,
+      includeOffers: true,
       featureList: [
         "Convert uploaded spoken Urdu audio and video into editable Roman Urdu text",
         "Preserves Urdu words in Latin script with protected numbers and identifiers",
@@ -102,11 +125,14 @@ export default function UrduAudioToRomanUrdu() {
         "Export UTF-8 TXT transcripts, SRT and VTT subtitle files, or burned-in captioned MP4 video",
       ],
     }),
-  ];
+  ]);
 
   return (
     <PublicPage mainClassName="public-container marketing-page">
       <StructuredData data={jsonLd} />
+      <Breadcrumbs
+        items={[{ name: "Home", href: "/" }, { name: "Roman Urdu text" }]}
+      />
       <section className="product-hero" aria-label="Urdu audio to Roman Urdu">
         <MarketingIntro title="Convert Urdu audio into Roman Urdu text">
           <p>
@@ -114,7 +140,7 @@ export default function UrduAudioToRomanUrdu() {
             <strong>Roman Urdu</strong> in Studio to generate an editable
             transcript and timed captions written in Latin letters. Keep the
             speaker’s original Urdu words while making captions easy to read in
-            Latin script.
+            Latin script across mobile feeds and left-to-right video editors.
           </p>
           <div className="product-actions">
             <StartFree />
@@ -172,7 +198,9 @@ export default function UrduAudioToRomanUrdu() {
         <p>
           Roman Urdu changes the writing system from right-to-left Urdu script
           to left-to-right Latin letters while keeping the spoken Urdu words and
-          sentence structure intact.
+          sentence structure intact. It is ideal for audiences in Pakistan,
+          India, the UAE, the UK, and North America who understand spoken Urdu
+          fluently and read Latin-script subtitles quickly on phones.
         </p>
         <div
           className="pricing-scroll"
@@ -236,6 +264,36 @@ export default function UrduAudioToRomanUrdu() {
             </tbody>
           </table>
         </div>
+      </section>
+
+      <section
+        className="product-section"
+        aria-labelledby="roman-urdu-conventions"
+      >
+        <h2 id="roman-urdu-conventions">
+          Handling everyday Roman Urdu spelling and Urdu-English code-switching
+        </h2>
+        <p>
+          Real Pakistani podcasts, reels, and voice notes rarely use textbook
+          Urdu alone. Speakers naturally mix English nouns and verbs into Urdu
+          sentences—such as{" "}
+          <span lang="ur-Latn" dir="ltr">
+            “Aaj ke episode mein hum production workflow aur editing timeline
+            discuss karenge.”
+          </span>{" "}
+          In Roman Urdu output, both Urdu phrases and borrowed English words
+          flow left-to-right in a single direction, eliminating the awkward
+          bidirectional punctuation flips that happen in generic subtitle tools.
+        </p>
+        <p>
+          Because Roman Urdu has no single official orthography, keep a short
+          channel glossary for recurring words when you review cues in Studio
+          (for instance choosing consistently between <em>hai</em> vs{" "}
+          <em>hy</em>, <em>aap</em> vs <em>ap</em>, or <em>nahin</em> vs{" "}
+          <em>nahi</em>). Protected tokens such as prices (PKR 2,499), phone
+          numbers, URLs, and <code>@handles</code> stay guarded from silent
+          reformatting during processing.
+        </p>
       </section>
 
       <section
@@ -307,7 +365,11 @@ export default function UrduAudioToRomanUrdu() {
             <p>
               Add casual Latin-script Urdu captions to short videos for viewers
               who speak Urdu every day and scan Roman Urdu quickly on mobile
-              feeds.
+              feeds. See{" "}
+              <Link href="/urdu-captions-for-reels-tiktok">
+                Urdu captions for Reels and TikTok
+              </Link>
+              .
             </p>
           </li>
           <li>
@@ -324,9 +386,9 @@ export default function UrduAudioToRomanUrdu() {
             <h3>Voice notes and show notes</h3>
             <p>
               Turn saved local voice recordings into readable Roman Urdu text
-              for team messages, quotes, or podcast episode notes—see our{" "}
-              <Link href="/guides/voice-notes-to-text">
-                voice notes to text guide
+              for team messages, quotes, or podcast episode notes—see{" "}
+              <Link href="/urdu-voice-notes-to-text">
+                Urdu voice notes to text
               </Link>
               .
             </p>

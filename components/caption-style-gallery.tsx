@@ -19,11 +19,13 @@ export function CaptionStyleGallery({
       <div className="caption-style-stage" data-visual>
         <Image
           src={creatorStill}
-          alt=""
+          alt="Creator video frame demonstrating Clean, Social highlight, and Boxed Urdu Nastaliq burned-in captions"
           width={creatorStill.width}
           height={creatorStill.height}
           sizes="(max-width: 760px) calc(100vw - 40px), 720px"
           preload={preload}
+          fetchPriority={preload ? "high" : undefined}
+          placeholder="blur"
         />
         <div className="caption-style-text">
           <span

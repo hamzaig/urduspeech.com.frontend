@@ -43,8 +43,8 @@ button:active {
 /* Header: translucent glass bar */
 .site-header {
   background: color-mix(in srgb, var(--canvas) 94%, transparent);
-  backdrop-filter: saturate(1.4) blur(14px);
   -webkit-backdrop-filter: saturate(1.4) blur(14px);
+  backdrop-filter: saturate(1.4) blur(14px);
   border-bottom-color: color-mix(in srgb, var(--line) 75%, transparent);
 }
 

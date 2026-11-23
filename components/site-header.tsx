@@ -14,6 +14,7 @@ const pages = [
   { href: "/urdu-transcription", label: "Transcription" },
   { href: "/demo", label: "Demo" },
   { href: "/guides", label: "Guides" },
+  { href: "/compare", label: "Compare" },
   { href: "/pricing", label: "Pricing" },
 ];
 

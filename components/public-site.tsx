@@ -11,31 +11,77 @@ const footerGroups = [
       { href: "/video-captions", label: "Video captions" },
       { href: "/urdu-audio-to-roman-urdu", label: "Roman Urdu text" },
       { href: "/urdu-audio-to-english-text", label: "English translation" },
-      { href: "/demo", label: "Caption demo" },
-      { href: "/pricing", label: "Pricing" },
+      { href: "/demo", label: "Interactive demo" },
+      { href: "/pricing", label: "PKR pricing" },
+      { href: "/supported-formats", label: "Supported formats" },
     ],
   },
   {
-    name: "Resources",
+    name: "Use Cases & Tools",
+    links: [
+      {
+        href: "/urdu-captions-for-reels-tiktok",
+        label: "Reels & TikTok captions",
+      },
+      { href: "/youtube-urdu-subtitles", label: "YouTube Urdu subtitles" },
+      {
+        href: "/bilingual-urdu-english-captions",
+        label: "Bilingual Urdu + English",
+      },
+      { href: "/urdu-voice-notes-to-text", label: "Voice notes to text" },
+      {
+        href: "/urdu-podcast-transcription",
+        label: "Podcast transcription",
+      },
+      {
+        href: "/srt-vtt-urdu-subtitle-generator",
+        label: "SRT & VTT generator",
+      },
+      { href: "/tools", label: "All free tools" },
+      {
+        href: "/tools/srt-to-vtt-converter",
+        label: "SRT to VTT converter",
+      },
+      {
+        href: "/tools/urdu-subtitle-checker",
+        label: "Urdu subtitle checker",
+      },
+      {
+        href: "/tools/caption-plan-calculator",
+        label: "PKR plan calculator",
+      },
+    ],
+  },
+  {
+    name: "Guides & Compare",
     links: [
       { href: "/guides", label: "Creator guides" },
-      { href: "/guides/voice-notes-to-text", label: "Voice notes to text" },
+      { href: "/urdu-caption-glossary", label: "Urdu caption glossary" },
+      { href: "/guides/make-urdu-video-captions", label: "Caption workflow" },
       {
-        href: "/guides/urdu-subtitles-for-youtube",
-        label: "YouTube subtitles",
+        href: "/guides/urdu-roman-urdu-and-english",
+        label: "Script comparison",
       },
-      { href: "/supported-formats", label: "Supported formats" },
+      { href: "/compare", label: "Compare tools" },
+      { href: "/compare/urduspeech-vs-capcut", label: "UrduSpeech vs CapCut" },
+      {
+        href: "/alternatives/capcut-urdu-alternative",
+        label: "CapCut Urdu alternative",
+      },
       { href: "/faq", label: "FAQ" },
-      { href: "/contact", label: "Contact" },
     ],
   },
   {
-    name: "Policies",
+    name: "Company & Policies",
     links: [
-      { href: "/privacy", label: "Privacy" },
-      { href: "/terms", label: "Terms" },
+      { href: "/about", label: "About UrduSpeech" },
+      { href: "/methodology", label: "AI methodology" },
+      { href: "/security", label: "Security & retention" },
+      { href: "/privacy", label: "Privacy policy" },
+      { href: "/terms", label: "Terms of service" },
       { href: "/refunds", label: "Payments & refunds" },
       { href: "/delete-account", label: "Delete account" },
+      { href: "/contact", label: "Contact support" },
     ],
   },
 ];
@@ -51,7 +97,10 @@ export function PublicFooter({ intro }: { intro?: ReactNode }) {
           <div className="site-footer-layout">
             <div>
               <Brand />
-              <p>Urdu transcription and captions for creators.</p>
+              <p>
+                Automated AI Urdu transcription, Nastaliq subtitles, and video
+                captioning studio for creators.
+              </p>
             </div>
             <nav className="site-footer-nav" aria-label="Service information">
               {footerGroups.map(({ name, links }) => (
@@ -67,7 +116,8 @@ export function PublicFooter({ intro }: { intro?: ReactNode }) {
             </nav>
           </div>
           <small>
-            Operated by MoonSys Ltd. Prices are in Pakistani rupees.
+            Operated by MoonSys Ltd. Automated AI creator studio (not a human
+            transcription agency). Prices are in Pakistani rupees (PKR).
           </small>
         </div>
       </div>
@@ -132,19 +182,47 @@ export function ReadingSections({
   );
 }
 
+export function Breadcrumbs({
+  items,
+}: {
+  items: readonly { name: string; href?: string }[];
+}) {
+  return (
+    <nav className="guide-breadcrumbs" aria-label="Breadcrumb">
+      <ol role="list">
+        {items.map((item, index) => {
+          const isLast = index === items.length - 1;
+          return (
+            <li key={item.name} aria-current={isLast ? "page" : undefined}>
+              {isLast || !item.href ? (
+                item.name
+              ) : (
+                <Link href={item.href}>{item.name}</Link>
+              )}
+            </li>
+          );
+        })}
+      </ol>
+    </nav>
+  );
+}
+
 export function PolicyPage({
   title,
   description,
   sections,
   updated,
+  breadcrumbs,
 }: {
   title: string;
   description: string;
   sections: readonly DocumentSection[];
   updated?: string;
+  breadcrumbs?: readonly { name: string; href?: string }[];
 }) {
   return (
     <PublicPage mainClassName="public-container policy-page">
+      {breadcrumbs && <Breadcrumbs items={breadcrumbs} />}
       <h1>{title}</h1>
       {updated && <p className="policy-date">Updated {updated}</p>}
       <p className="policy-intro">{description}</p>

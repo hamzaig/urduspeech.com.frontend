@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Upload, FileVideo, X, ShieldCheck } from "lucide-react";
 import { api, ApiError, mutation, explain } from "@/lib/api";
+import { trackEvent } from "@/lib/analytics";
 import type {
   Defaults,
   CreatedProject,
@@ -35,6 +36,7 @@ export default function NewProject() {
     [rights, setRights] = useState(false),
     [saveDefault, setSaveDefault] = useState(false),
     [error, setError] = useState(""),
+    [oversizeUpgradeHint, setOversizeUpgradeHint] = useState(false),
     [busy, setBusy] = useState(false),
     [stage, setStage] = useState(""),
     [percent, setPercent] = useState(0),
@@ -71,6 +73,7 @@ export default function NewProject() {
   function choose(f: File | undefined) {
     if (!f) return;
     setError("");
+    setOversizeUpgradeHint(false);
     if (created) {
       setError(
         "This upload has already started. Open the saved project before choosing another file.",
@@ -78,8 +81,17 @@ export default function NewProject() {
       return;
     }
     if (cap && f.size > cap.maxUploadBytes) {
+      const capLabel =
+        cap.maxUploadBytes < 1024 ** 3
+          ? `${Math.round(cap.maxUploadBytes / 1024 ** 2)} MiB`
+          : `${(cap.maxUploadBytes / 1024 ** 3).toFixed(1)} GiB`;
+      const canUpgradeSize =
+        usage?.plan.slug === "free" || usage?.plan.slug === "starter";
+      setOversizeUpgradeHint(canUpgradeSize);
       setError(
-        `This file is above your upload limit (${(cap.maxUploadBytes / 1024 ** 3).toFixed(1)} GiB). Choose a smaller file.`,
+        canUpgradeSize
+          ? `This file (${(f.size / 1024 ** 2).toFixed(0)} MiB) is above your ${usage?.plan.name} plan upload limit (${capLabel}). Upgrade your plan for up to 2 GiB uploads, or export a smaller M4A/MP3 audio bounce.`
+          : `This file is above the ${capLabel} scanning limit. For large 4K recordings, export a 1080p MP4 or a lightweight M4A/MP3 audio bounce to generate TXT, SRT, and VTT.`,
       );
       return;
     }
@@ -128,6 +140,11 @@ export default function NewProject() {
       );
       setStage("Checking the completed upload…");
       if (saveDefault) await api("/v1/me/defaults", mutation("PATCH", options));
+      trackEvent("project_upload_completed", {
+        output_variant: options.outputVariant,
+        file_kind: file.type.startsWith("video/") ? "video" : "audio",
+        plan_slug: usage?.plan.slug ?? "unknown",
+      });
       // Validation is asynchronous; processing starts from the project screen once media is ready.
       router.push(
         "/studio/projects/" +
@@ -172,7 +189,20 @@ export default function NewProject() {
       ) : (
         <div className="new-grid">
           <div className="upload-form">
-            {error && <ErrorNotice message={error} />}
+            {error && (
+              <div>
+                <ErrorNotice message={error} />
+                {oversizeUpgradeHint && (
+                  <p className="field-help">
+                    Need larger uploads up to 1–2 GiB and 1080p clean video?{" "}
+                    <Link href="/studio/billing">
+                      Compare Starter, Creator, and Studio in Billing
+                    </Link>
+                    .
+                  </p>
+                )}
+              </div>
+            )}
             <section className="form-section">
               <h2>1. Add your audio or video</h2>
               <button

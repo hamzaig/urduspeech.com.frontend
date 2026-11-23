@@ -1,25 +1,53 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "@fontsource-variable/public-sans";
 import "@fontsource-variable/bricolage-grotesque";
 import "./globals.css";
-import "./editor.css";
 import "./public.css";
 import "./site.css";
-import "./home.css";
 import "./premium.css";
 import "./theme.css";
+import { AnalyticsProvider } from "@/components/analytics-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { THEME_INIT_SCRIPT } from "@/lib/theme-script";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#faf9f4" },
+    { media: "(prefers-color-scheme: dark)", color: "#0c1510" },
+  ],
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://urduspeech.com"),
   title: {
-    default: "UrduSpeech — Creator studio",
+    default: "UrduSpeech — AI Urdu Captions & Transcripts",
     template: "%s | UrduSpeech",
   },
   description:
-    "Turn your Urdu audio and video into editable transcripts and captions.",
+    "Turn spoken Urdu audio and video into editable Nastaliq, Roman Urdu, English, and bilingual transcripts, SRT/VTT subtitles, and captioned MP4 exports.",
+  applicationName: "UrduSpeech",
+  manifest: "/manifest.webmanifest",
 };
+
+const SPECULATION_RULES = JSON.stringify({
+  prefetch: [
+    {
+      where: {
+        and: [
+          { href_matches: "/*" },
+          { not: { href_matches: "/api/*" } },
+          { not: { href_matches: "/studio/*" } },
+          { not: { href_matches: "/studio" } },
+          { not: { href_matches: "/auth/*" } },
+          { not: { href_matches: "/deletion-status" } },
+        ],
+      },
+      eagerness: "moderate",
+    },
+  ],
+});
 
 export default function RootLayout({
   children,
@@ -30,9 +58,14 @@ export default function RootLayout({
     <html lang="en" data-type="software" suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }} />
+        <script
+          type="speculationrules"
+          dangerouslySetInnerHTML={{ __html: SPECULATION_RULES }}
+        />
       </head>
       <body>
         <ThemeProvider>
+          <AnalyticsProvider />
           <a className="skip" href="#main">
             Skip to content
           </a>
