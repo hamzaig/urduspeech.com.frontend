@@ -42,6 +42,12 @@ export function explain(error: unknown) {
       return "Sign in to access your projects. If your email is not verified, check your inbox first.";
     if (error.status === 412)
       return "This transcript changed in another session. Reload it before saving your edits.";
+    if (error.code === "UPLOAD_RATE_LIMIT")
+      return "You have several uploads in progress or reached today's upload limit. Finish or cancel an upload, then try again.";
+    if (error.code === "DECISION_LIMIT")
+      return "You have reached today's limit for correction decisions on this account. Try again tomorrow.";
+    if (error.code === "CONTACT_BUSY")
+      return "We are receiving a lot of messages right now. Please try again in a little while.";
     if (error.status === 429)
       return "Too many requests. Wait a moment, then try again.";
     if (error.status >= 500)
