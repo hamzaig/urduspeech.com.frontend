@@ -171,7 +171,7 @@ const exportFaq: readonly QuestionItem[] = [
         cues with comma milliseconds) and <code>.vtt</code> (<code>WEBVTT</code>{" "}
         header with period milliseconds) subtitle files with verified
         non-overlapping timestamps. Remember that external subtitle files rely
-        on the target editor or player’s Urdu font support—if you want
+        on the target editor or player’s Urdu font support. If you want
         guaranteed Nastaliq typography on social feeds, export a burned-in{" "}
         <Link href="/video-captions">captioned MP4</Link> instead.
       </p>
@@ -200,7 +200,7 @@ const exportFaq: readonly QuestionItem[] = [
         <Link href="/tools/srt-to-vtt-converter">
           SRT to WebVTT converter and Urdu subtitle validator
         </Link>{" "}
-        right in your browser—it runs locally with zero upload and checks for
+        right in your browser. It runs locally with zero upload and checks for
         overlapping timestamps and Urdu RTL cues.
       </p>
     ),

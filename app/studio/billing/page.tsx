@@ -225,7 +225,7 @@ export default function Billing() {
           className="studio-upgrade-benefits"
           aria-label="Paid plan benefits"
         >
-          <strong>What paid PKR plans unlock immediately</strong>
+          <strong>What paid PKR plans include immediately</strong>
           <ul>
             <li>Clean 1080p burned-in Nastaliq MP4 video without watermark</li>
             <li>
@@ -262,7 +262,7 @@ export default function Billing() {
               <p className="plan-price">{money(p.price.amountMinor)}</p>
               <small>
                 {p.renewal === "monthly"
-                  ? `per month${pkrPerMin ? ` · PKR ${pkrPerMin}/min` : ""}`
+                  ? `per month${pkrPerMin ? `, PKR ${pkrPerMin}/min` : ""}`
                   : "one-time free allowance"}
               </small>
               <ul>
@@ -417,7 +417,7 @@ function ManualPayment({ catalog }: { catalog: PlanCatalog }) {
                 .filter((p) => p.slug !== "free")
                 .map((p) => (
                   <option value={p.id} key={p.id}>
-                    {p.name} — {money(p.price.amountMinor)}
+                    {p.name}: {money(p.price.amountMinor)}
                   </option>
                 ))}
             </select>
@@ -472,7 +472,7 @@ function ManualPayment({ catalog }: { catalog: PlanCatalog }) {
                 />
               </label>
               <button disabled={busy || !reference.trim()} onClick={submit}>
-                I have paid — submit for verification
+                Submit payment reference
               </button>
             </>
           ) : request.status === "approved" ? (

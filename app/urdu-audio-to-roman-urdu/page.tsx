@@ -47,7 +47,7 @@ const romanUrduQuestions = [
     answer: (
       <p>
         Roman Urdu keeps your spoken Urdu words and phrasing intact and writes
-        them in Latin letters (<code>A–Z</code>)—for example,{" "}
+        them in Latin letters (<code>A to Z</code>), for example,{" "}
         <span lang="ur-Latn" dir="ltr">
           “Aaj kuch naya banate hain.”
         </span>{" "}
@@ -149,8 +149,8 @@ export default function UrduAudioToRomanUrdu() {
             </Link>
           </div>
           <p className="free-note">
-            One-time 10-minute free allowance · No card required · Free MP4
-            renders up to 720p with watermark
+            One-time 10-minute free allowance, no card required. Free MP4
+            renders up to 720p with watermark.
           </p>
         </MarketingIntro>
 
@@ -159,7 +159,6 @@ export default function UrduAudioToRomanUrdu() {
           aria-labelledby="roman-urdu-sample-heading"
         >
           <header className="script-example-header">
-            <span className="script-example-badge">Illustrative sample</span>
             <h2 id="roman-urdu-sample-heading">
               Same spoken Urdu sentence in Urdu script and Roman Urdu
             </h2>
@@ -168,7 +167,7 @@ export default function UrduAudioToRomanUrdu() {
             {captionCues.map((cue) => (
               <li key={cue.start} className="script-pair-item">
                 <span className="sample-time">
-                  {captionTime(cue.start)}–{captionTime(cue.end)}
+                  {captionTime(cue.start)} to {captionTime(cue.end)}
                 </span>
                 <div className="script-pair-lines">
                   <p className="script-line-urdu" lang="ur" dir="rtl">
@@ -276,7 +275,7 @@ export default function UrduAudioToRomanUrdu() {
         <p>
           Real Pakistani podcasts, reels, and voice notes rarely use textbook
           Urdu alone. Speakers naturally mix English nouns and verbs into Urdu
-          sentences—such as{" "}
+          sentences, such as{" "}
           <span lang="ur-Latn" dir="ltr">
             “Aaj ke episode mein hum production workflow aur editing timeline
             discuss karenge.”
@@ -386,7 +385,7 @@ export default function UrduAudioToRomanUrdu() {
             <h3>Voice notes and show notes</h3>
             <p>
               Turn saved local voice recordings into readable Roman Urdu text
-              for team messages, quotes, or podcast episode notes—see{" "}
+              for team messages, quotes, or podcast episode notes. See{" "}
               <Link href="/urdu-voice-notes-to-text">
                 Urdu voice notes to text
               </Link>

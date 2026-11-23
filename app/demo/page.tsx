@@ -67,34 +67,39 @@ export default function CaptionDemo() {
   return (
     <PublicPage mainClassName="public-container marketing-page demo-page">
       <StructuredData data={jsonLd} />
-      <Breadcrumbs
-        items={[{ name: "Home", href: "/" }, { name: "Interactive demo" }]}
-      />
-      <div className="demo-intro marketing-intro">
-        <h1>Try the Urdu caption editor</h1>
-        <p>
-          Pick a cue on the timeline and make it yours. Switch between Nastaliq
-          Urdu, Roman Urdu, English, and bilingual captions, preview three
-          burned-in styles, and download valid UTF-8 SRT, VTT, or TXT files
-          without creating an account.
-        </p>
-      </div>
-      <CaptionStudioDemo editable />
-      <div className="demo-help">
-        <p>
-          This browser sandbox uses illustrative sample cues so you can test RTL
-          editing and subtitle export formatting immediately. Upload your own
-          audio or video in Studio to transcribe real recordings and render
-          captioned MP4 video.
-        </p>
-        <Link
-          className="public-inline-link"
-          href="/guides/subtitle-and-video-exports"
-        >
-          Compare TXT, SRT, VTT &amp; MP4 exports{" "}
-          <ArrowRight size={16} aria-hidden="true" />
-        </Link>
-      </div>
+      <header className="page-hero">
+        <Breadcrumbs
+          items={[{ name: "Home", href: "/" }, { name: "Interactive demo" }]}
+        />
+        <div className="demo-intro marketing-intro">
+          <h1>Try the Urdu caption editor</h1>
+          <p>
+            Pick a cue, edit Nastaliq or bilingual captions, and export SRT,
+            VTT, or TXT.
+          </p>
+        </div>
+      </header>
+      <section
+        className="demo-workbench-section"
+        aria-label="Interactive caption workbench"
+      >
+        <CaptionStudioDemo editable />
+        <div className="demo-help">
+          <p>
+            This browser sandbox uses illustrative sample cues so you can test
+            RTL editing and subtitle export formatting immediately. Upload your
+            own audio or video in Studio to transcribe real recordings and
+            render captioned MP4 video.
+          </p>
+          <Link
+            className="public-inline-link"
+            href="/guides/subtitle-and-video-exports"
+          >
+            Compare TXT, SRT, VTT &amp; MP4 exports{" "}
+            <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+        </div>
+      </section>
 
       <section className="product-section" aria-labelledby="demo-walkthrough">
         <h2 id="demo-walkthrough">What you can test in the sample editor</h2>

@@ -1,0 +1,224 @@
+/* Hallmark · shape: Stage + Workbench · genre: editorial · theme: brand · redesign: full
+ * paper: oklch(98.2% 0.006 112) · accent: oklch(37% 0.082 154) · display: Bricolage Grotesque Variable · body: Public Sans Variable · hero: Stage (/), Banner (/pricing, /demo, /tools, /urdu-transcription) · nav: three-part bar · footer: index columns · signature: live Noto Nastaliq Urdu video caption workbench above the fold
+ * axes: light/grotesk-sans/forest-green · posture: Restrained · contrast: pass · fold: pass · v2.0.0 */
+/* Hallmark · pre-emit critique: P5 H5 E5 S5 R5 V4 · weakest: V, interior product pages share one editorial rhythm; varied hero postures, hairline divisions, and inline workbench density across routes */
+/* Hallmark · dropped _R_s5lftb_-language, _R_4inpftb_-language, _R_4inpftb_-style, "caption preview", "read every word", "an automated ai urdu caption and transcription studio" · React useId radio names shifted after removing decorative HeroBackdrop SVG and wrapping interior heroes; all interactive radios remain intact and full workbench/transcript stay on /demo */
+/* Hallmark · reworded "urdu captions. ready to publish." to "Urdu captions, ready to publish.", "creator plan — pkr 2,499/mo" to "Recommended: Creator (PKR 2,499/mo)", "free & starter (pkr 0 – 999)" to "Free & Starter (PKR 0 to 999)", "creator & studio (pkr 2,499 – 5,999)" to "Creator & Studio (PKR 2,499 to 5,999)", "make the words fit the frame" to "Preview Nastaliq styles over real video", "edit words and timing" to "Refine Urdu names and cue timing", "your media, on your terms" to "Private S3 storage and timed expiry", "from recording to final cut" to "From Urdu recording to SRT, VTT, or MP4", "common questions" to "Urdu captioning & billing questions" · Floor 19 dash cleanup, Floor 54 eyebrow removal, and finish-review craft.md § 6 heading specificity */
+/* Hallmark · finish-review: subagent · fixed 8/8 (Floor 73 watermark collision, Urdu tofu glyphs, global .demo-next styling, .guide-cards eyebrows/icon-tiles, trailing CTA arrows, nested containment cards, detached demo header & 375px controls, generic homepage heads & trial echo) */
+
+@font-face {
+  font-family: CaptionUrdu;
+  src:
+    url(/fonts/NotoNastaliqUrdu-Regular.woff2) format("woff2"),
+    url(/fonts/NotoNastaliqUrdu-Regular.ttf) format("truetype");
+  font-display: swap;
+  unicode-range:
+    U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200D;
+}
+
+:root {
+  /* Hallmark 4px spacing scale */
+  --space-3xs: 2px;
+  --space-2xs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 24px;
+  --space-xl: 40px;
+  --space-2xl: 64px;
+  --space-3xl: 96px;
+  --space-4xl: 144px;
+
+  /* Hallmark type scale */
+  --text-xs: 0.8125rem;
+  --text-sm: 0.875rem;
+  --text-md: 1rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5625rem;
+  --text-2xl: 1.953rem;
+  --text-3xl: 2.441rem;
+  --text-display-s: clamp(2.25rem, 3.6vw + 0.5rem, 3.5rem);
+  --text-display: clamp(2.5rem, 4vw + 0.75rem, 4.25rem);
+  --text-section: clamp(2.25rem, 2.5vw + 1rem, 3.25rem);
+  --text-title: clamp(1.25rem, 0.75vw + 0.875rem, 1.55rem);
+  --text-lead: clamp(1.0625rem, 0.35vw + 0.95rem, 1.25rem);
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-in: cubic-bezier(0.7, 0, 0.84, 0);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-micro: 120ms;
+  --dur-short: 220ms;
+  --dur-long: 420ms;
+
+  /* Layout & z-index ladder */
+  --container: 1360px;
+  --gutter: 64px;
+  --gap-columns: 32px;
+  --section-gap-s: 120px;
+  --section-gap: 144px;
+  --section-gap-l: 176px;
+  --site-nav-height: 72px;
+  --z-base: 1;
+  --z-raised: 10;
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-sticky-nav: 300;
+  --z-modal: 400;
+  --z-toast: 500;
+  --z-tooltip: 600;
+
+  /* UrduSpeech Brand Palette in OKLCH (Light — Warm Alabaster + Deep Forest Green) */
+  --color-paper: oklch(98.2% 0.006 112);
+  --color-paper-2: oklch(95.4% 0.011 116);
+  --color-paper-3: oklch(92.4% 0.019 132);
+  --color-surface: oklch(99.2% 0.005 110);
+  --color-surface-hover: oklch(96.8% 0.014 132);
+  --color-ink: oklch(22% 0.024 155);
+  --color-ink-2: oklch(34% 0.022 152);
+  --color-muted: oklch(43% 0.022 150);
+  --color-rule: oklch(85.5% 0.016 135);
+  --color-rule-strong: oklch(72% 0.024 142);
+  --color-control: oklch(54% 0.024 146);
+  --color-accent: oklch(37% 0.082 154);
+  --color-accent-hover: oklch(30% 0.075 154);
+  --color-accent-ink: oklch(98.5% 0.005 112);
+  --color-focus: oklch(44% 0.16 154);
+
+  /* Dark Media Stage & Studio Bands */
+  --color-stage: oklch(21% 0.026 152);
+  --color-stage-deep: oklch(15.5% 0.022 152);
+  --color-stage-forest: oklch(25% 0.036 152);
+  --color-stage-hover: oklch(32% 0.046 152);
+  --color-stage-ink: oklch(96.5% 0.011 124);
+  --color-stage-muted: oklch(81% 0.022 135);
+  --color-stage-accent: oklch(90% 0.072 116);
+  --color-stage-accent-hover: oklch(94% 0.068 112);
+  --color-stage-rule: oklch(82% 0.025 135 / 0.28);
+  --color-stage-pill-bg: oklch(14% 0.02 152 / 0.88);
+  --color-stage-pill-border: oklch(96% 0.01 124 / 0.28);
+  --color-stage-chip-bg: oklch(90% 0.072 116 / 0.12);
+  --color-stage-watermark: oklch(90% 0.072 116 / 0.09);
+  --color-stage-box: oklch(12% 0.018 152);
+  --color-stage-swatch: oklch(32% 0.052 158);
+  --color-scrim-strong: oklch(12% 0.014 145 / 0.9);
+  --color-scrim-soft: oklch(12% 0.014 145 / 0.78);
+  --color-caption-shadow: oklch(8% 0.01 150 / 0.88);
+  --color-caption-ink: oklch(98% 0.005 112);
+  --color-timeline-bar: oklch(98% 0.005 112 / 0.16);
+
+  /* Semantic Status Tokens */
+  --color-error: oklch(48% 0.165 10);
+  --color-error-hover: oklch(41% 0.16 10);
+  --color-danger-bg: oklch(44% 0.165 14);
+  --color-danger-hover: oklch(37% 0.16 14);
+  --color-error-ink: oklch(98.5% 0.005 112);
+  --color-error-bg: oklch(96.5% 0.018 10);
+  --color-error-border: oklch(82% 0.065 10);
+  --color-success: oklch(46% 0.115 154);
+  --color-success-border: oklch(56% 0.085 150);
+  --color-warn-ink: oklch(41% 0.095 66);
+  --color-warn-bg: oklch(96.5% 0.032 84);
+  --color-warn-border: oklch(76% 0.095 76);
+  --color-sun-warm: oklch(54% 0.135 62);
+  --color-auto-dot: oklch(58% 0.155 58);
+
+  /* Typography */
+  --font-urdu: CaptionUrdu, serif;
+  --font-body: "Public Sans Variable", var(--font-urdu), system-ui, sans-serif;
+  --font-display:
+    "Bricolage Grotesque Variable", "Public Sans Variable", var(--font-urdu),
+    system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-outlier: var(--font-urdu);
+  --display-weight: 700;
+  --tracking-display: -0.032em;
+
+  /* Radii, Hairlines & Depth */
+  --radius-strip: 4px;
+  --radius-control: 8px;
+  --radius-card: 12px;
+  --radius-stage: 16px;
+  --radius-pill: 999px;
+  --rule-hair: 1px;
+  --shadow-card: 0 1px 2px oklch(20% 0.02 152 / 0.06);
+  --shadow-soft: 0 2px 8px oklch(20% 0.02 152 / 0.07);
+  --shadow-lift: 0 8px 20px oklch(20% 0.02 152 / 0.12);
+
+  /* Legacy semantic aliases (keeps every Studio/Public route consistent) */
+  --ink: var(--color-ink);
+  --muted: var(--color-muted);
+  --accent: var(--color-accent);
+  --accent-hover: var(--color-accent-hover);
+  --on-accent: var(--color-accent-ink);
+  --wash: var(--color-paper-3);
+  --paper: var(--color-paper-2);
+  --line: var(--color-rule);
+  --control: var(--color-control);
+  --canvas: var(--color-paper);
+  --surface: var(--color-surface);
+  --stage: var(--color-stage);
+  --stage-accent: var(--color-stage-accent);
+  --red: var(--color-error);
+  --green: var(--color-success);
+  --body: var(--font-body);
+  --display: var(--font-display);
+  --site-forest: var(--color-stage-forest);
+  --site-dark: var(--color-stage);
+  --site-deep: var(--color-stage-deep);
+  --site-on-dark: var(--color-stage-ink);
+  --site-on-dark-muted: var(--color-stage-muted);
+  --site-free: var(--color-stage-accent);
+  --site-cream: var(--color-paper-2);
+  --site-sage: var(--color-paper-3);
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-paper: oklch(15.5% 0.018 152);
+  --color-paper-2: oklch(19% 0.022 152);
+  --color-paper-3: oklch(24% 0.032 152);
+  --color-surface: oklch(18% 0.02 152);
+  --color-surface-hover: oklch(23% 0.028 152);
+  --color-ink: oklch(95% 0.012 128);
+  --color-ink-2: oklch(86% 0.016 132);
+  --color-muted: oklch(74% 0.02 138);
+  --color-rule: oklch(30% 0.028 150);
+  --color-rule-strong: oklch(44% 0.032 148);
+  --color-control: oklch(56% 0.032 148);
+  --color-accent: oklch(87% 0.085 118);
+  --color-accent-hover: oklch(92% 0.075 116);
+  --color-accent-ink: oklch(17% 0.028 154);
+  --color-focus: oklch(88% 0.14 118);
+
+  --color-stage: oklch(12.5% 0.016 152);
+  --color-stage-deep: oklch(10% 0.014 152);
+  --color-stage-forest: oklch(18.5% 0.028 152);
+  --color-stage-hover: oklch(26% 0.038 152);
+  --color-stage-ink: oklch(96% 0.012 126);
+  --color-stage-muted: oklch(78% 0.02 136);
+  --color-stage-accent: oklch(89% 0.078 118);
+  --color-stage-accent-hover: oklch(94% 0.07 114);
+  --color-stage-rule: oklch(86% 0.035 128 / 0.22);
+  --color-stage-watermark: oklch(89% 0.078 118 / 0.07);
+
+  --color-error: oklch(74% 0.14 14);
+  --color-error-hover: oklch(66% 0.16 14);
+  --color-danger-bg: oklch(46% 0.165 14);
+  --color-danger-hover: oklch(39% 0.16 14);
+  --color-error-ink: oklch(98.5% 0.005 112);
+  --color-error-bg: oklch(22% 0.048 12);
+  --color-error-border: oklch(44% 0.105 12);
+  --color-success: oklch(78% 0.125 154);
+  --color-success-border: oklch(62% 0.095 154);
+  --color-warn-ink: oklch(85% 0.095 82);
+  --color-warn-bg: oklch(23% 0.04 74);
+  --color-warn-border: oklch(48% 0.08 74);
+  --color-sun-warm: oklch(83% 0.12 82);
+  --color-auto-dot: oklch(87% 0.085 118);
+
+  --shadow-card: 0 1px 2px oklch(5% 0.01 150 / 0.45);
+  --shadow-soft: 0 4px 14px oklch(5% 0.01 150 / 0.48);
+  --shadow-lift: 0 10px 24px oklch(5% 0.01 150 / 0.62);
+}

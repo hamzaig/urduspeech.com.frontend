@@ -90,7 +90,7 @@ export function SrtVttTool() {
             Browser UTF-8 subtitle converter &amp; validator
           </h2>
           <p className="field-help">
-            Runs 100% locally in your browser—your subtitle files are never
+            Runs 100% locally in your browser, so your subtitle files are never
             uploaded to any server.
           </p>
         </div>

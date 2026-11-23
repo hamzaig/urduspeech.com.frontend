@@ -122,7 +122,7 @@ const sections: readonly DocumentSection[] = [
             <strong>Explicit review cards:</strong> Uncertain wording proposals
             are surfaced in Studio with <code>before</code> and{" "}
             <code>after</code> text plus a brief reason so you can accept or
-            reject each change individually—or disable AI text correction
+            reject each change individually, or disable AI text correction
             altogether at upload time.
           </li>
         </ul>

@@ -166,7 +166,7 @@ export function UrduReadabilityTool() {
             });
           }}
         >
-          Reels, TikTok &amp; Shorts (≤17 Urdu CPS · ≤38 chars/line)
+          Reels, TikTok &amp; Shorts (≤17 Urdu CPS, ≤38 chars/line)
         </button>
         <button
           type="button"
@@ -180,7 +180,7 @@ export function UrduReadabilityTool() {
             });
           }}
         >
-          YouTube &amp; 16:9 Landscape (≤20 Urdu CPS · ≤46 chars/line)
+          YouTube &amp; 16:9 Landscape (≤20 Urdu CPS, ≤46 chars/line)
         </button>
       </div>
 

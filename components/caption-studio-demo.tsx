@@ -5,7 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowUp,
-  ArrowUpRight,
   Captions,
   Check,
   Copy,
@@ -50,8 +49,10 @@ type WebMcpNavigator = Navigator & {
 
 export function CaptionStudioDemo({
   editable = false,
+  compact = false,
 }: {
   editable?: boolean;
+  compact?: boolean;
 }) {
   const [mode, setMode] = useState<CaptionMode>("bilingual");
   const [selected, setSelected] = useState(1);
@@ -160,6 +161,7 @@ export function CaptionStudioDemo({
       id="caption-demo"
       className="caption-studio"
       data-editable={editable || undefined}
+      data-compact={compact || undefined}
       aria-labelledby={id + "-title"}
       tabIndex={-1}
     >
@@ -212,21 +214,28 @@ export function CaptionStudioDemo({
                 onClick={() => selectCue(index)}
               >
                 <span className="sr-only">Cue {index + 1}, </span>
-                {captionTime(start)}–{captionTime(end)}
+                {captionTime(start)} to {captionTime(end)}
               </button>
             ))}
           </div>
         </div>
       </div>
       <div className="caption-studio-controls">
-        <header>
-          <span className="caption-studio-icon">
-            <Captions size={22} strokeWidth={1.8} aria-hidden="true" />
-          </span>
-          <h2 id={id + "-title"}>
-            {editable ? "Sample editor" : "Caption preview"}
+        {!compact && (
+          <header>
+            <span className="caption-studio-icon">
+              <Captions size={22} strokeWidth={1.8} aria-hidden="true" />
+            </span>
+            <h2 id={id + "-title"}>
+              {editable ? "Sample editor" : "Caption preview"}
+            </h2>
+          </header>
+        )}
+        {compact && (
+          <h2 id={id + "-title"} className="sr-only">
+            Interactive Urdu caption preview
           </h2>
-        </header>
+        )}
         <fieldset className="caption-studio-modes">
           <legend>Caption language</legend>
           <div>
@@ -308,21 +317,25 @@ export function CaptionStudioDemo({
               View preview
             </a>
           </>
-        ) : (
+        ) : !compact ? (
           <p className="caption-studio-description">
             Switch the language or select a moment on the timeline to see how
             your captions could look.
           </p>
-        )}
+        ) : null}
         <div className="caption-studio-actions">
           {editable ? (
             <button type="button" className="text-button" onClick={reset}>
               <RotateCcw size={16} aria-hidden="true" />
               Reset sample
             </button>
+          ) : compact ? (
+            <Link href="/demo" className="public-inline-link">
+              Open full editor
+            </Link>
           ) : (
             <Link href="/demo" className="button">
-              Edit the sample <ArrowUpRight size={17} aria-hidden="true" />
+              Edit the sample
             </Link>
           )}
           {canDownload ? (
@@ -360,113 +373,114 @@ export function CaptionStudioDemo({
           )}
         </div>
       </div>
-      <section
-        className="caption-studio-transcript"
-        aria-labelledby={id + "-transcript-title"}
-      >
-        <header className="caption-transcript-heading">
-          <div>
-            <p>Parallel transcript</p>
-            <h3 id={id + "-transcript-title"}>Read every word</h3>
-          </div>
-          <button
-            type="button"
-            className="caption-transcript-copy"
-            onClick={copyCaption}
-            disabled={!exportLines[selected]}
-          >
-            {copyStatus === "Caption copied." ? (
-              <Check size={16} aria-hidden="true" />
-            ) : (
-              <Copy size={16} aria-hidden="true" />
-            )}
-            {copyStatus === "Caption copied." ? "Copied" : "Copy text"}
-          </button>
-        </header>
-        <div className="caption-transcript-body">
-          <div className="caption-transcript-source">
-            <p>Urdu source cues</p>
-            <ol role="list">
-              {captionCues.map((item, index) => (
-                <li key={item.start}>
-                  <button
-                    type="button"
-                    aria-pressed={index === selected}
-                    onClick={() => selectCue(index)}
-                  >
-                    <span className="caption-transcript-time">
-                      {captionTime(item.start)}
-                    </span>
-                    <span lang="ur" dir="rtl">
-                      {line(index, "urdu")}
-                    </span>
-                  </button>
-                </li>
-              ))}
-            </ol>
-          </div>
-          <div className="caption-transcript-output">
-            <div className="caption-transcript-meta">
-              <span>{outputName} output</span>
-              <span className="caption-transcript-time">
-                {captionTime(cue.start)}–{captionTime(cue.end)}
-              </span>
-            </div>
-            <div
-              className="caption-transcript-lines"
-              aria-live={editable ? undefined : "polite"}
-              aria-atomic={editable ? undefined : "true"}
+      {!compact && (
+        <section
+          className="caption-studio-transcript"
+          aria-labelledby={id + "-transcript-title"}
+        >
+          <header className="caption-transcript-heading">
+            <h3 id={id + "-transcript-title"}>Parallel transcript</h3>
+            <button
+              type="button"
+              className="caption-transcript-copy"
+              onClick={copyCaption}
+              disabled={!exportLines[selected]}
             >
-              {activeLanguages.map((language) => {
-                const text = line(selected, language);
-                return text.trim() ? (
-                  <span
-                    key={language}
-                    lang={captionLanguageMeta[language].lang}
-                    dir={captionLanguageMeta[language].dir}
-                  >
-                    {text}
-                  </span>
-                ) : null;
-              })}
+              {copyStatus === "Caption copied." ? (
+                <Check size={16} aria-hidden="true" />
+              ) : (
+                <Copy size={16} aria-hidden="true" />
+              )}
+              {copyStatus === "Caption copied." ? "Copied" : "Copy text"}
+            </button>
+          </header>
+          <div className="caption-transcript-body">
+            <div className="caption-transcript-source">
+              <p>Urdu source cues</p>
+              <ol role="list">
+                {captionCues.map((item, index) => (
+                  <li key={item.start}>
+                    <button
+                      type="button"
+                      aria-pressed={index === selected}
+                      onClick={() => selectCue(index)}
+                    >
+                      <span className="caption-transcript-time">
+                        {captionTime(item.start)}
+                      </span>
+                      <span lang="ur" dir="rtl">
+                        {line(index, "urdu")}
+                      </span>
+                    </button>
+                  </li>
+                ))}
+              </ol>
             </div>
-            <p className="caption-transcript-status" role="status">
-              {copyStatus}
-            </p>
+            <div className="caption-transcript-output">
+              <div className="caption-transcript-meta">
+                <span>{outputName} output</span>
+                <span className="caption-transcript-time">
+                  {captionTime(cue.start)} to {captionTime(cue.end)}
+                </span>
+              </div>
+              <div
+                className="caption-transcript-lines"
+                aria-live={editable ? undefined : "polite"}
+                aria-atomic={editable ? undefined : "true"}
+              >
+                {activeLanguages.map((language) => {
+                  const text = line(selected, language);
+                  return text.trim() ? (
+                    <span
+                      key={language}
+                      lang={captionLanguageMeta[language].lang}
+                      dir={captionLanguageMeta[language].dir}
+                    >
+                      {text}
+                    </span>
+                  ) : null;
+                })}
+              </div>
+              <p className="caption-transcript-status" role="status">
+                {copyStatus}
+              </p>
+            </div>
           </div>
-        </div>
-        <table className="sr-only">
-          <caption>
-            Illustrative Urdu, Roman Urdu, and English caption cues
-          </caption>
-          <thead>
-            <tr>
-              <th scope="col">Time</th>
-              <th scope="col">Urdu</th>
-              <th scope="col">Roman Urdu</th>
-              <th scope="col">English</th>
-            </tr>
-          </thead>
-          <tbody>
-            {captionCues.map((item) => (
-              <tr key={item.start}>
-                <td>
-                  {captionTime(item.start)}–{captionTime(item.end)}
-                </td>
-                <td lang="ur" dir="rtl">
-                  {item.urdu}
-                </td>
-                <td lang="ur-Latn" dir="ltr">
-                  {item.romanUrdu}
-                </td>
-                <td lang="en" dir="ltr">
-                  {item.english}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </section>
+          <div className="sr-only">
+            <table>
+              <caption>
+                Illustrative Urdu, Roman Urdu, and English caption cues
+              </caption>
+              <thead>
+                <tr>
+                  <th scope="col">Time</th>
+                  <th scope="col">Urdu</th>
+                  <th scope="col">Roman Urdu</th>
+                  <th scope="col">English</th>
+                </tr>
+              </thead>
+              <tbody>
+                {captionCues.map((item) => (
+                  <tr key={item.start}>
+                    <td>
+                      {captionTime(item.start)} to {captionTime(item.end)}
+                    </td>
+                    <td lang="ur" dir="rtl">
+                      {item.urdu}
+                    </td>
+                    <td lang="ur-Latn" dir="ltr">
+                      {item.romanUrdu}
+                    </td>
+                    <td lang="en" dir="ltr">
+                      {item.english}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      )}
     </article>
   );
 }
