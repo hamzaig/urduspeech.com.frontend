@@ -8,6 +8,8 @@ import type {
   ComputeAccounts,
   ComputeAccountInput,
   ComputeAccountPatch,
+  ContactMessage,
+  ContactMessages,
   ManualPaymentReviews,
 } from "@/lib/contracts";
 import { PageTitle, ErrorNotice, Saved } from "@/components/common";
@@ -95,10 +97,12 @@ export default function Admin() {
         </p>
       )}
       <nav className="operations-nav" aria-label="Operations sections">
+        <a href="#contact-messages">Contact messages</a>
         <a href="#payment-reviews">Payment reviews</a>
         <a href="#compute-accounts">Modal accounts</a>
         <a href="#private-settings">Service settings</a>
       </nav>
+      <ContactInbox />
       <PaymentReviews fresh={session.fresh} />
       <ModalAccounts fresh={session.fresh} />
       <ServiceSettings fresh={session.fresh} />
@@ -829,5 +833,97 @@ function PaymentReview({
         </fieldset>
       </form>
     </details>
+  );
+}
+function ContactInbox() {
+  const [items, setItems] = useState<ContactMessage[]>([]),
+    [unread, setUnread] = useState(0),
+    [more, setMore] = useState(false),
+    [loaded, setLoaded] = useState(false),
+    [error, setError] = useState("");
+  async function load(before?: string) {
+    try {
+      const result = await api<ContactMessages>(
+        "/v1/admin/contact-messages" +
+          (before ? "?before=" + encodeURIComponent(before) : ""),
+      );
+      setItems((old) =>
+        before
+          ? [
+              ...old,
+              ...result.messages.filter((m) => !old.some((o) => o.id === m.id)),
+            ]
+          : result.messages,
+      );
+      setUnread(result.unread);
+      setMore(result.messages.length === 50);
+      setLoaded(true);
+      setError("");
+    } catch (e) {
+      setError(failure(e));
+    }
+  }
+  async function mark(item: ContactMessage, read: boolean) {
+    try {
+      const updated = await api<ContactMessage>(
+        `/v1/admin/contact-messages/${item.id}`,
+        mutation("PATCH", { read }),
+      );
+      setItems((old) => old.map((m) => (m.id === updated.id ? updated : m)));
+      setUnread((n) => Math.max(0, n + (read ? -1 : 1)));
+    } catch (e) {
+      setError(failure(e));
+    }
+  }
+  useEffect(() => {
+    void load();
+  }, []);
+  return (
+    <section id="contact-messages" className="operations-section">
+      <div className="operations-heading">
+        <div>
+          <h2>Contact messages{unread > 0 ? ` (${unread} unread)` : ""}</h2>
+          <p>
+            Messages sent from the public contact form. Reply from your own
+            mailbox; nothing is e-mailed automatically.
+          </p>
+        </div>
+        <button className="secondary" onClick={() => load()}>
+          Refresh messages
+        </button>
+      </div>
+      {error && <ErrorNotice message={error} />}
+      {!loaded && !error && <p role="status">Loading messages…</p>}
+      {loaded && items.length === 0 && <p>No contact messages yet.</p>}
+      {items.map((item) => (
+        <article
+          key={item.id}
+          className="panel"
+          aria-label={`Message from ${item.name}`}
+        >
+          <p>
+            <strong>{item.read ? item.subject : "● " + item.subject}</strong>
+            <br />
+            {item.name} &lt;
+            <a href={`mailto:${encodeURIComponent(item.email)}`}>
+              {item.email}
+            </a>
+            &gt; · {new Date(item.createdAt).toLocaleString()}
+          </p>
+          <p style={{ whiteSpace: "pre-wrap" }}>{item.message}</p>
+          <button className="secondary" onClick={() => mark(item, !item.read)}>
+            {item.read ? "Mark unread" : "Mark read"}
+          </button>
+        </article>
+      ))}
+      {more && (
+        <button
+          className="secondary"
+          onClick={() => load(items[items.length - 1]?.createdAt)}
+        >
+          Load older messages
+        </button>
+      )}
+    </section>
   );
 }

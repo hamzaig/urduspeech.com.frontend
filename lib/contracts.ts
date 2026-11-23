@@ -496,3 +496,13 @@ export type ProjectActivity = {
   exports: { id: string; state: string }[];
   uploads: { id: string; state: string }[];
 };
+export type ContactMessage = {
+  id: string;
+  name: string;
+  email: string;
+  subject: string;
+  message: string;
+  read: boolean;
+  createdAt: string;
+};
+export type ContactMessages = { messages: ContactMessage[]; unread: number };

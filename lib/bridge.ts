@@ -1,5 +1,7 @@
 // Fixed-origin bridge: the browser never receives backend/provider credentials.
 import routes from "./routes.json";
+import { isIP } from "node:net";
+import { createHmac } from "node:crypto";
 export const SESSION_COOKIE = "__Host-urduspeech_session";
 export const MAX_BODY = 512 * 1024;
 const allowed = routes.map((r) => ({
@@ -72,6 +74,23 @@ export async function bridge(
   ]) {
     const value = request.headers.get(name);
     if (value) headers.set(name, value);
+  }
+  // The API sees only this function's shared egress IP; pass the end-user IP Vercel
+  // observed (it overwrites client-supplied x-real-ip / x-forwarded-for) with an HMAC.
+  const secret = env.BFF_CLIENT_IP_SECRET;
+  const clientIp = (
+    request.headers.get("x-real-ip") ??
+    request.headers.get("x-forwarded-for")?.split(",")[0] ??
+    ""
+  ).trim();
+  if (secret && secret.length >= 32 && clientIp && isIP(clientIp)) {
+    const ts = String(Date.now());
+    headers.set("x-urduspeech-client-ip", clientIp);
+    headers.set("x-urduspeech-client-ts", ts);
+    headers.set(
+      "x-urduspeech-client-sig",
+      createHmac("sha256", secret).update(`${ts}.${clientIp}`).digest("hex"),
+    );
   }
   let body: Uint8Array | undefined;
   if (unsafe && request.body) {

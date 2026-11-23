@@ -297,3 +297,34 @@ test("a nonempty unsafe body still requires JSON before contacting the backend",
   assert.equal(response.status, 415);
   assert.equal(calls, 0);
 });
+test("signs the Vercel-observed client IP only when a strong secret is configured", async () => {
+  const { createHmac } = await import("node:crypto");
+  const secret = "s".repeat(40);
+  let seen: Headers | undefined;
+  const capture = async (_url: URL | RequestInfo, init?: RequestInit) => {
+    seen = new Headers(init?.headers);
+    return Response.json({});
+  };
+  const req = () =>
+    request("/v1/session", {
+      headers: {
+        "x-real-ip": "203.0.113.9",
+        "x-urduspeech-client-ip": "1.1.1.1",
+      },
+    });
+  await bridge(
+    req(),
+    ["v1", "session"],
+    { ...env, BFF_CLIENT_IP_SECRET: secret },
+    capture,
+  );
+  const ts = seen!.get("x-urduspeech-client-ts")!;
+  assert.equal(seen!.get("x-urduspeech-client-ip"), "203.0.113.9");
+  assert.equal(
+    seen!.get("x-urduspeech-client-sig"),
+    createHmac("sha256", secret).update(`${ts}.203.0.113.9`).digest("hex"),
+  );
+  await bridge(req(), ["v1", "session"], env, capture);
+  assert.equal(seen!.get("x-urduspeech-client-ip"), null);
+  assert.equal(seen!.get("x-urduspeech-client-sig"), null);
+});
