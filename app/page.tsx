@@ -13,7 +13,6 @@ import {
   Timer,
   Wallet,
 } from "lucide-react";
-import sampleStill from "@/assets/studio-interview.webp";
 import { CaptionStudioDemo } from "@/components/caption-studio-demo";
 import { CaptionStyleGallery } from "@/components/caption-style-gallery";
 import { GuideCards } from "@/components/guide-cards";
@@ -29,41 +28,29 @@ import { PublicFooter } from "@/components/public-site";
 import { StructuredData } from "@/components/structured-data";
 import { publicGuides } from "@/lib/public-guides";
 import {
+  SITE_URL,
+  buildGraphJsonLd,
   buildOrganizationJsonLd,
   buildSoftwareApplicationJsonLd,
+  buildWebPageJsonLd,
   buildWebSiteJsonLd,
+  publicMetadata,
 } from "@/lib/seo";
 import "./landing.css";
 
-const title = "Urdu captions and transcripts for creators";
+const absoluteTitle = "Urdu Captions & Transcripts for Creators | UrduSpeech";
 const description =
-  "Turn Urdu recordings into editable transcripts and subtitles in Urdu, Roman Urdu, English or both. Try the demo and start with 10 free minutes.";
+  "Upload Urdu audio or video for editable Nastaliq, Roman Urdu, English, and bilingual captions. Export UTF-8 TXT, SRT, VTT, or MP4.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://urduspeech.com"),
-  title,
-  description,
-  alternates: { canonical: "/" },
-  openGraph: {
-    type: "website",
-    siteName: "UrduSpeech",
-    title,
+  ...publicMetadata({
+    title: "Urdu Captions & Transcripts for Creators",
+    absoluteTitle,
     description,
-    url: "/",
-    images: [
-      {
-        url: sampleStill.src,
-        width: sampleStill.width,
-        height: sampleStill.height,
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title,
-    description,
-    images: [sampleStill.src],
-  },
+    path: "/",
+    ogImage: "default",
+    markdownPath: "/index.md",
+  }),
   other: { "page-type": "software", "site-kind": "software" },
 };
 
@@ -117,25 +104,37 @@ const homeQuestions = [
   commonQuestions[1],
   commonQuestions[2],
   commonQuestions[3],
-  commonQuestions[6],
+  commonQuestions[4],
+  commonQuestions[7],
 ];
 
 export default function Home() {
-  const jsonLd = [
+  const jsonLd = buildGraphJsonLd([
     buildOrganizationJsonLd(),
     buildWebSiteJsonLd(),
+    buildWebPageJsonLd({
+      name: absoluteTitle,
+      description,
+      path: "/",
+      primaryImage: "/og/default.png",
+      hasBreadcrumb: false,
+      mainEntityId: `${SITE_URL}/#software`,
+      dateModified: "2026-11-22",
+    }),
     buildSoftwareApplicationJsonLd({
       name: "UrduSpeech",
       description,
       path: "/",
+      isCanonicalApp: true,
+      includeOffers: true,
       featureList: [
-        "AI-assisted Urdu speech-to-text transcription for uploaded audio and video",
-        "Editable Urdu script (Nastaliq), Roman Urdu, English translation, and stacked bilingual captions",
-        "Optional AI text correction with reviewable accept/reject suggestions",
-        "UTF-8 TXT transcripts, SRT and VTT subtitle files, and burned-in captioned MP4 exports",
+        "AI-assisted Urdu speech-to-text transcription for uploaded audio and video (MP3, FLAC, WAV, M4A, MP4, MOV)",
+        "Editable Urdu script (Noto Nastaliq Urdu RTL), Roman Urdu (ur-Latn), English translation, and stacked bilingual captions",
+        "Optional conservative AI text correction with reviewable accept/reject suggestions",
+        "UTF-8 TXT transcripts, SRT and WebVTT subtitle files, and burned-in H.264 captioned MP4 exports",
       ],
     }),
-  ];
+  ]);
 
   return (
     <>
@@ -164,7 +163,7 @@ export default function Home() {
                   translate and share. Built for interviews, podcasts and reels.
                 </p>
                 <div className="landing-hero-actions">
-                  <StartFree />
+                  <StartFree label="Try 10 free minutes" />
                   <a className="button secondary" href="#caption-demo">
                     Try the demo <ArrowDownRight size={17} aria-hidden="true" />
                   </a>
@@ -184,6 +183,75 @@ export default function Home() {
                 </li>
               ))}
             </ul>
+          </div>
+        </section>
+
+        <section
+          id="what-is-urduspeech"
+          className="landing-section landing-entity"
+          aria-labelledby="entity-title"
+        >
+          <div className="public-container landing-entity-grid">
+            <div className="landing-entity-copy">
+              <p className="landing-kicker">What is UrduSpeech?</p>
+              <h2 id="entity-title">
+                An automated AI Urdu caption and transcription studio
+              </h2>
+              <p>
+                <strong>UrduSpeech</strong> (<code>urduspeech.com</code>),
+                operated by <strong>MoonSys Ltd</strong>, is a browser-based AI
+                speech-to-text and video captioning studio built specifically
+                for spoken Urdu audio and video recordings. Creators upload
+                local MP3, FLAC, PCM WAV, AAC M4A, MP4, or MOV files, choose
+                Nastaliq Urdu script, Roman Urdu, English translation, or
+                stacked bilingual captions, review every word and timestamp in
+                Studio, and export UTF-8 TXT, SRT, VTT, or burned-in MP4 video.
+              </p>
+              <p>
+                Unlike human transcription agencies, processing is fully
+                automated and recordings are never used to train models.
+                UrduSpeech is an independent creator software application and is
+                unrelated to the academic ASLP-lab/UrduSpeech research corpus.
+              </p>
+              <div className="guide-link-row">
+                <Link href="/about">
+                  About UrduSpeech &amp; MoonSys Ltd{" "}
+                  <ArrowRight size={17} aria-hidden="true" />
+                </Link>
+                <Link href="/methodology">
+                  How our AI correction &amp; Nastaliq pipeline works{" "}
+                  <ArrowRight size={17} aria-hidden="true" />
+                </Link>
+              </div>
+            </div>
+            <aside
+              className="landing-entity-facts"
+              aria-label="Product summary"
+            >
+              <h3>Platform facts</h3>
+              <dl>
+                <div>
+                  <dt>Operator</dt>
+                  <dd>MoonSys Ltd (automated web studio)</dd>
+                </div>
+                <div>
+                  <dt>Input formats</dt>
+                  <dd>MP3, FLAC, PCM WAV, AAC M4A, MP4, MOV</dd>
+                </div>
+                <div>
+                  <dt>Outputs</dt>
+                  <dd>Urdu Nastaliq, Roman Urdu, English, Urdu + English</dd>
+                </div>
+                <div>
+                  <dt>Exports</dt>
+                  <dd>UTF-8 TXT, SRT, WebVTT, burned-in H.264 MP4</dd>
+                </div>
+                <div>
+                  <dt>Pricing</dt>
+                  <dd>10 free min, then PKR 999 – 5,999 / month</dd>
+                </div>
+              </dl>
+            </aside>
           </div>
         </section>
 
@@ -257,7 +325,7 @@ export default function Home() {
                     <Link href="/urdu-audio-to-english-text">English</Link>
                   </li>
                   <li>
-                    <Link href="/guides/urdu-roman-urdu-and-english">
+                    <Link href="/bilingual-urdu-english-captions">
                       Bilingual
                     </Link>
                   </li>
@@ -400,7 +468,7 @@ export default function Home() {
           <div className="public-container">
             <div className="landing-section-heading landing-heading-row">
               <div>
-                <p className="landing-kicker">Creator guides</p>
+                <p className="landing-kicker">Creator guides &amp; workflows</p>
                 <h2 id="home-guides">
                   Practical workflows for Urdu audio &amp; video
                 </h2>
@@ -414,6 +482,28 @@ export default function Home() {
               </Link>
             </div>
             <GuideCards guides={publicGuides.slice(0, 3)} />
+            <div className="guide-link-row">
+              <Link href="/urdu-captions-for-reels-tiktok">
+                Urdu captions for Instagram Reels &amp; TikTok{" "}
+                <ArrowRight size={17} aria-hidden="true" />
+              </Link>
+              <Link href="/youtube-urdu-subtitles">
+                YouTube Urdu &amp; English subtitle workflow{" "}
+                <ArrowRight size={17} aria-hidden="true" />
+              </Link>
+              <Link href="/compare">
+                Compare UrduSpeech vs CapCut, Descript &amp; Whisper{" "}
+                <ArrowRight size={17} aria-hidden="true" />
+              </Link>
+              <Link href="/tools">
+                Free Urdu subtitle checker, SRT to VTT &amp; PKR calculator{" "}
+                <ArrowRight size={17} aria-hidden="true" />
+              </Link>
+              <Link href="/urdu-caption-glossary">
+                Urdu subtitling, Nastaliq &amp; Unicode technical glossary{" "}
+                <ArrowRight size={17} aria-hidden="true" />
+              </Link>
+            </div>
           </div>
         </section>
 
@@ -432,8 +522,8 @@ export default function Home() {
                   Media expires with your plan’s retention period. You can
                   request project or account deletion in Studio.
                 </p>
-                <Link className="public-inline-link" href="/privacy">
-                  Read the privacy policy{" "}
+                <Link className="public-inline-link" href="/security">
+                  Read security &amp; retention details{" "}
                   <ArrowRight size={17} aria-hidden="true" />
                 </Link>
               </div>
@@ -475,7 +565,7 @@ export default function Home() {
                 </li>
               </ul>
             </div>
-            <StartFree />
+            <StartFree label="Try 10 free minutes" />
           </div>
         }
       />

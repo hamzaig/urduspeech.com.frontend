@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { api, mutation, explain, minutes, money } from "@/lib/api";
+import { trackEvent } from "@/lib/analytics";
 import type {
   PlanCatalog,
   BillingSummary,
@@ -111,7 +112,7 @@ export default function Billing() {
       clearTimeout(timer);
     };
   }, [paymentRefresh]);
-  async function checkout(planId: string) {
+  async function checkout(planId: string, planSlug?: string) {
     setBusy(true);
     setError("");
     try {
@@ -119,6 +120,10 @@ export default function Billing() {
         "/v1/billing/stripe/checkout",
         mutation("POST", { planId }, crypto.randomUUID()),
       );
+      trackEvent("billing_checkout_started", {
+        provider: "stripe",
+        plan_slug: planSlug ?? "paid",
+      });
       stripeRedirect(r.url);
     } catch (e) {
       setError(explain(e));
@@ -215,49 +220,83 @@ export default function Billing() {
           </div>
         </section>
       )}
+      {summary?.usage.plan.slug === "free" && (
+        <aside
+          className="studio-upgrade-benefits"
+          aria-label="Paid plan benefits"
+        >
+          <strong>What paid PKR plans unlock immediately</strong>
+          <ul>
+            <li>Clean 1080p burned-in Nastaliq MP4 video without watermark</li>
+            <li>
+              60 to 500 monthly minutes plus longer single uploads (1 to 6
+              hours)
+            </li>
+            <li>15 to 90 days of source and rendered media retention</li>
+          </ul>
+        </aside>
+      )}
       <div className="plans">
-        {catalog?.plans.map((p) => (
-          <article
-            key={p.id}
-            className={
-              "plan " + (summary?.usage.plan.id === p.id ? "current" : "")
-            }
-          >
-            <h2>{p.name}</h2>
-            <p className="plan-price">{money(p.price.amountMinor)}</p>
-            <small>
-              {p.renewal === "monthly"
-                ? "per month"
-                : "one-time free allowance"}
-            </small>
-            <ul>
-              <li>{minutes(p.includedSeconds)} minutes included</li>
-              <li>Up to {p.maxRenderHeight}p video</li>
-              <li>{p.sourceRetentionDays}-day media retention</li>
-              <li>
-                {p.watermark ? "Watermarked videos" : "No video watermark"}
-              </li>
-            </ul>
-            {summary?.usage.plan.id === p.id ? (
-              <p className="plan-status">Current plan</p>
-            ) : (
-              p.slug !== "free" &&
-              summary &&
-              (p.checkoutAvailable &&
-              summary.providers.stripe.checkoutAvailable ? (
-                <button disabled={busy} onClick={() => checkout(p.id)}>
-                  Choose {p.name}
-                </button>
-              ) : catalog.providers.manual.checkoutAvailable ? (
-                <a className="text-button plan-status" href="#manual-payment">
-                  Manual payment options
-                </a>
+        {catalog?.plans.map((p) => {
+          const isRecommended = p.slug === "creator";
+          const includedMins = Math.max(1, Math.round(p.includedSeconds / 60));
+          const pkrPerMin =
+            p.price.amountMinor > 0
+              ? (p.price.amountMinor / 100 / includedMins).toFixed(1)
+              : null;
+          return (
+            <article
+              key={p.id}
+              className={
+                "plan" +
+                (summary?.usage.plan.id === p.id ? " current" : "") +
+                (isRecommended ? " recommended" : "")
+              }
+            >
+              <div className="plan-header-row">
+                <h2>{p.name}</h2>
+                {isRecommended && (
+                  <span className="plan-badge">Recommended</span>
+                )}
+              </div>
+              <p className="plan-price">{money(p.price.amountMinor)}</p>
+              <small>
+                {p.renewal === "monthly"
+                  ? `per month${pkrPerMin ? ` · PKR ${pkrPerMin}/min` : ""}`
+                  : "one-time free allowance"}
+              </small>
+              <ul>
+                <li>{minutes(p.includedSeconds)} minutes included</li>
+                <li>Up to {p.maxRenderHeight}p video</li>
+                <li>{p.sourceRetentionDays}-day media retention</li>
+                <li>
+                  {p.watermark ? "Watermarked videos" : "No video watermark"}
+                </li>
+              </ul>
+              {summary?.usage.plan.id === p.id ? (
+                <p className="plan-status">Current plan</p>
               ) : (
-                <p className="plan-status">Checkout unavailable</p>
-              ))
-            )}
-          </article>
-        ))}
+                p.slug !== "free" &&
+                summary &&
+                (p.checkoutAvailable &&
+                summary.providers.stripe.checkoutAvailable ? (
+                  <button
+                    disabled={busy}
+                    onClick={() => checkout(p.id, p.slug)}
+                  >
+                    Choose {p.name}
+                  </button>
+                ) : catalog.providers.manual.checkoutAvailable ? (
+                  <a className="text-button plan-status" href="#manual-payment">
+                    Manual payment options
+                  </a>
+                ) : (
+                  <p className="plan-status">Checkout unavailable</p>
+                ))
+              )}
+            </article>
+          );
+        })}
       </div>
       {!catalog && !error && (
         <p role="status" className="loading">
@@ -312,12 +351,14 @@ function ManualPayment({ catalog }: { catalog: PlanCatalog }) {
     setBusy(true);
     setError("");
     try {
-      setRequest(
-        await api<ManualRequest>(
-          "/v1/billing/manual/requests",
-          mutation("POST", { planId, method }, crypto.randomUUID()),
-        ),
+      const created = await api<ManualRequest>(
+        "/v1/billing/manual/requests",
+        mutation("POST", { planId, method }, crypto.randomUUID()),
       );
+      setRequest(created);
+      trackEvent("manual_payment_requested", {
+        method,
+      });
     } catch (e) {
       setError(explain(e));
     } finally {
@@ -329,16 +370,14 @@ function ManualPayment({ catalog }: { catalog: PlanCatalog }) {
     setBusy(true);
     setError("");
     try {
-      setRequest(
-        await api<ManualRequest>(
-          `/v1/billing/manual/requests/${request.transactionId}/submit`,
-          mutation(
-            "POST",
-            { claimedReference: reference },
-            crypto.randomUUID(),
-          ),
-        ),
+      const submitted = await api<ManualRequest>(
+        `/v1/billing/manual/requests/${request.transactionId}/submit`,
+        mutation("POST", { claimedReference: reference }, crypto.randomUUID()),
       );
+      setRequest(submitted);
+      trackEvent("manual_payment_submitted", {
+        method: method || "manual",
+      });
     } catch (e) {
       setError(explain(e));
     } finally {

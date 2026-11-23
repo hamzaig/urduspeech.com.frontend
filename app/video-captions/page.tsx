@@ -10,7 +10,7 @@ import {
   Sparkles,
 } from "lucide-react";
 import { CaptionStyleGallery } from "@/components/caption-style-gallery";
-import { PublicPage } from "@/components/public-site";
+import { Breadcrumbs, PublicPage } from "@/components/public-site";
 import {
   MarketingIntro,
   QuestionList,
@@ -18,18 +18,26 @@ import {
 } from "@/components/marketing";
 import { StructuredData } from "@/components/structured-data";
 import {
+  SITE_URL,
+  buildBreadcrumbJsonLd,
+  buildGraphJsonLd,
   buildOrganizationJsonLd,
   buildSoftwareApplicationJsonLd,
+  buildWebPageJsonLd,
+  buildWebSiteJsonLd,
   publicMetadata,
 } from "@/lib/seo";
 
+const title = "Urdu Subtitle Generator & Video Captions";
 const description =
-  "Generate timed Urdu subtitles and burned-in video captions. Edit words and timing in Studio, then export SRT, VTT or captioned MP4. Start with 10 free minutes.";
+  "Generate timed Urdu subtitles and burned-in Nastaliq video captions. Edit words and timestamps in your browser, then export SRT, VTT, or MP4.";
 
 export const metadata: Metadata = publicMetadata({
-  title: "Urdu Subtitle Generator & Video Captions",
+  title,
   description,
   path: "/video-captions",
+  ogImage: "captions",
+  markdownPath: "/video-captions.md",
 });
 
 const videoCaptionQuestions = [
@@ -66,13 +74,18 @@ const videoCaptionQuestions = [
   },
   {
     question:
-      "Can I import an existing SRT file or convert SRT to VTT without uploading media?",
+      "Can I convert an existing SRT file to VTT without uploading a video?",
     answer: (
       <p>
-        No. UrduSpeech generates transcripts and timed caption tracks from
-        uploaded audio or video recordings in Studio. It does not offer
-        standalone SRT-to-VTT file conversion or arbitrary external subtitle
-        file import.
+        UrduSpeech Studio generates fresh transcripts and timed subtitles from
+        uploaded audio or video files (it does not import external SRT files
+        into video renders). However, if you already have an Urdu or English
+        subtitle file and need to convert between SRT, WebVTT, and plain TXT or
+        check timestamp overlaps, use our free browser{" "}
+        <Link href="/tools/srt-to-vtt-converter">
+          SRT to WebVTT subtitle converter and validator
+        </Link>
+        .
       </p>
     ),
   },
@@ -85,19 +98,39 @@ const videoCaptionQuestions = [
         You can choose <strong>Urdu first</strong> or{" "}
         <strong>English first</strong> when setting up the project, and edit
         both lines or their start and end timestamps before exporting SRT, VTT,
-        or a captioned MP4.
+        or a captioned MP4. See{" "}
+        <Link href="/bilingual-urdu-english-captions">
+          bilingual Urdu and English captions
+        </Link>{" "}
+        for layout tips.
       </p>
     ),
   },
 ];
 
 export default function VideoCaptions() {
-  const jsonLd = [
+  const path = "/video-captions" as const;
+  const jsonLd = buildGraphJsonLd([
     buildOrganizationJsonLd(),
+    buildWebSiteJsonLd(),
+    buildWebPageJsonLd({
+      name: `${title} | UrduSpeech`,
+      description,
+      path,
+      primaryImage: "/og/captions.png",
+      mainEntityId: `${SITE_URL}${path}#app`,
+      dateModified: "2026-11-22",
+    }),
+    buildBreadcrumbJsonLd([
+      { name: "Home", path: "/" },
+      { name: "Video captions", path },
+    ]),
     buildSoftwareApplicationJsonLd({
       name: "UrduSpeech — Urdu Subtitle Generator & Video Captions",
       description,
-      path: "/video-captions",
+      path,
+      includeOffers: true,
+      screenshot: "/images/short-video-demo.webp",
       featureList: [
         "Timed Urdu, Roman Urdu, English, and stacked bilingual subtitle generation",
         "Editable cue text and non-overlapping start/end timestamps in seconds",
@@ -105,11 +138,14 @@ export default function VideoCaptions() {
         "Burned-in H.264 MP4 video rendering with Clean, Social highlight, and Boxed Nastaliq presets",
       ],
     }),
-  ];
+  ]);
 
   return (
     <PublicPage mainClassName="public-container marketing-page">
       <StructuredData data={jsonLd} />
+      <Breadcrumbs
+        items={[{ name: "Home", href: "/" }, { name: "Video captions" }]}
+      />
       <section className="product-hero" aria-label="Video captions">
         <MarketingIntro title="Generate Urdu subtitles and add captions to your videos">
           <p>
@@ -138,8 +174,13 @@ export default function VideoCaptions() {
       <section className="product-section" aria-labelledby="caption-workflow">
         <h2 id="caption-workflow">From uploaded video to timed captions</h2>
         <p>
-          Prepare subtitles for short reels, interviews, podcasts, and YouTube
-          videos in one Studio workflow.
+          Prepare subtitles for{" "}
+          <Link href="/urdu-captions-for-reels-tiktok">
+            short reels and TikTok clips
+          </Link>
+          , interviews, podcasts, and{" "}
+          <Link href="/youtube-urdu-subtitles">YouTube videos</Link> in one
+          Studio workflow.
         </p>
         <ol className="product-points two-col" role="list">
           <li>
@@ -219,7 +260,11 @@ export default function VideoCaptions() {
               Standard UTF-8 <code>WEBVTT</code> tracks with period-based
               millisecond timestamps (<code>00:00:04.000</code>) and escaped
               markup, built for HTML5 <code>&lt;track&gt;</code> web video
-              players.
+              players. See our{" "}
+              <Link href="/srt-vtt-urdu-subtitle-generator">
+                SRT &amp; VTT Urdu subtitle generator overview
+              </Link>
+              .
             </p>
           </li>
           <li>
@@ -334,20 +379,20 @@ export default function VideoCaptions() {
         <h2 id="video-captions-faq">Urdu subtitle and caption questions</h2>
         <QuestionList questions={videoCaptionQuestions} openFirst />
         <div className="guide-link-row">
-          <Link href="/guides/subtitle-and-video-exports">
-            Guide: When to export TXT, SRT, VTT or MP4{" "}
+          <Link href="/urdu-captions-for-reels-tiktok">
+            Urdu captions for Reels, Shorts &amp; TikTok{" "}
+            <ArrowRight size={18} aria-hidden="true" />
+          </Link>
+          <Link href="/bilingual-urdu-english-captions">
+            Bilingual Urdu + English video captions{" "}
+            <ArrowRight size={18} aria-hidden="true" />
+          </Link>
+          <Link href="/compare/urduspeech-vs-capcut">
+            Compare UrduSpeech vs CapCut for Urdu captions{" "}
             <ArrowRight size={18} aria-hidden="true" />
           </Link>
           <Link href="/guides/make-urdu-video-captions">
             Guide: How to make Urdu video captions{" "}
-            <ArrowRight size={18} aria-hidden="true" />
-          </Link>
-          <Link href="/guides/urdu-subtitles-for-youtube">
-            Guide: Add Urdu subtitles to YouTube videos{" "}
-            <ArrowRight size={18} aria-hidden="true" />
-          </Link>
-          <Link href="/urdu-transcription">
-            Need plain-text transcripts? Urdu speech to text{" "}
             <ArrowRight size={18} aria-hidden="true" />
           </Link>
         </div>

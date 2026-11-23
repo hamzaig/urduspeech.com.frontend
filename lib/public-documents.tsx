@@ -1,13 +1,40 @@
 import Link from "next/link";
+import type { DocumentSection } from "@/components/public-site";
+import type { OgImageKey } from "@/lib/seo";
 
 const contact = (
   <a href="mailto:notification@urduspeech.com">notification@urduspeech.com</a>
 );
-export const publicDocuments = {
+
+export type PublicDocumentKey =
+  "privacy" | "terms" | "refunds" | "delete-account" | "supported-formats";
+
+export interface PublicDocument {
+  title: string;
+  seoTitle: string;
+  breadcrumbLabel: string;
+  description: string;
+  metaDescription: string;
+  updated: string;
+  updatedIso: string;
+  ogImage: OgImageKey;
+  isTechArticle?: boolean;
+  markdownPath?: `/${string}`;
+  sections: readonly DocumentSection[];
+}
+
+export const publicDocuments: Record<PublicDocumentKey, PublicDocument> = {
   privacy: {
     title: "Your recordings, your choices.",
+    seoTitle: "Privacy Policy & Media Retention",
+    breadcrumbLabel: "Privacy policy",
     description:
-      "How UrduSpeech handles your account, media and generated content.",
+      "How UrduSpeech handles your account, uploaded recordings, AI processing providers, media expiry, and deletion receipts.",
+    metaDescription:
+      "Read how uploaded Urdu recordings, transcripts, cookies, sub-processors (AWS S3, Deepgram, OpenAI, Modal), retention windows, and deletion work.",
+    updated: "18 November 2026",
+    updatedIso: "2026-11-18T00:00:00+05:00",
+    ogImage: "about",
     sections: [
       {
         title: "What we process",
@@ -29,7 +56,9 @@ export const publicDocuments = {
             translation, timing alignment and caption rendering. You can turn AI
             correction off and review or edit results. UrduSpeech does not offer
             a human transcription service and does not train its own models on
-            your recordings.
+            your recordings. Read our{" "}
+            <Link href="/security">security and retention overview</Link> for an
+            architectural summary.
           </p>
         ),
       },
@@ -79,7 +108,8 @@ export const publicDocuments = {
               from verified removal. Backup propagation and provider cleanup are
               separate, and a pending status does not mean they have finished.
               Necessary financial and audit records may remain for accounting
-              and legal obligations.
+              and legal obligations. See{" "}
+              <Link href="/delete-account">how to delete your account</Link>.
             </p>
           </>
         ),
@@ -110,8 +140,15 @@ export const publicDocuments = {
   },
   terms: {
     title: "Terms of service",
+    seoTitle: "Terms of Service & Usage Rules",
+    breadcrumbLabel: "Terms of service",
     description:
       "UrduSpeech is an automated transcription and caption service operated by MoonSys Ltd.",
+    metaDescription:
+      "Review terms of service for accounts, content ownership, AI review responsibilities, Pakistani rupee minute plans, retention, and acceptable use.",
+    updated: "18 November 2026",
+    updatedIso: "2026-11-18T00:00:00+05:00",
+    ogImage: "about",
     sections: [
       {
         title: "Your account and recordings",
@@ -211,8 +248,15 @@ export const publicDocuments = {
   },
   refunds: {
     title: "Payment support, without the guesswork.",
+    seoTitle: "Payments, PKR Billing & Refund Policy",
+    breadcrumbLabel: "Payments & refunds",
     description:
-      "Contact us when a payment, plan activation or usage charge does not look right.",
+      "Contact us when a payment, plan activation, manual transfer verification, or usage charge does not look right.",
+    metaDescription:
+      "Learn how Pakistani rupee card checkout, bank transfer, JazzCash, Easypaisa, SadaPay, NayaPay verification, cancellation, and payment reviews work.",
+    updated: "18 November 2026",
+    updatedIso: "2026-11-18T00:00:00+05:00",
+    ogImage: "pricing",
     sections: [
       {
         title: "Report a payment problem",
@@ -244,7 +288,7 @@ export const publicDocuments = {
         body: (
           <p>
             Use only the receiving details shown in your workspace. Bank
-            transfer, Easypaisa, SadaPay and NayaPay payments require
+            transfer, JazzCash, Easypaisa, SadaPay and NayaPay payments require
             verification. Do not pay again just because your first payment is
             pending. Keep the transfer reference and submit it once through the
             workspace.
@@ -281,25 +325,43 @@ export const publicDocuments = {
             available, refunds go through the original payment method. Bank and
             provider processing times vary. This policy does not promise an
             automatic refund window for unused paid plans. Your rights under
-            applicable law are preserved.
+            applicable law are preserved. See{" "}
+            <Link href="/pricing">current PKR plans</Link>.
           </p>
         ),
       },
     ],
   },
   "delete-account": {
-    title: "Delete your UrduSpeech account",
+    title: "Delete your account and stored data",
+    seoTitle: "How to Delete Your Account & Data",
+    breadcrumbLabel: "Delete account",
     description:
-      "Find the deletion option, save copies of your work and check the cleanup status.",
+      "Save copies of your transcripts and videos, request permanent account deletion inside Studio, and verify cleanup with your private receipt.",
+    metaDescription:
+      "Step-by-step instructions to export your files, permanently delete your account inside Studio settings, and track verified data and backup cleanup.",
+    updated: "22 November 2026",
+    updatedIso: "2026-11-22T00:00:00+05:00",
+    ogImage: "about",
     sections: [
       {
         title: "Save your work first",
         body: (
-          <p>
-            Download any recordings, transcripts, subtitles and rendered videos
-            you want to keep before deleting your account. Project access and
-            downloads become unavailable after the request is accepted.
-          </p>
+          <>
+            <p>
+              Download any original recordings, UTF-8 TXT transcripts, SRT or
+              VTT subtitle tracks, and rendered MP4 videos you want to keep
+              before submitting an account deletion request. Project access and
+              file download grants are revoked immediately as soon as your
+              request is accepted.
+            </p>
+            <p>
+              If you only want to remove one recording without closing your
+              entire account, open that project inside Studio and delete the
+              individual project instead. Deleting a single project removes its
+              files while keeping your remaining monthly allowance intact.
+            </p>
+          </>
         ),
       },
       {
@@ -308,55 +370,104 @@ export const publicDocuments = {
           <ol>
             <li>
               Sign in and open{" "}
-              <Link href="/studio/settings">Studio settings</Link>.
+              <a href="/studio/settings" rel="nofollow">
+                Studio settings
+              </a>
+              .
             </li>
             <li>
-              Go to <strong>Delete your account</strong> and type{" "}
+              Scroll to <strong>Delete your account</strong> and type{" "}
               <strong>DELETE</strong> in the confirmation field.
             </li>
             <li>
-              Select <strong>Delete my account</strong>. Sign in again first if
-              Studio asks you to refresh your session.
+              Select <strong>Delete my account</strong>. If your session is
+              older than the recent-authentication window, Studio will prompt
+              you to sign in again before accepting the deletion request.
             </li>
           </ol>
         ),
       },
       {
-        title: "Check your deletion status",
+        title: "Check your deletion status and private receipt",
         body: (
-          <p>
-            Save the private receipt displayed after your request. Open{" "}
-            <Link href="/deletion-status">Deletion status</Link> to check
-            content removal, billing cleanup and backup propagation. Read the{" "}
-            <Link href="/privacy">privacy policy</Link> for details about
-            provider cleanup and records that may be kept for legal or
-            accounting reasons.
-          </p>
+          <>
+            <p>
+              Immediately after your request is accepted, save the private JSON
+              deletion receipt displayed in your browser. Because your account
+              is signed out upon acceptance, that private receipt lets you open{" "}
+              <a href="/deletion-status" rel="nofollow">
+                Deletion status
+              </a>{" "}
+              later to track three independent stages: primary media and project
+              content removal, active subscription cleanup, and backup
+              propagation.
+            </p>
+            <p>
+              Read our <Link href="/privacy">privacy policy</Link> and{" "}
+              <Link href="/security">security and retention documentation</Link>{" "}
+              for details on provider cleanup and financial records retained for
+              accounting or legal compliance. If you lose access to your account
+              email or receipt, email {contact} from your registered address.
+            </p>
+          </>
         ),
       },
     ],
   },
   "supported-formats": {
-    title: "Check your recording before uploading.",
+    title: "Supported audio, video formats, and upload limits",
+    seoTitle: "Supported Audio, Video & Upload Limits",
+    breadcrumbLabel: "Supported formats",
     description:
-      "File type, audio track and plan limits determine what UrduSpeech can process.",
+      "File containers, codecs, HDR tone-mapping, per-plan upload ceilings, and the 256 MiB MP4 render safety limit explained clearly.",
+    metaDescription:
+      "Check supported audio (MP3, FLAC, WAV, M4A) and video (MP4, MOV H.264/HEVC AAC) codecs, iPhone HDR conversion, plan size caps, and MP4 limits.",
+    updated: "22 November 2026",
+    updatedIso: "2026-11-22T00:00:00+05:00",
+    ogImage: "transcription",
+    isTechArticle: true,
+    markdownPath: "/supported-formats.md",
     sections: [
       {
-        title: "Audio and video",
+        title: "Accepted audio and video codecs",
         body: (
           <>
             <p>
-              Audio: MP3, FLAC, PCM WAV and AAC M4A. Video: MP4 or MOV with
-              H.264 or HEVC video and AAC audio. A supported file needs an
-              audible speech track; a filename extension alone does not
-              establish compatibility. Encrypted files and files without audio
-              are not supported.
+              Studio inspects every uploaded file’s actual media container and
+              elementary streams before transcription begins; renaming a file
+              extension alone does not make an unsupported codec compatible.
             </p>
+            <ul>
+              <li>
+                <strong>Audio files:</strong> MP3 (<code>.mp3</code>), FLAC (
+                <code>.flac</code>), uncompressed PCM WAV (<code>.wav</code>),
+                and AAC inside M4A (<code>.m4a</code>).
+              </li>
+              <li>
+                <strong>Video files:</strong> MP4 (<code>.mp4</code>) or
+                QuickTime MOV (<code>.mov</code>) containing H.264 (AVC) or HEVC
+                (H.265) video plus an audible AAC speech audio track.
+              </li>
+              <li>
+                <strong>Not supported directly:</strong> DRM-encrypted media,
+                silent videos without an audio stream, and messaging exports
+                encoded as <code>.opus</code> or <code>.ogg</code> (such as raw
+                WhatsApp voice messages—convert those locally to{" "}
+                <code>.m4a</code>, <code>.mp3</code>, or <code>.wav</code> first
+                using our{" "}
+                <Link href="/guides/voice-notes-to-text">
+                  voice notes preparation guide
+                </Link>
+                ).
+              </li>
+            </ul>
             <p>
-              If a video has several audio tracks, select the one you want
-              transcribed. Reels, portrait recordings and landscape videos use
-              the same workflow. Video rendering preserves the source
-              orientation and fits your plan’s maximum output height.
+              If a video has several audio tracks (for instance a camera mic and
+              a wireless lavalier stream), Studio’s <strong>Media check</strong>{" "}
+              panel lets you select the exact spoken-Urdu track to transcribe.
+              Portrait reels (9:16), square clips (1:1), and landscape videos
+              (16:9) all preserve their source orientation up to your plan’s
+              maximum output height.
             </p>
           </>
         ),
@@ -364,17 +475,26 @@ export const publicDocuments = {
       {
         title: "HDR and iPhone recordings",
         body: (
-          <p>
-            Properly tagged BT.2020 HLG or PQ video is converted to SDR BT.709
-            for captioned MP4 output. The result does not retain HDR or Dolby
-            Vision metadata. Files with missing or inconsistent HDR color tags
-            may be rejected. Review colors in the downloaded result before
-            publishing.
-          </p>
+          <>
+            <p>
+              Modern iPhones and flagship Android cameras frequently record in
+              10-bit HDR (BT.2020 HLG or PQ). When you render a burned-in
+              captioned MP4, Studio automatically tone-maps properly tagged
+              BT.2020 HLG or PQ video to standard 8-bit SDR BT.709 so colors and
+              Nastaliq captions display predictably across Instagram, TikTok,
+              YouTube, and desktop browsers.
+            </p>
+            <p>
+              Rendered MP4 outputs do not carry HDR or Dolby Vision metadata.
+              Videos with corrupt or contradictory color tags may be rejected
+              during media validation. Always inspect skin tones and contrast in
+              the downloaded MP4 before publishing.
+            </p>
+          </>
         ),
       },
       {
-        title: "Upload limits",
+        title: "Upload duration and file size limits by plan",
         body: (
           <>
             <div
@@ -389,6 +509,7 @@ export const publicDocuments = {
                     <th scope="col">Plan</th>
                     <th scope="col">Maximum recording</th>
                     <th scope="col">Maximum upload</th>
+                    <th scope="col">Media retention</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -396,67 +517,96 @@ export const publicDocuments = {
                     <th scope="row">Free</th>
                     <td>10 minutes</td>
                     <td>250 MiB</td>
+                    <td>3 days</td>
                   </tr>
                   <tr>
                     <th scope="row">Starter</th>
                     <td>60 minutes</td>
                     <td>1 GiB</td>
+                    <td>15 days</td>
                   </tr>
                   <tr>
                     <th scope="row">Creator</th>
                     <td>180 minutes</td>
                     <td>Less than 2 GiB</td>
+                    <td>30 days</td>
                   </tr>
                   <tr>
                     <th scope="row">Studio</th>
                     <td>360 minutes</td>
                     <td>Less than 2 GiB</td>
+                    <td>90 days</td>
                   </tr>
                 </tbody>
               </table>
             </div>
             <p>
-              The current scanning safety limit is 2 GiB minus one byte, even if
-              a plan has a higher nominal limit. Available account minutes also
-              apply. Compress larger recordings before upload while keeping
-              speech clear.
+              The operational scanning ceiling is strictly{" "}
+              <strong>2 GiB minus one byte</strong> across all plans, alongside
+              your remaining account minute allowance. For long 4K camera
+              recordings that exceed 2 GiB, export a 1080p H.264/AAC proxy from
+              your editor—or upload a clean AAC M4A or MP3 audio bounce if you
+              only need UTF-8 <strong>TXT</strong>, <strong>SRT</strong>, or{" "}
+              <strong>VTT</strong> files.
             </p>
           </>
         ),
       },
       {
-        title: "Outputs",
+        title: "Outputs and the 256 MiB rendered MP4 safety limit",
         body: (
           <>
             <p>
-              Download TXT transcripts and SRT or VTT subtitles. Video captions
-              render to H.264 MP4 with AAC audio when the selected track has
-              audio. Free exports have a watermark and a 720p height limit; paid
-              plans allow up to 1080p without the watermark. Source geometry can
-              reduce the resulting size.
+              Every project supports UTF-8 <strong>TXT</strong> transcripts and
+              timed <strong>SRT</strong> or <strong>WebVTT</strong> subtitle
+              downloads once timing is ready. Burned-in video captions render to
+              H.264 MP4 with AAC audio using Noto Nastaliq Urdu and Inter inside
+              verified safe-area margins. Free plan MP4 exports are capped at
+              720p with a watermark; paid plans render up to 1080p without a
+              watermark.
             </p>
             <p>
-              Generated video files currently have a 256 MiB safety limit. A
-              long or detailed video may exceed this even when its source upload
-              is accepted. Transcript and subtitle downloads remain separate
-              from video rendering. Keep your original and download generated
-              media before its retention deadline.
+              Generated captioned MP4 files have a{" "}
+              <strong>256 MiB operational safety limit</strong>. A long,
+              high-motion video may exceed 256 MiB even when its source upload
+              passes validation. Transcript and subtitle downloads stay
+              completely independent of video rendering—so for hour-long YouTube
+              episodes, export the SRT or VTT track and attach it directly in{" "}
+              <Link href="/youtube-urdu-subtitles">YouTube Studio</Link> or your
+              non-linear editor.
             </p>
           </>
         ),
       },
       {
-        title: "Get better results",
+        title: "Preparing recordings for cleaner Urdu transcripts",
         body: (
-          <p>
-            Use clear speech with minimal background music. Mixed Urdu and
-            English are supported, but names and figures need review. If timing
-            needs attention, edit it before exporting or rendering. See{" "}
-            <Link href="/pricing">plans</Link> or email {contact} with a project
-            reference for help.
-          </p>
+          <>
+            <p>
+              Clean vocal audio dramatically reduces manual review time. Before
+              uploading, lower loud background music beds by 12–18 dB relative
+              to speech, avoid heavy room echo where possible, and export mono
+              or clean stereo AAC/WAV speech tracks. Mixed Urdu and English
+              speech is supported, while proper names, places, and figures
+              should always be verified in Studio.
+            </p>
+            <p>
+              Explore our{" "}
+              <Link href="/urdu-transcription">
+                Urdu transcription workflow
+              </Link>
+              , <Link href="/video-captions">video captioning presets</Link>,{" "}
+              <Link href="/methodology">AI processing methodology</Link>, or{" "}
+              <Link href="/tools/srt-to-vtt-converter">
+                free SRT to WebVTT converter
+              </Link>
+              . For upload troubleshooting, check{" "}
+              <Link href="/pricing">plan limits</Link> or email {contact} with
+              your project reference.
+            </p>
+          </>
         ),
       },
     ],
   },
-} as const;
+};

@@ -1,238 +1,45 @@
-"use client";
-import { use, useState } from "react";
-import Link from "next/link";
-import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
-import { ArrowRight, Eye, EyeOff } from "lucide-react";
-import { api, mutation, explain } from "@/lib/api";
-import { PublicPage } from "@/components/public-site";
-import { ErrorNotice, Saved } from "@/components/common";
-import preview from "@/assets/caption-demo.webp";
-import { captionCues } from "@/lib/caption-demo";
-const modes = {
-  "sign-in": {
-    title: "Sign in to UrduSpeech",
-    description: "Sign in to your creator studio.",
-    button: "Sign in",
-  },
-  register: {
-    title: "Create your account",
-    description: "Start with 10 free minutes for transcripts and captions.",
-    button: "Create account",
-  },
-  "forgot-password": {
-    title: "Reset your password.",
-    description: "We’ll email you a link to choose a new password.",
-    button: "Send reset link",
-  },
-  "reset-password": {
-    title: "Choose a new password.",
-    description: "Use at least 12 characters.",
-    button: "Save new password",
-  },
-  "verify-email": {
-    title: "Verify your email.",
-    description: "Confirm your email address to activate your account.",
-    button: "Verify email",
-  },
-};
-export default function Auth({
+import { Suspense } from "react";
+import type { Metadata } from "next";
+import { notFound, permanentRedirect } from "next/navigation";
+import { AUTH_MODES, type AuthMode } from "@/lib/auth-modes";
+import { AuthForm } from "./auth-form";
+
+type AuthParams = { params: Promise<{ mode: string }> };
+
+function resolveMode(mode: string): AuthMode {
+  if (mode === "login") permanentRedirect("/auth/sign-in");
+  if (mode === "signup") permanentRedirect("/auth/register");
+  if (!Object.hasOwn(AUTH_MODES, mode)) notFound();
+  return mode as AuthMode;
+}
+
+export async function generateMetadata({
   params,
-}: {
-  params: Promise<{ mode: string }>;
-}) {
-  const { mode } = use(params);
-  const config = Object.hasOwn(modes, mode)
-    ? modes[mode as keyof typeof modes]
-    : undefined;
-  const router = useRouter();
-  const query = useSearchParams();
-  const [error, setError] = useState(""),
-    [message, setMessage] = useState(""),
-    [busy, setBusy] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  if (!config)
-    return (
-      <PublicPage mainClassName="account-page">
-        <div className="public-container account-compact">
-          <section className="account-panel">
-            <h1>Page not found</h1>
-            <Link className="button" href="/auth/sign-in">
-              Sign in
-            </Link>
-          </section>
-        </div>
-      </PublicPage>
-    );
-  async function submit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setBusy(true);
-    setError("");
-    setMessage("");
-    const data = new FormData(e.currentTarget);
-    let body: Record<string, string> = {};
-    if (["sign-in", "register", "forgot-password"].includes(mode))
-      body.email = String(data.get("email"));
-    if (["sign-in", "register"].includes(mode))
-      body.password = String(data.get("password"));
-    if (mode === "register") body.name = String(data.get("name"));
-    if (["verify-email", "reset-password"].includes(mode)) {
-      const token = query.get("token");
-      if (!token) {
-        setError(
-          "This link is incomplete. Open the full link from your email.",
-        );
-        setBusy(false);
-        return;
-      }
-      body.token = token;
-    }
-    if (mode === "reset-password")
-      body.newPassword = String(data.get("password"));
-    try {
-      await api("/v1/auth/" + mode, mutation("POST", body));
-      if (mode === "sign-in") {
-        router.push(
-          query.get("next") === "/studio/admin" ? "/studio/admin" : "/studio",
-        );
-        router.refresh();
-      } else
-        setMessage(
-          mode === "register"
-            ? "Check your inbox to verify your email before signing in."
-            : mode === "forgot-password"
-              ? "If an account exists for that email, a reset link will arrive shortly."
-              : "Saved. You can now sign in.",
-        );
-    } catch (err) {
-      setError(explain(err));
-    } finally {
-      setBusy(false);
-    }
+}: AuthParams): Promise<Metadata> {
+  const { mode } = await params;
+  if (!Object.hasOwn(AUTH_MODES, mode)) {
+    return {
+      title: "Page Not Found",
+      robots: { index: false, follow: false },
+    };
   }
-  const showPreview = mode === "sign-in" || mode === "register";
+  const config = AUTH_MODES[mode as AuthMode];
+  return {
+    title: config.title.replace(/\.$/, ""),
+    description: config.description,
+    robots: {
+      index: false,
+      follow: false,
+    },
+  };
+}
+
+export default async function AuthPage({ params }: AuthParams) {
+  const { mode } = await params;
+  const resolved = resolveMode(mode);
   return (
-    <PublicPage mainClassName="account-page">
-      <div
-        className={
-          showPreview
-            ? "public-container account-layout"
-            : "public-container account-compact"
-        }
-      >
-        <section className="account-panel" aria-labelledby="account-title">
-          <h1 id="account-title">{config.title}</h1>
-          <p>{config.description}</p>
-          {error && <ErrorNotice message={error} />}
-          <form onSubmit={submit}>
-            {mode === "register" && (
-              <label className="field">
-                Your name
-                <input
-                  name="name"
-                  autoComplete="name"
-                  required
-                  minLength={1}
-                  maxLength={120}
-                />
-              </label>
-            )}
-            {["sign-in", "register", "forgot-password"].includes(mode) && (
-              <label className="field">
-                Email address
-                <input
-                  name="email"
-                  type="email"
-                  required
-                  autoComplete="email"
-                  maxLength={254}
-                />
-              </label>
-            )}
-            {["sign-in", "register", "reset-password"].includes(mode) && (
-              <div className="field">
-                <label htmlFor="auth-password">Password</label>
-                <div className="password-field">
-                  <input
-                    id="auth-password"
-                    name="password"
-                    type={showPassword ? "text" : "password"}
-                    required
-                    minLength={mode === "sign-in" ? 1 : 12}
-                    maxLength={128}
-                    aria-describedby={
-                      mode === "register" ? "password-hint" : undefined
-                    }
-                    autoComplete={
-                      mode === "sign-in" ? "current-password" : "new-password"
-                    }
-                  />
-                  <button
-                    type="button"
-                    className="text-button"
-                    aria-label={
-                      showPassword ? "Hide password" : "Show password"
-                    }
-                    onClick={() => setShowPassword((visible) => !visible)}
-                  >
-                    {showPassword ? (
-                      <EyeOff size={18} aria-hidden="true" />
-                    ) : (
-                      <Eye size={18} aria-hidden="true" />
-                    )}
-                  </button>
-                </div>
-                {mode === "register" && (
-                  <small id="password-hint">At least 12 characters.</small>
-                )}
-              </div>
-            )}
-            <button className="button" disabled={busy || !!message}>
-              {busy ? "Please wait…" : config.button}
-              <ArrowRight size={17} aria-hidden="true" />
-            </button>
-          </form>
-          {message && <Saved>{message}</Saved>}
-          <div className="auth-links">
-            <Link
-              href={mode === "sign-in" ? "/auth/register" : "/auth/sign-in"}
-            >
-              {mode === "sign-in" ? "Create an account" : "Sign in instead"}
-            </Link>
-            {mode === "sign-in" && (
-              <Link href="/auth/forgot-password">Forgot password?</Link>
-            )}
-          </div>
-        </section>
-        {showPreview && (
-          <aside
-            className="account-preview"
-            aria-label="UrduSpeech Studio preview"
-          >
-            <div className="account-preview-frame">
-              <Image
-                src={preview}
-                width={preview.width}
-                height={preview.height}
-                alt=""
-                sizes="(max-width: 760px) 100vw, 500px"
-              />
-              <div className="account-preview-caption">
-                <span lang="ur" dir="rtl">
-                  {captionCues[1].urdu}
-                </span>
-                <span>{captionCues[1].english}</span>
-              </div>
-            </div>
-            <p>
-              <strong>UrduSpeech Studio</strong>
-              <br />
-              Review your words, adjust timing and export captions for your next
-              video.
-            </p>
-          </aside>
-        )}
-      </div>
-    </PublicPage>
+    <Suspense fallback={null}>
+      <AuthForm mode={resolved} />
+    </Suspense>
   );
 }

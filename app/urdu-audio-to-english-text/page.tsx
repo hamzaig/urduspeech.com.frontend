@@ -3,14 +3,13 @@ import Link from "next/link";
 import {
   ArrowRight,
   Captions,
-  FileText,
   Globe,
   Languages,
   Layers,
   PencilLine,
   Upload,
 } from "lucide-react";
-import { PublicPage } from "@/components/public-site";
+import { Breadcrumbs, PublicPage } from "@/components/public-site";
 import {
   MarketingIntro,
   QuestionList,
@@ -19,18 +18,26 @@ import {
 import { StructuredData } from "@/components/structured-data";
 import { captionCues, captionTime } from "@/lib/caption-demo";
 import {
+  SITE_URL,
+  buildBreadcrumbJsonLd,
+  buildGraphJsonLd,
   buildOrganizationJsonLd,
   buildSoftwareApplicationJsonLd,
+  buildWebPageJsonLd,
+  buildWebSiteJsonLd,
   publicMetadata,
 } from "@/lib/seo";
 
+const title = "Urdu Audio to English Text & Subtitles";
 const description =
-  "Turn uploaded Urdu audio and video into editable English transcripts, English subtitles or bilingual Urdu-English captions. Export TXT, SRT, VTT or MP4.";
+  "Turn uploaded Urdu audio and video into editable English transcripts, English subtitles, or stacked bilingual captions. Export TXT, SRT, VTT, or MP4.";
 
 export const metadata: Metadata = publicMetadata({
-  title: "Urdu Audio to English Text & Subtitles",
+  title,
   description,
   path: "/urdu-audio-to-english-text",
+  ogImage: "english",
+  markdownPath: "/urdu-audio-to-english-text.md",
 });
 
 const englishOutputQuestions = [
@@ -90,12 +97,27 @@ const englishOutputQuestions = [
 ];
 
 export default function UrduAudioToEnglishText() {
-  const jsonLd = [
+  const path = "/urdu-audio-to-english-text" as const;
+  const jsonLd = buildGraphJsonLd([
     buildOrganizationJsonLd(),
+    buildWebSiteJsonLd(),
+    buildWebPageJsonLd({
+      name: `${title} | UrduSpeech`,
+      description,
+      path,
+      primaryImage: "/og/english.png",
+      mainEntityId: `${SITE_URL}${path}#app`,
+      dateModified: "2026-11-22",
+    }),
+    buildBreadcrumbJsonLd([
+      { name: "Home", path: "/" },
+      { name: "Urdu audio to English text", path },
+    ]),
     buildSoftwareApplicationJsonLd({
       name: "UrduSpeech — Urdu Audio to English Text & Subtitles",
       description,
-      path: "/urdu-audio-to-english-text",
+      path,
+      includeOffers: true,
       featureList: [
         "Translate uploaded spoken Urdu audio and video into editable English text",
         "English-only or stacked bilingual (Urdu + English, Urdu-first or English-first) output",
@@ -103,11 +125,17 @@ export default function UrduAudioToEnglishText() {
         "Export UTF-8 TXT transcripts, SRT and VTT subtitles, or burned-in captioned MP4 video",
       ],
     }),
-  ];
+  ]);
 
   return (
     <PublicPage mainClassName="public-container marketing-page">
       <StructuredData data={jsonLd} />
+      <Breadcrumbs
+        items={[
+          { name: "Home", href: "/" },
+          { name: "Urdu audio to English text" },
+        ]}
+      />
       <section
         className="product-hero"
         aria-label="Urdu audio to English text and subtitles"
@@ -195,8 +223,11 @@ export default function UrduAudioToEnglishText() {
             <p>
               Displays the Urdu script line and the English translation together
               on each cue. Choose <strong>Urdu first</strong> or{" "}
-              <strong>English first</strong> when creating the project;
-              bilingual TXT exports include both ordered lines.
+              <strong>English first</strong> when creating the project; see{" "}
+              <Link href="/bilingual-urdu-english-captions">
+                bilingual caption workflows
+              </Link>
+              .
             </p>
           </li>
           <li>
@@ -210,6 +241,44 @@ export default function UrduAudioToEnglishText() {
                 Roman Urdu in Latin letters
               </Link>
               .
+            </p>
+          </li>
+        </ul>
+      </section>
+
+      <section
+        className="product-section"
+        aria-labelledby="english-review-checklist"
+      >
+        <h2 id="english-review-checklist">
+          Practical review checklist for Urdu-to-English captions
+        </h2>
+        <p>
+          Because Urdu sentence structure places verbs at the end of a clause
+          while English places verbs early, translated subtitle cues often read
+          more naturally when tightened slightly for reading speed. Before you
+          download your final English SRT, VTT, or bilingual MP4, inspect four
+          areas inside Studio:
+        </p>
+        <ul className="product-points two-col" role="list">
+          <li>
+            <PencilLine size={24} aria-hidden="true" />
+            <h3>Idioms, humor, and cultural references</h3>
+            <p>
+              Spoken Urdu idioms, poetry lines, and colloquial emphasis do not
+              always translate literally. Use Studio’s cue editor to swap stiff
+              literal phrasing for natural English that preserves the speaker’s
+              tone.
+            </p>
+          </li>
+          <li>
+            <Globe size={24} aria-hidden="true" />
+            <h3>Proper nouns, titles, and figures</h3>
+            <p>
+              Confirm spellings of Pakistani cities, family names, religious or
+              academic terms, and spoken amounts such as lakh and crore so
+              international readers understand the exact value without
+              confusion.
             </p>
           </li>
         </ul>
@@ -264,10 +333,8 @@ export default function UrduAudioToEnglishText() {
               Download plain-text <strong>TXT</strong> for written work, export
               UTF-8 <strong>SRT</strong> or <strong>VTT</strong> subtitle tracks
               (for example, to add an English track in{" "}
-              <Link href="/guides/urdu-subtitles-for-youtube">
-                YouTube Studio
-              </Link>
-              ), or render a{" "}
+              <Link href="/youtube-urdu-subtitles">YouTube Studio</Link>), or
+              render a{" "}
               <Link href="/video-captions">burned-in captioned MP4</Link>.
             </p>
           </li>
@@ -338,8 +405,8 @@ export default function UrduAudioToEnglishText() {
         </h2>
         <QuestionList questions={englishOutputQuestions} openFirst />
         <div className="guide-link-row">
-          <Link href="/guides/urdu-roman-urdu-and-english">
-            Compare Urdu script, Roman Urdu &amp; English{" "}
+          <Link href="/bilingual-urdu-english-captions">
+            Bilingual Urdu + English video caption guide{" "}
             <ArrowRight size={18} aria-hidden="true" />
           </Link>
           <Link href="/urdu-transcription">
@@ -350,8 +417,8 @@ export default function UrduAudioToEnglishText() {
             Need Urdu words in Latin letters? Roman Urdu text{" "}
             <ArrowRight size={18} aria-hidden="true" />
           </Link>
-          <Link href="/video-captions">
-            Explore Urdu &amp; bilingual video captions{" "}
+          <Link href="/guides/urdu-roman-urdu-and-english">
+            Compare Urdu script, Roman Urdu &amp; English{" "}
             <ArrowRight size={18} aria-hidden="true" />
           </Link>
         </div>

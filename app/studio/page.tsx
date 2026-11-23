@@ -2,7 +2,15 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { ArrowRight, ChevronRight, FileVideo, Wallet } from "lucide-react";
+import {
+  ArrowRight,
+  CheckCircle2,
+  ChevronRight,
+  Circle,
+  FileVideo,
+  Sparkles,
+  Wallet,
+} from "lucide-react";
 import { api, ApiError, explain, minutes } from "@/lib/api";
 import type { ProjectList, Usage } from "@/lib/contracts";
 import { ErrorNotice, PageTitle, UploadLink } from "@/components/common";
@@ -52,6 +60,10 @@ export default function Studio() {
   }, [attempt]);
 
   const needsSignIn = error instanceof ApiError && error.status === 401;
+  const isPlanExpired = usage?.blockingReason === "PLAN_EXPIRED";
+  const isLowMinutes =
+    usage !== null && !isPlanExpired && usage.remaining <= 120;
+
   return (
     <div className="page studio-overview">
       <div className="studio-overview-summary" data-usage={!!usage}>
@@ -83,6 +95,32 @@ export default function Studio() {
           </Link>
         )}
       </div>
+
+      {(isPlanExpired || isLowMinutes) && usage && (
+        <aside
+          className="studio-upgrade-banner"
+          aria-label="Plan allowance notice"
+        >
+          <div>
+            <strong>
+              {isPlanExpired
+                ? "Your paid period has ended"
+                : usage.remaining <= 0
+                  ? `You have used your ${usage.plan.name} allowance`
+                  : `Only ${minutes(usage.remaining)} minutes left on ${usage.plan.name}`}
+            </strong>
+            <p>
+              {usage.plan.slug === "free"
+                ? "Upgrade to Starter (PKR 999 for 60 min) or Creator (PKR 2,499 for 200 min) to unlock clean 1080p MP4 exports without watermarks and longer recordings. Existing TXT, SRT, and VTT transcripts remain downloadable."
+                : "Renew or upgrade in Studio Billing via card checkout or local Pakistani transfer to continue transcribing new recordings."}
+            </p>
+          </div>
+          <Link className="button" href="/studio/billing">
+            View PKR plans <ArrowRight size={16} aria-hidden="true" />
+          </Link>
+        </aside>
+      )}
+
       <section aria-labelledby="project-list-title" className="project-list">
         <h2 id="project-list-title">My projects</h2>
         {error ? (
@@ -137,27 +175,75 @@ export default function Studio() {
               </Link>
             ))}
           </div>
-        ) : (
+        ) : offset > 0 ? (
           <div className="empty-projects project-empty">
             <span className="project-icon">
               <FileVideo size={25} aria-hidden="true" />
             </span>
             <div>
-              <h3>{offset ? "No more projects" : "No projects yet"}</h3>
+              <h3>No more projects</h3>
+              <p>Go back to see earlier results.</p>
+            </div>
+          </div>
+        ) : (
+          <div className="studio-onboarding-card">
+            <div className="studio-onboarding-header">
+              <span className="studio-onboarding-badge">
+                <Sparkles size={15} aria-hidden="true" />
+                Quick start · 1 of 4 steps done (25%)
+              </span>
+              <h3>Create your first Urdu transcript or captioned video</h3>
               <p>
-                {offset
-                  ? "Go back to see earlier results."
-                  : "Upload audio or video to create your first transcript and captions."}
+                Your account is ready with{" "}
+                <strong>
+                  {usage
+                    ? `${minutes(usage.remaining)} minutes`
+                    : "10 free minutes"}
+                </strong>
+                . Upload any MP3, M4A, WAV, FLAC, MP4, or MOV clip to try
+                Nastaliq, Roman Urdu, English, or bilingual captions.
               </p>
-              {offset === 0 && (
-                <Link
-                  className="public-inline-link"
-                  href="/guides/make-urdu-video-captions"
-                >
-                  Read the caption guide{" "}
-                  <ArrowRight size={16} aria-hidden="true" />
-                </Link>
-              )}
+            </div>
+            <ol className="studio-checklist" role="list">
+              <li className="done">
+                <CheckCircle2 size={18} aria-hidden="true" />
+                <span>
+                  <strong>Account verified</strong> — workspace &amp; allowance
+                  ready
+                </span>
+              </li>
+              <li>
+                <Circle size={18} aria-hidden="true" />
+                <span>
+                  <strong>Upload a recording</strong> — start with a 1 to 10
+                  minute clip for fastest preview
+                </span>
+              </li>
+              <li>
+                <Circle size={18} aria-hidden="true" />
+                <span>
+                  <strong>Review words &amp; timing</strong> — accept or reject
+                  AI suggestions alongside local playback
+                </span>
+              </li>
+              <li>
+                <Circle size={18} aria-hidden="true" />
+                <span>
+                  <strong>Export</strong> — download UTF-8 TXT, SRT, VTT, or a
+                  burned-in Nastaliq MP4
+                </span>
+              </li>
+            </ol>
+            <div className="studio-onboarding-actions">
+              <UploadLink />
+              <Link className="public-inline-link" href="/supported-formats">
+                Supported formats &amp; WhatsApp tips{" "}
+                <ArrowRight size={15} aria-hidden="true" />
+              </Link>
+              <Link className="public-inline-link" href="/demo">
+                Inspect sample demo first{" "}
+                <ArrowRight size={15} aria-hidden="true" />
+              </Link>
             </div>
           </div>
         )}

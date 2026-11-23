@@ -39,6 +39,10 @@
 }
 
 .caption-studio-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   z-index: -2;
   object-fit: cover;
   object-position: 57% 38%;
@@ -131,7 +135,7 @@
   border-color: #b6cbb956;
   border-radius: 6px;
   font-variant-numeric: tabular-nums;
-  font-size: clamp(0.65rem, 1.35vw, 0.81rem);
+  font-size: clamp(0.75rem, 1.35vw, 0.85rem);
 }
 
 .caption-studio-timeline button:hover {

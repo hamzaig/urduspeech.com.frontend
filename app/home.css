@@ -160,8 +160,8 @@
 
 .sample-copy,
 .sample-copy:hover {
-  min-height: 38px;
-  padding: 4px 8px;
+  min-height: 44px;
+  padding: 6px 10px;
   background: transparent;
   color: var(--accent);
 }

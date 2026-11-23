@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -13,6 +13,7 @@ import {
   RotateCcw,
 } from "lucide-react";
 import sampleStill from "@/assets/studio-interview.webp";
+import { trackEvent } from "@/lib/analytics";
 import {
   captionCues,
   captionLanguageMeta,
@@ -31,6 +32,22 @@ type CueEdits = Partial<
   Record<number, Partial<Record<CaptionLanguage, string>>>
 >;
 
+type WebMcpNavigator = Navigator & {
+  modelContext?: {
+    registerTool?: (tool: {
+      name: string;
+      description: string;
+      inputSchema: Record<string, unknown>;
+      annotations?: { readOnlyHint?: boolean };
+      execute: (input: {
+        mode?: CaptionMode;
+        format?: "srt" | "vtt" | "txt";
+      }) => Promise<string>;
+    }) => void;
+    unregisterTool?: (name: string) => void;
+  };
+};
+
 export function CaptionStudioDemo({
   editable = false,
 }: {
@@ -46,6 +63,62 @@ export function CaptionStudioDemo({
   const style = sampleCaptionStyles[styleIndex];
   const activeLanguages = captionOutputLanguages(mode);
   const visibleFormats = editable ? formats : (["srt"] as const);
+
+  useEffect(() => {
+    if (!editable || typeof navigator === "undefined") return;
+    const nav = navigator as WebMcpNavigator;
+    const mc = nav.modelContext;
+    if (!mc?.registerTool) return;
+    const toolName = "export_sample_urdu_captions";
+    try {
+      mc.registerTool({
+        name: toolName,
+        description:
+          "Generate sample Urdu, Roman Urdu, English, or bilingual captions in UTF-8 SRT, WebVTT, or plain TXT format from UrduSpeech's demo cues.",
+        inputSchema: {
+          type: "object",
+          properties: {
+            mode: {
+              type: "string",
+              enum: ["urdu", "romanUrdu", "english", "bilingual"],
+              description: "Output script or translation mode",
+            },
+            format: {
+              type: "string",
+              enum: ["srt", "vtt", "txt"],
+              description: "Export file format",
+            },
+          },
+        },
+        annotations: { readOnlyHint: true },
+        execute: async (input) => {
+          const requestedMode: CaptionMode =
+            input?.mode &&
+            ["urdu", "romanUrdu", "english", "bilingual"].includes(input.mode)
+              ? input.mode
+              : "bilingual";
+          const requestedFormat =
+            input?.format && ["srt", "vtt", "txt"].includes(input.format)
+              ? input.format
+              : "srt";
+          const langs = captionOutputLanguages(requestedMode);
+          const lines = captionCues.map((item) =>
+            langs.map((l) => item[l]).join("\n"),
+          );
+          return sampleExport(requestedFormat, lines);
+        },
+      });
+    } catch {
+      // Ignore environments with incompatible WebMCP implementations.
+    }
+    return () => {
+      try {
+        mc.unregisterTool?.(toolName);
+      } catch {
+        // Ignore cleanup errors.
+      }
+    };
+  }, [editable]);
 
   function line(index: number, language: CaptionLanguage) {
     return edits[index]?.[language] ?? captionCues[index][language];
@@ -94,9 +167,12 @@ export function CaptionStudioDemo({
         <div className="caption-studio-monitor">
           <Image
             src={sampleStill}
-            alt="A creator speaking into a microphone in a sunlit studio"
-            fill
+            alt="A creator speaking Urdu into a studio microphone with live Nastaliq and English captions overlaid"
+            width={sampleStill.width}
+            height={sampleStill.height}
             preload
+            fetchPriority="high"
+            placeholder="blur"
             sizes="(max-width: 800px) calc(100vw - 52px), (max-width: 1300px) 62vw, 800px"
             className="caption-studio-image"
           />
@@ -164,6 +240,10 @@ export function CaptionStudioDemo({
                   onChange={() => {
                     setMode(modeId);
                     setCopyStatus("");
+                    trackEvent("demo_mode_switched", {
+                      mode: modeId,
+                      editable,
+                    });
                   }}
                 />
                 <span>{label}</span>
@@ -206,7 +286,12 @@ export function CaptionStudioDemo({
                       type="radio"
                       name={id + "-style"}
                       checked={styleIndex === index}
-                      onChange={() => setStyleIndex(index)}
+                      onChange={() => {
+                        setStyleIndex(index);
+                        trackEvent("demo_style_changed", {
+                          style: name.toLowerCase(),
+                        });
+                      }}
                     />
                     <span>
                       <b style={{ color }} aria-hidden="true">
@@ -245,7 +330,6 @@ export function CaptionStudioDemo({
               {visibleFormats.map((format) => {
                 const text = sampleExport(format, exportLines);
                 const type = format === "vtt" ? "text/vtt" : "text/plain";
-                // URI encoding requires well-formed Unicode.
                 const encoded = encodeURIComponent(
                   text.replace(/[\uD800-\uDFFF]/gu, "\uFFFD"),
                 );
@@ -255,6 +339,13 @@ export function CaptionStudioDemo({
                     href={`data:${type};charset=utf-8,${encoded}`}
                     download={`urduspeech-${mode}.${format}`}
                     aria-label={`Download ${format.toUpperCase()}`}
+                    onClick={() =>
+                      trackEvent("demo_export_downloaded", {
+                        format,
+                        mode,
+                        editable,
+                      })
+                    }
                   >
                     <Download size={16} aria-hidden="true" />
                     {editable ? format.toUpperCase() : "Download SRT"}
@@ -344,6 +435,37 @@ export function CaptionStudioDemo({
             </p>
           </div>
         </div>
+        <table className="sr-only">
+          <caption>
+            Illustrative Urdu, Roman Urdu, and English caption cues
+          </caption>
+          <thead>
+            <tr>
+              <th scope="col">Time</th>
+              <th scope="col">Urdu</th>
+              <th scope="col">Roman Urdu</th>
+              <th scope="col">English</th>
+            </tr>
+          </thead>
+          <tbody>
+            {captionCues.map((item) => (
+              <tr key={item.start}>
+                <td>
+                  {captionTime(item.start)}–{captionTime(item.end)}
+                </td>
+                <td lang="ur" dir="rtl">
+                  {item.urdu}
+                </td>
+                <td lang="ur-Latn" dir="ltr">
+                  {item.romanUrdu}
+                </td>
+                <td lang="en" dir="ltr">
+                  {item.english}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </section>
     </article>
   );

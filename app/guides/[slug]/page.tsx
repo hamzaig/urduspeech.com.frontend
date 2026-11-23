@@ -1,16 +1,25 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { GuideCards } from "@/components/guide-cards";
 import { MarketingIntro, StartFree } from "@/components/marketing";
-import { PublicPage, ReadingSections } from "@/components/public-site";
+import {
+  Breadcrumbs,
+  PublicPage,
+  ReadingSections,
+} from "@/components/public-site";
 import { StructuredData } from "@/components/structured-data";
 import { publicGuides } from "@/lib/public-guides";
 import {
+  SITE_URL,
   buildArticleJsonLd,
   buildBreadcrumbJsonLd,
+  buildEditorialTeamJsonLd,
+  buildGraphJsonLd,
   buildOrganizationJsonLd,
+  buildWebPageJsonLd,
+  buildWebSiteJsonLd,
   publicMetadata,
 } from "@/lib/seo";
 
@@ -39,14 +48,29 @@ export async function generateMetadata({
     description: guide.description,
     path: `/guides/${guide.slug}`,
     ogType: "article",
+    ogImage: "guides",
+    publishedTime: guide.publishedIso,
+    modifiedTime: guide.updatedIso,
+    markdownPath: `/guides/${guide.slug}.md`,
   });
 }
 
 export default async function GuidePage({ params }: GuideParams) {
   const guide = await getGuide(params);
   const path = `/guides/${guide.slug}` as const;
-  const jsonLd = [
+  const jsonLd = buildGraphJsonLd([
     buildOrganizationJsonLd(),
+    buildEditorialTeamJsonLd(),
+    buildWebSiteJsonLd(),
+    buildWebPageJsonLd({
+      name: guide.seoTitle ?? `${guide.title} | UrduSpeech`,
+      description: guide.description,
+      path,
+      primaryImage: "/og/guides.png",
+      datePublished: guide.publishedIso,
+      dateModified: guide.updatedIso,
+      mainEntityId: `${SITE_URL}${path}#article`,
+    }),
     buildBreadcrumbJsonLd([
       { name: "Home", path: "/" },
       { name: "Creator guides", path: "/guides" },
@@ -56,32 +80,41 @@ export default async function GuidePage({ params }: GuideParams) {
       headline: guide.title,
       description: guide.description,
       path,
-      datePublished: guide.updated,
-      dateModified: guide.updated,
+      datePublished: guide.publishedIso,
+      dateModified: guide.updatedIso,
+      image: "/og/guides.png",
+      articleSection: guide.topic,
+      wordCount: guide.wordCount,
     }),
-  ];
+  ]);
 
   return (
     <PublicPage mainClassName="public-container marketing-page guide-article">
       <StructuredData data={jsonLd} />
-      <nav className="guide-breadcrumbs" aria-label="Breadcrumb">
-        <ol role="list">
-          <li>
-            <Link href="/">Home</Link>
-          </li>
-          <li>
-            <Link className="guide-back" href="/guides">
-              <ArrowLeft size={16} aria-hidden="true" /> Creator guides
-            </Link>
-          </li>
-          <li aria-current="page">{guide.title}</li>
-        </ol>
-      </nav>
+      <Breadcrumbs
+        items={[
+          { name: "Home", href: "/" },
+          { name: "Creator guides", href: "/guides" },
+          { name: guide.title },
+        ]}
+      />
       <article>
         <MarketingIntro title={guide.title}>
-          <p className="policy-date">
-            {guide.topic} · Updated {guide.displayUpdated}
-          </p>
+          <div className="author-byline">
+            <span>
+              By{" "}
+              <Link href="/about#editorial-team">
+                UrduSpeech Editorial &amp; Engineering Team
+              </Link>
+            </span>
+            <span aria-hidden="true">·</span>
+            <span>{guide.topic}</span>
+            <span aria-hidden="true">·</span>
+            <span>
+              Updated{" "}
+              <time dateTime={guide.updated}>{guide.displayUpdated}</time>
+            </span>
+          </div>
           <p>{guide.summary}</p>
         </MarketingIntro>
         <ReadingSections sections={guide.sections} />
