@@ -1,13 +1,16 @@
 "use client";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { api, ApiError, explain, money, mutation } from "@/lib/api";
+import { api, ApiError, explain, minutes, money, mutation } from "@/lib/api";
 import type {
   AdminSession,
   AdminSettings,
   ComputeAccounts,
   ComputeAccountInput,
   ComputeAccountPatch,
+  AdminUser,
+  AdminUserDetail,
+  AdminUsers,
   ContactMessage,
   ContactMessages,
   ManualPaymentReviews,
@@ -97,11 +100,13 @@ export default function Admin() {
         </p>
       )}
       <nav className="operations-nav" aria-label="Operations sections">
+        <a href="#users">Users</a>
         <a href="#contact-messages">Contact messages</a>
         <a href="#payment-reviews">Payment reviews</a>
         <a href="#compute-accounts">Modal accounts</a>
         <a href="#private-settings">Service settings</a>
       </nav>
+      <UserDirectory fresh={session.fresh} />
       <ContactInbox />
       <PaymentReviews fresh={session.fresh} />
       <ModalAccounts fresh={session.fresh} />
@@ -925,5 +930,304 @@ function ContactInbox() {
         </button>
       )}
     </section>
+  );
+}
+function date(value: string | null) {
+  return value ? new Date(value).toLocaleString() : "—";
+}
+function UserDirectory({ fresh }: { fresh: boolean }) {
+  const [users, setUsers] = useState<AdminUser[]>([]),
+    [totals, setTotals] = useState<AdminUsers["totals"] | null>(null),
+    [next, setNext] = useState<string | null>(null),
+    [q, setQ] = useState(""),
+    [filter, setFilter] = useState("all"),
+    [error, setError] = useState("");
+  async function load(before?: string) {
+    try {
+      const params = new URLSearchParams();
+      if (q.trim()) params.set("q", q.trim());
+      if (filter !== "all") params.set("filter", filter);
+      if (before) params.set("before", before);
+      const result = await api<AdminUsers>(
+        "/v1/admin/users" + (params.size ? "?" + params : ""),
+      );
+      setUsers((old) => (before ? [...old, ...result.users] : result.users));
+      setTotals(result.totals);
+      setNext(result.nextBefore);
+      setError("");
+    } catch (e) {
+      setError(failure(e));
+    }
+  }
+  useEffect(() => {
+    void load();
+    // Reload only when the filter changes; search runs on submit.
+  }, [filter]);
+  return (
+    <section id="users" className="operations-section">
+      <div className="operations-heading">
+        <div>
+          <h2>Users</h2>
+          <p>
+            {totals
+              ? `${totals.users} users · ${totals.paid} on a paid plan · ${totals.blocked} blocked. `
+              : ""}
+            Shows account status, usage and payments only; transcripts and media
+            stay private.
+          </p>
+        </div>
+        <button className="secondary" onClick={() => load()}>
+          Refresh users
+        </button>
+      </div>
+      <form
+        className="user-filters"
+        onSubmit={(e) => {
+          e.preventDefault();
+          void load();
+        }}
+      >
+        <input
+          type="search"
+          placeholder="Search by email or name"
+          aria-label="Search users"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+        />
+        <select
+          aria-label="Filter users"
+          value={filter}
+          onChange={(e) => setFilter(e.target.value)}
+        >
+          <option value="all">All users</option>
+          <option value="paid">Paid plans</option>
+          <option value="free">Free plan</option>
+          <option value="unverified">Email not verified</option>
+          <option value="blocked">Blocked</option>
+        </select>
+        <button type="submit">Search</button>
+      </form>
+      {error && <ErrorNotice message={error} />}
+      {totals && users.length === 0 && <p>No users match.</p>}
+      {users.map((user) => (
+        <UserRow
+          key={user.id}
+          user={user}
+          fresh={fresh}
+          changed={(u) =>
+            setUsers((old) => old.map((o) => (o.id === u.id ? u : o)))
+          }
+        />
+      ))}
+      {next && (
+        <button className="secondary" onClick={() => load(next)}>
+          Load more users
+        </button>
+      )}
+    </section>
+  );
+}
+function UserRow({
+  user,
+  fresh,
+  changed,
+}: {
+  user: AdminUser;
+  fresh: boolean;
+  changed: (user: AdminUser) => void;
+}) {
+  const [detail, setDetail] = useState<AdminUserDetail | null>(null),
+    [plan, setPlan] = useState("starter"),
+    [busy, setBusy] = useState(false),
+    [error, setError] = useState(""),
+    [notice, setNotice] = useState("");
+  async function open() {
+    try {
+      setDetail(await api<AdminUserDetail>(`/v1/admin/users/${user.id}`));
+    } catch (e) {
+      setError(failure(e));
+    }
+  }
+  async function act(
+    path: string,
+    body: object,
+    done: string,
+    confirmText: string,
+  ) {
+    if (!window.confirm(confirmText)) return;
+    setBusy(true);
+    setNotice("");
+    try {
+      const updated = await api<AdminUser>(
+        `/v1/admin/users/${user.id}/${path}`,
+        mutation("POST", body, crypto.randomUUID()),
+      );
+      changed(updated);
+      setNotice(done);
+      setError("");
+      await open();
+    } catch (e) {
+      setError(
+        e instanceof ApiError && e.code === "PLAN_GRANT_CONFLICT"
+          ? "This user already has a paid plan for this period."
+          : e instanceof ApiError && e.code === "CANNOT_MODIFY_SELF"
+            ? "You cannot block your own account."
+            : failure(e),
+      );
+    } finally {
+      setBusy(false);
+    }
+  }
+  return (
+    <details
+      className="user-row"
+      onToggle={(e) => {
+        if ((e.currentTarget as HTMLDetailsElement).open && !detail)
+          void open();
+      }}
+    >
+      <summary>
+        <span>
+          <strong>
+            {user.blocked ? "⛔ " : ""}
+            {user.email}
+          </strong>
+          <small>
+            {user.name || "No name"} · joined {date(user.createdAt)} · last
+            sign-in {date(user.lastLoginAt)}
+          </small>
+        </span>
+        <span>
+          {user.plan.name}
+          {!user.emailVerified && " · unverified"}
+        </span>
+      </summary>
+      <div>
+        {error && <ErrorNotice message={error} />}
+        {notice && <Saved>{notice}</Saved>}
+        {!detail && !error && <p role="status">Loading user…</p>}
+        {detail && (
+          <>
+            <dl>
+              <div>
+                <dt>Plan</dt>
+                <dd>
+                  {detail.user.plan.name}
+                  {detail.user.plan.endsAt
+                    ? ` until ${date(detail.user.plan.endsAt)}`
+                    : ""}
+                </dd>
+              </div>
+              <div>
+                <dt>Minutes used / allowance</dt>
+                <dd>
+                  {minutes(detail.usage.consumedSeconds)} /{" "}
+                  {minutes(detail.usage.allowanceSeconds)} min (
+                  {minutes(Math.max(0, detail.usage.remainingSeconds))} left)
+                </dd>
+              </div>
+              <div>
+                <dt>Projects / uploads</dt>
+                <dd>
+                  {detail.counts.projects} / {detail.counts.uploads}
+                  {detail.counts.failedUploads
+                    ? ` (${detail.counts.failedUploads} failed)`
+                    : ""}
+                </dd>
+              </div>
+              <div>
+                <dt>Jobs by state</dt>
+                <dd>
+                  {Object.entries(detail.jobs)
+                    .map(([state, n]) => `${state}: ${n}`)
+                    .join(", ") || "None"}
+                </dd>
+              </div>
+            </dl>
+            <h3>Recent jobs</h3>
+            {detail.recentJobs.length === 0 ? (
+              <p>No jobs yet.</p>
+            ) : (
+              <ul>
+                {detail.recentJobs.map((j) => (
+                  <li key={j.id}>
+                    {date(j.createdAt)} · {j.state}
+                    {j.durationSeconds !== null
+                      ? ` · ${minutes(j.durationSeconds)} min`
+                      : ""}
+                  </li>
+                ))}
+              </ul>
+            )}
+            <h3>Payments</h3>
+            {detail.payments.length === 0 ? (
+              <p>No payments.</p>
+            ) : (
+              <ul>
+                {detail.payments.map((p) => (
+                  <li key={p.id}>
+                    {date(p.createdAt)} · {p.plan ?? "—"} ·{" "}
+                    {money(p.amountMinor)} · {p.provider} · {p.status}
+                  </li>
+                ))}
+              </ul>
+            )}
+            <h3>Actions</h3>
+            {!fresh && (
+              <p className="notice">
+                Actions need a recent sign-in.{" "}
+                <Link href="/auth/sign-in?next=/studio/admin">
+                  Sign in again
+                </Link>
+                .
+              </p>
+            )}
+            <div className="actions">
+              <select
+                aria-label="Plan to give"
+                value={plan}
+                onChange={(e) => setPlan(e.target.value)}
+                disabled={busy || !fresh}
+              >
+                <option value="starter">Starter</option>
+                <option value="creator">Creator</option>
+                <option value="studio">Studio</option>
+              </select>
+              <button
+                disabled={busy || !fresh}
+                onClick={() =>
+                  act(
+                    "plan",
+                    { plan },
+                    `${plan} plan given for one month.`,
+                    `Give ${user.email} the ${plan} plan free for one month?`,
+                  )
+                }
+              >
+                Give plan for 1 month
+              </button>
+              <button
+                className="secondary"
+                disabled={busy || !fresh}
+                onClick={() =>
+                  act(
+                    "block",
+                    { blocked: !user.blocked },
+                    user.blocked
+                      ? "User unblocked."
+                      : "User blocked and signed out.",
+                    user.blocked
+                      ? `Unblock ${user.email}?`
+                      : `Block ${user.email}? They will be signed out and cannot use the app.`,
+                  )
+                }
+              >
+                {user.blocked ? "Unblock user" : "Block user"}
+              </button>
+            </div>
+          </>
+        )}
+      </div>
+    </details>
   );
 }

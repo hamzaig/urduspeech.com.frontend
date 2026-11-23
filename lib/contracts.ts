@@ -506,3 +506,47 @@ export type ContactMessage = {
   createdAt: string;
 };
 export type ContactMessages = { messages: ContactMessage[]; unread: number };
+export type AdminUser = {
+  id: string;
+  email: string;
+  name: string;
+  emailVerified: boolean;
+  createdAt: string;
+  lastLoginAt: string | null;
+  plan: { code: string; name: string; endsAt: string | null };
+  blocked: boolean;
+};
+export type AdminUsers = {
+  users: AdminUser[];
+  nextBefore: string | null;
+  totals: { users: number; paid: number; blocked: number };
+};
+export type AdminUserDetail = {
+  user: AdminUser;
+  usage: {
+    allowanceSeconds: number;
+    consumedSeconds: number;
+    reservedSeconds: number;
+    remainingSeconds: number;
+    activeJobs: number;
+    blockingReason: string | null;
+  };
+  counts: { projects: number; uploads: number; failedUploads: number };
+  jobs: Record<string, number>;
+  recentJobs: {
+    id: string;
+    state: string;
+    createdAt: string;
+    updatedAt: string;
+    durationSeconds: number | null;
+  }[];
+  payments: {
+    id: string;
+    provider: string;
+    status: string;
+    amountMinor: number;
+    currency: string;
+    plan: string | null;
+    createdAt: string;
+  }[];
+};

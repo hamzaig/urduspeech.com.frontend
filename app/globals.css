@@ -949,13 +949,15 @@ a.plan-status {
 }
 
 .setting-row,
-.payment-review {
+.payment-review,
+.user-row {
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-rule);
 }
 
 .setting-row summary,
-.payment-review summary {
+.payment-review summary,
+.user-row summary {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -966,13 +968,15 @@ a.plan-status {
 }
 
 .setting-row summary strong,
-.payment-review summary strong {
+.payment-review summary strong,
+.user-row summary strong {
   display: block;
   font-size: var(--text-sm);
 }
 
 .setting-row summary small,
-.payment-review summary small {
+.payment-review summary small,
+.user-row summary small {
   display: block;
   margin-block-start: var(--space-2xs);
   color: var(--color-muted);
@@ -1332,4 +1336,36 @@ a.plan-status {
   .plans {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+.user-row > div {
+  padding: 0 var(--space-md) var(--space-md);
+}
+.user-row dl {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: var(--space-sm) var(--space-lg);
+  margin: 0 0 var(--space-md);
+}
+.user-row dt {
+  font-size: var(--text-xs);
+  color: var(--color-muted);
+}
+.user-row dd {
+  margin: 0;
+  font-size: var(--text-sm);
+}
+.user-row ul {
+  margin: 0 0 var(--space-md);
+  padding-inline-start: var(--space-lg);
+  font-size: var(--text-sm);
+}
+.user-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+.user-filters input {
+  flex: 1 1 220px;
 }
