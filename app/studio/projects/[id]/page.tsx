@@ -28,6 +28,11 @@ import type {
 } from "@/lib/contracts";
 import { PageTitle, ErrorNotice, Saved } from "@/components/common";
 import { outputLabel, type Preset } from "@/components/output-options";
+import {
+  TemplateLine,
+  TemplatePicker,
+  templateFrame,
+} from "@/components/caption-template";
 import { MediaReadiness } from "@/components/media-readiness";
 import { ResumeUpload } from "@/components/resume-upload";
 type Cue = Track["content"]["cues"][number];
@@ -788,23 +793,43 @@ export default function ProjectEditor({
                       <small>Preview stays on this device.</small>
                     </div>
                   )}
-                  {previewCue && (
+                  {previewCue && previewPreset && (
                     <div
-                      className={
-                        previewPreset?.box
-                          ? "local-caption boxed"
-                          : "local-caption"
+                      className="local-caption template-overlay"
+                      data-band={
+                        previewPreset.style?.boxStyle === "band" || undefined
                       }
+                      style={templateFrame(previewPreset)}
                     >
-                      <p
-                        lang={
-                          track?.content.variant === "urdu" ? "ur" : undefined
-                        }
-                        dir="auto"
-                        style={{ color: previewPreset?.color }}
-                      >
-                        {previewCue.text}
-                      </p>
+                      {previewCue.text.split("\n").map((line, index, all) => {
+                        // Karaoke: estimate the spoken word from time within the cue.
+                        const words = previewCue.text.split(/\s+/).length;
+                        const span = Math.max(
+                          1,
+                          previewCue.endMs - previewCue.startMs,
+                        );
+                        const spoken = Math.min(
+                          words - 1,
+                          Math.floor(
+                            ((time - previewCue.startMs) / span) * words,
+                          ),
+                        );
+                        const before = all
+                          .slice(0, index)
+                          .reduce((n, l) => n + l.split(" ").length, 0);
+                        return (
+                          <TemplateLine
+                            key={index}
+                            template={previewPreset}
+                            text={line}
+                            highlight={spoken - before}
+                            dir="auto"
+                            lang={
+                              /\p{Script=Arabic}/u.test(line) ? "ur" : undefined
+                            }
+                          />
+                        );
+                      })}
                     </div>
                   )}
                 </div>
@@ -853,37 +878,17 @@ export default function ProjectEditor({
                   disabled={busy}
                   aria-describedby="preset-preview-note"
                 >
-                  <legend>Caption style</legend>
-                  <div className="editor-preset-grid">
-                    {presets.map((p) => (
-                      <label key={p.id} className="editor-preset">
-                        <input
-                          type="radio"
-                          name="render-preset"
-                          value={p.id}
-                          checked={p.id === preset}
-                          onChange={() => setPreset(p.id)}
-                        />
-                        <span
-                          className="editor-preset-sample"
-                          aria-hidden="true"
-                        >
-                          <span
-                            lang="ur"
-                            dir="rtl"
-                            style={{ color: p.color }}
-                            data-box={p.box}
-                          >
-                            آواز
-                          </span>
-                        </span>
-                        <strong>{p.name.replaceAll("-", " ")}</strong>
-                      </label>
-                    ))}
-                  </div>
+                  <legend>Caption template</legend>
+                  <TemplatePicker
+                    templates={presets}
+                    value={preset || null}
+                    onChange={(id) => id && setPreset(id)}
+                    name="render-preset"
+                    disabled={busy}
+                  />
                   <small id="preset-preview-note">
                     {presets.length
-                      ? "Style preview is approximate."
+                      ? "Preview is approximate; the MP4 uses the server template. Premium templates need a paid plan."
                       : "Caption styles are unavailable."}
                   </small>
                 </fieldset>

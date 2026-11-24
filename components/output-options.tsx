@@ -1,4 +1,8 @@
 "use client";
+import {
+  TemplatePicker,
+  type CaptionTemplate,
+} from "@/components/caption-template";
 import type { Defaults } from "@/lib/contracts";
 export const initialDefaults: Defaults = {
   outputVariant: "urdu",
@@ -42,7 +46,7 @@ export function outputLabel(variant: unknown) {
   );
 }
 
-export type Preset = { id: string; name: string; color: string; box: boolean };
+export type Preset = CaptionTemplate;
 export function OutputOptions({
   value,
   onChange,
@@ -136,23 +140,20 @@ export function OutputOptions({
           />
         </label>
       </div>
-      <label className="field">
-        Caption style
-        <select
-          value={value.captionPresetVersionId ?? ""}
-          onChange={(e) =>
-            update("captionPresetVersionId", e.target.value || null)
-          }
-        >
-          <option value="">Use account / system default</option>
-          {presets.map((p) => (
-            <option key={p.id} value={p.id}>
-              {p.name.replaceAll("-", " ")}
-            </option>
-          ))}
-        </select>
-        <small>Final rendering uses the selected server preset.</small>
-      </label>
+      <fieldset className="field template-field">
+        <legend>Caption template</legend>
+        <TemplatePicker
+          templates={presets}
+          value={value.captionPresetVersionId}
+          onChange={(id) => update("captionPresetVersionId", id)}
+          name="caption-template"
+          defaultLabel="Account default"
+        />
+        <small>
+          Previews are approximate; the rendered MP4 uses the server template.
+          Premium templates need a paid plan.
+        </small>
+      </fieldset>
     </fieldset>
   );
 }
