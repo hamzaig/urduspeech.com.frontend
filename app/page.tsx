@@ -266,11 +266,22 @@ export default function Home() {
                   Fix names and numbers, then nudge each caption&rsquo;s start
                   and end before you export.
                 </p>
-                <div className="bento-timeline" aria-hidden="true">
-                  <span style={{ inlineSize: "28%" }} />
-                  <span style={{ inlineSize: "18%" }} data-active="" />
-                  <span style={{ inlineSize: "34%" }} />
-                </div>
+                <ol className="bento-cues" aria-label="Example cue edit">
+                  <li>
+                    <span className="bento-cue-time">00:00 – 00:04</span>
+                    <span className="bento-cue-text" lang="ur" dir="rtl">
+                      آج کچھ نیا بناتے ہیں۔
+                    </span>
+                  </li>
+                  <li data-active="">
+                    <span className="bento-cue-time">
+                      00:04 – <ins>00:07.6</ins>
+                    </span>
+                    <span className="bento-cue-text" lang="ur" dir="rtl">
+                      <del>عائیشہ</del> <ins>عائشہ</ins> کی کہانی
+                    </span>
+                  </li>
+                </ol>
               </li>
               <li className="bento-card bento-dark bento-export">
                 <div className="bento-head">

@@ -1369,3 +1369,20 @@ a.plan-status {
 .user-filters input {
   flex: 1 1 220px;
 }
+
+/* Studio card headings: the global h2 is display-sized for marketing pages, so
+ * panels inside Studio (Pay manually, Delete your account) use section size,
+ * matching ".form-section h2" and staying below the page title. */
+.settings-panel > h2,
+.danger-zone > h2 {
+  font-size: var(--text-lg);
+  line-height: 1.2;
+  margin-block-end: var(--space-xs);
+}
+
+/* The settings danger zone sits beside a full settings card; give it the same
+ * inner padding and radius so the two cards align. */
+section.danger-zone {
+  padding: var(--space-lg);
+  border-radius: var(--radius-card);
+}
