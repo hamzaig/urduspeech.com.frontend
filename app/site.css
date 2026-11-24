@@ -1847,6 +1847,7 @@ table.public-pricing tbody th,
   text-decoration: underline;
   text-underline-offset: 4px;
   text-decoration-color: var(--color-accent);
+}
 
 /* The calculator sits inside page sections whose h2 is display-sized; keep the
  * tool heading at title size so the icon stays aligned with its first line. */
