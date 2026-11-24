@@ -425,3 +425,55 @@
     justify-self: stretch;
   }
 }
+
+/* "Continue with Google": Google's neutral button (white face, grey border,
+ * full-colour mark) in both themes, as Google's branding guidelines require. */
+.google-auth {
+  display: grid;
+  gap: var(--space-md);
+  margin-block: var(--space-lg) var(--space-md);
+}
+
+button.google-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm);
+  width: 100%;
+  min-height: 48px;
+  padding-inline: var(--space-md);
+  border: 1px solid #747775;
+  border-radius: var(--radius-control);
+  background: #ffffff;
+  color: #1f1f1f;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+button.google-button:hover:not(:disabled) {
+  border-color: #1f1f1f;
+  background: #f8faff;
+  color: #1f1f1f;
+}
+
+button.google-button:disabled {
+  opacity: 0.7;
+  cursor: progress;
+}
+
+.google-auth-divider {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+.google-auth-divider::before,
+.google-auth-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--color-rule);
+}

@@ -328,3 +328,33 @@ test("signs the Vercel-observed client IP only when a strong secret is configure
   assert.equal(seen!.get("x-urduspeech-client-ip"), null);
   assert.equal(seen!.get("x-urduspeech-client-sig"), null);
 });
+test("the OAuth state cookie travels only on the two Google sign-in routes", async () => {
+  const state = "__Host-urduspeech_oauth_state=signed-state";
+  const session = `${SESSION_COOKIE}=s`;
+  const stateSet =
+    "__Host-urduspeech_oauth_state=new; Path=/; HttpOnly; Secure; SameSite=Lax";
+  const sent: Record<string, string | null> = {};
+  const echo = (path: string) => async (_: unknown, init?: RequestInit) => {
+    sent[path] = new Headers(init?.headers).get("cookie");
+    const headers = new Headers({ "content-type": "application/json" });
+    headers.append("set-cookie", stateSet);
+    return new Response("{}", { status: 200, headers });
+  };
+  const cookie = `${session}; ${state}; other=x`;
+  const callback = await bridge(
+    request("/v1/auth/callback/google?code=c&state=s", { headers: { cookie } }),
+    ["v1", "auth", "callback", "google"],
+    env,
+    echo("callback") as typeof fetch,
+  );
+  assert.equal(sent.callback, `${session}; ${state}`);
+  assert.match(callback.headers.get("set-cookie") ?? "", /oauth_state=new/);
+  const ordinary = await bridge(
+    request("/v1/session", { headers: { cookie } }),
+    ["v1", "session"],
+    env,
+    echo("session") as typeof fetch,
+  );
+  assert.equal(sent.session, session);
+  assert.equal(ordinary.headers.get("set-cookie"), null);
+});

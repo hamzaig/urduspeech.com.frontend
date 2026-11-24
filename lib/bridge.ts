@@ -3,6 +3,13 @@ import routes from "./routes.json";
 import { isIP } from "node:net";
 import { createHmac } from "node:crypto";
 export const SESSION_COOKIE = "__Host-urduspeech_session";
+// Google sign-in binds the browser that started the flow to its callback with this
+// cookie; it only ever travels on the two Google endpoints below.
+export const OAUTH_STATE_COOKIE = "__Host-urduspeech_oauth_state";
+const OAUTH_PATHS = new Set([
+  "/v1/auth/social/google",
+  "/v1/auth/callback/google",
+]);
 export const MAX_BODY = 512 * 1024;
 const allowed = routes.map((r) => ({
   method: r.method,
@@ -56,11 +63,14 @@ export async function bridge(
   const headers = new Headers({
     accept: request.headers.get("accept") ?? "application/json",
   });
+  const forwardedCookies = OAUTH_PATHS.has(path)
+    ? [SESSION_COOKIE, OAUTH_STATE_COOKIE]
+    : [SESSION_COOKIE];
   const cookie = request.headers
     .get("cookie")
     ?.split(";")
     .map((s) => s.trim())
-    .filter((s) => s.startsWith(SESSION_COOKIE + "="))
+    .filter((s) => forwardedCookies.some((name) => s.startsWith(name + "=")))
     .join("; ");
   if (cookie) headers.set("cookie", cookie);
   if (unsafe) headers.set("origin", origin.origin);
@@ -169,7 +179,7 @@ export async function bridge(
     }
     for (const value of response.headers.getSetCookie()) {
       if (
-        value.startsWith(SESSION_COOKIE + "=") &&
+        forwardedCookies.some((name) => value.startsWith(name + "=")) &&
         !/;\s*domain=/i.test(value) &&
         /;\s*secure(?:;|$)/i.test(value) &&
         /;\s*httponly(?:;|$)/i.test(value) &&

@@ -9,6 +9,7 @@ import { trackEvent } from "@/lib/analytics";
 import { PLANS } from "@/lib/plans";
 import { PublicPage } from "@/components/public-site";
 import { ErrorNotice, Saved } from "@/components/common";
+import { GoogleButton, googleErrorMessage } from "@/components/google-button";
 import preview from "@/assets/caption-demo.webp";
 import { captionCues } from "@/lib/caption-demo";
 import { AUTH_MODES, type AuthMode } from "@/lib/auth-modes";
@@ -45,7 +46,12 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
   const query = useSearchParams();
   const startedRef = useRef(false);
 
-  const [error, setError] = useState(""),
+  // A failed Google round trip lands back on sign-in with ?oauth=failed&error=…
+  const oauthError =
+    mode === "sign-in" && query.get("oauth") === "failed"
+      ? googleErrorMessage(query.get("error"))
+      : "";
+  const [error, setError] = useState(oauthError),
     [message, setMessage] = useState(""),
     [busy, setBusy] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -153,6 +159,17 @@ export function AuthForm({ mode }: { mode: AuthMode }) {
             </p>
           )}
           {error && <ErrorNotice message={error} />}
+          {(mode === "sign-in" || mode === "register") && !message && (
+            <GoogleButton
+              source={mode}
+              returnPath={
+                query.get("next") === "/studio/admin"
+                  ? "/studio/admin"
+                  : "/studio"
+              }
+              onError={setError}
+            />
+          )}
           <form onSubmit={submit}>
             {mode === "register" && (
               <label className="field">
