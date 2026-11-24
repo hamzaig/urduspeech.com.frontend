@@ -1,18 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import {
-  ArrowRight,
-  Captions,
-  Check,
-  FileText,
-  FileVideo,
-  Languages,
-  LockKeyhole,
-  ShieldCheck,
-  Timer,
-  Wallet,
-} from "lucide-react";
-import { CaptionStudioDemo } from "@/components/caption-studio-demo";
+import { StampHero } from "@/components/stamp-hero";
 import { CaptionStyleGallery } from "@/components/caption-style-gallery";
 import { GuideCards } from "@/components/guide-cards";
 import { SiteHeader } from "@/components/site-header";
@@ -34,7 +22,7 @@ import {
   buildWebSiteJsonLd,
   publicMetadata,
 } from "@/lib/seo";
-import "./landing.css";
+import "./home-ajrak.css";
 
 const absoluteTitle = "Urdu Captions & Transcripts for Creators | UrduSpeech";
 const description =
@@ -52,52 +40,75 @@ export const metadata: Metadata = {
   other: { "page-type": "software", "site-kind": "software" },
 };
 
+const readings = [
+  {
+    script: "اردو",
+    name: "Urdu",
+    lang: "ur",
+    dir: "rtl",
+    text: "ہر کہانی کی اپنی آواز ہوتی ہے۔",
+    note: "Nastaliq script for Urdu readers.",
+  },
+  {
+    script: "Roman",
+    name: "Roman Urdu",
+    lang: "ur-Latn",
+    dir: "ltr",
+    text: "Har kahani ki apni awaaz hoti hai.",
+    note: "Urdu words in English letters.",
+  },
+  {
+    script: "English",
+    name: "English",
+    lang: "en",
+    dir: "ltr",
+    text: "Every story has a voice of its own.",
+    note: "A translation for wider audiences.",
+  },
+] as const;
+
 const workflow = [
   {
     title: "Upload a recording",
-    description: "Add an audio file or a video with spoken Urdu.",
+    description:
+      "Add MP3, M4A, WAV, FLAC, MP4, or MOV with spoken Urdu. Audio and video share one minute allowance.",
   },
   {
     title: "Review the draft",
     description:
-      "Correct words and names, and adjust when each caption appears.",
+      "Correct names and numbers, accept or reject AI suggestions, and nudge when each caption starts and ends.",
   },
   {
     title: "Export your work",
     description:
-      "Choose a transcript, subtitle track, or a video with captions.",
+      "Download a UTF-8 transcript, SRT or WebVTT subtitles, or render a captioned MP4.",
   },
 ];
 
 const exportsList = [
-  {
-    icon: FileText,
-    name: "Plain text",
-    description: "For show notes, quotes and articles",
-    format: "TXT",
-  },
-  {
-    icon: Captions,
-    name: "Timed subtitles",
-    description: "For video editors and web players",
-    format: "SRT / VTT",
-  },
-  {
-    icon: FileVideo,
-    name: "Captioned video",
-    description: "For sharing with captions on the video",
-    format: "MP4",
-  },
+  { format: "TXT", name: "Transcript for show notes and articles" },
+  { format: "SRT", name: "Subtitles for Premiere, CapCut, and YouTube" },
+  { format: "VTT", name: "Subtitles for web players" },
+  { format: "MP4", name: "Captions burned into the video" },
 ];
 
-const proof = [
+const promises = [
   {
-    value: "4 scripts",
-    label: "Urdu Nastaliq, Roman Urdu, English, bilingual",
+    title: "Real Nastaliq, not a fallback font",
+    text: "Urdu captions render in Noto Nastaliq Urdu with calibrated line height, so every stroke reads on screen.",
   },
-  { value: "4 exports", label: "UTF-8 TXT, SRT, WebVTT, burned-in MP4" },
-  { value: "10 min free", label: "One-time trial, no card required" },
-  { value: "PKR plans", label: "Local pricing for Pakistani creators" },
+  {
+    title: "Names and numbers stay yours",
+    text: "AI can miss names, numbers, and timing. Fix them in Studio before anything is published.",
+  },
+  {
+    title: "Private storage with timed expiry",
+    text: "Recordings expire with your plan’s retention period, never train models, and delete on demand.",
+  },
+  {
+    title: "Priced in rupees, paid locally",
+    text: "Monthly PKR plans with card checkout, or bank transfer, JazzCash, Easypaisa, SadaPay, and NayaPay.",
+  },
 ];
 
 const homeQuestions = [
@@ -141,64 +152,104 @@ export default function Home() {
     <>
       <StructuredData data={jsonLd} />
       <SiteHeader />
-      <main id="main" className="home-site" tabIndex={-1}>
-        <section className="landing-hero" aria-labelledby="hero-title">
-          <div className="public-container landing-hero-stage">
-            <div className="landing-hero-intro">
-              <h1 id="hero-title">Urdu captions, ready to publish.</h1>
-              <div className="landing-hero-copy">
-                <p>
-                  Turn Urdu recordings into Nastaliq, Roman Urdu, English, and
-                  bilingual captions.
-                </p>
-                <div className="landing-hero-actions">
-                  <StartFree label="Try 10 free min" />
-                  <Link className="button secondary" href="/demo">
-                    Edit sample
-                  </Link>
-                </div>
-                <small className="landing-hero-note">
-                  <Check size={15} aria-hidden="true" /> 10 free minutes, no
-                  card required.
-                </small>
-              </div>
+      <main id="main" className="home-site ajrak-home" tabIndex={-1}>
+        <section className="ajrak-field home-hero" aria-labelledby="hero-title">
+          <div className="public-container home-hero-copy">
+            <h1 id="hero-title">
+              Urdu captions,
+              <br /> ready to publish.
+            </h1>
+            <p className="home-hero-nastaliq" lang="ur" dir="rtl">
+              آواز کو الفاظ دیں
+            </p>
+            <p className="home-hero-lead">
+              Upload a recording. Get Nastaliq, Roman Urdu, English, or
+              bilingual captions you can edit and export.
+            </p>
+            <div className="home-hero-actions">
+              <StartFree label="Try 10 free minutes" className="home-cta" />
+              <Link className="home-hero-link" href="/demo">
+                Edit the sample
+              </Link>
             </div>
-            <CaptionStudioDemo compact />
+            <p className="home-hero-note">No card required. PKR plans after.</p>
+          </div>
+          <div className="public-container home-hero-stage">
+            <StampHero />
           </div>
         </section>
 
-        <section
-          className="landing-proof-band"
-          aria-label="Platform highlights"
-        >
+        <section className="home-manifest" aria-label="What you get">
+          <span className="ajrak-band" aria-hidden="true" />
           <div className="public-container">
-            <ul className="landing-proof" role="list">
-              {proof.map(({ value, label }) => (
-                <li key={label}>
-                  <strong>{value}</strong>
-                  <span>{label}</span>
-                </li>
-              ))}
-            </ul>
+            <p>
+              <span>4 scripts</span>
+              <span className="home-manifest-dot" aria-hidden="true" />
+              <span>TXT, SRT, VTT, MP4</span>
+              <span className="home-manifest-dot" aria-hidden="true" />
+              <span>10 free minutes</span>
+              <span className="home-manifest-dot" aria-hidden="true" />
+              <span>Plans in PKR</span>
+            </p>
           </div>
         </section>
 
         <section
           id="use-cases"
-          className="landing-section landing-styles"
-          aria-labelledby="caption-styles-title"
+          className="home-section home-readings"
+          aria-labelledby="readings-title"
           tabIndex={-1}
         >
-          <div className="public-container landing-style-layout">
-            <div className="landing-section-heading">
+          <div className="public-container">
+            <div className="home-heading">
+              <h2 id="readings-title">One recording, read four ways</h2>
+              <p>
+                Choose the script your audience reads. Bilingual stacks Urdu and
+                English on one caption.
+              </p>
+            </div>
+            <ol className="home-reading-grid" role="list">
+              {readings.map((reading) => (
+                <li key={reading.name} className="home-reading">
+                  <span className="home-ticket">
+                    <span>{reading.name}</span>
+                    <span>00:04–00:08</span>
+                  </span>
+                  <p lang={reading.lang} dir={reading.dir}>
+                    {reading.text}
+                  </p>
+                  <small>{reading.note}</small>
+                </li>
+              ))}
+              <li className="home-reading home-reading-bilingual">
+                <span className="home-ticket">
+                  <span>Bilingual</span>
+                  <span>00:04–00:08</span>
+                </span>
+                <p lang="ur" dir="rtl">
+                  ہر کہانی کی اپنی آواز ہوتی ہے۔
+                </p>
+                <p lang="en">Every story has a voice of its own.</p>
+                <small>Urdu first or English first, stacked.</small>
+              </li>
+            </ol>
+          </div>
+        </section>
+
+        <section
+          className="home-section home-styles"
+          aria-labelledby="caption-styles-title"
+        >
+          <div className="public-container home-styles-layout">
+            <div className="home-heading">
               <h2 id="caption-styles-title">
-                Preview Nastaliq styles over real video
+                Captions that hold up on a phone screen
               </h2>
               <p>
-                Compare clean, highlighted, and boxed Nastaliq captions over
-                real lighting before you render a 1080p MP4.
+                Compare clean, highlighted, and boxed Nastaliq over real
+                lighting, then render a 1080p MP4 for Reels, TikTok, or YouTube.
               </p>
-              <Link href="/video-captions" className="public-inline-link">
+              <Link href="/video-captions" className="home-inline-link">
                 Explore video captions
               </Link>
             </div>
@@ -207,372 +258,215 @@ export default function Home() {
         </section>
 
         <section
-          id="features"
-          className="landing-section landing-section--spacious landing-features"
-          aria-labelledby="features-title"
-          tabIndex={-1}
-        >
-          <div className="public-container">
-            <div className="landing-section-heading">
-              <h2 id="features-title">Built for Urdu from the first word</h2>
-              <p>
-                Designed around Noto Nastaliq Urdu, right-to-left reading, and
-                the mixed Urdu-English way Pakistani creators speak.
-              </p>
-            </div>
-            <ul className="bento" role="list">
-              <li className="bento-card bento-nastaliq">
-                <div className="bento-head">
-                  <Languages size={20} aria-hidden="true" />
-                  <h3>Real Nastaliq, not a fallback font</h3>
-                </div>
-                <p>
-                  Urdu captions render in Noto Nastaliq Urdu with calibrated
-                  line height so every stroke reads naturally on screen.
-                </p>
-                <p className="bento-urdu" lang="ur" dir="rtl">
-                  آپ کی آواز، آپ کے الفاظ
-                </p>
-              </li>
-              <li className="bento-card bento-outputs">
-                <div className="bento-head">
-                  <Captions size={20} aria-hidden="true" />
-                  <h3>Four outputs from one recording</h3>
-                </div>
-                <p>Choose the script or translation that fits your audience.</p>
-                <ul className="bento-chips" role="list">
-                  <li lang="ur" dir="rtl">
-                    <Link href="/urdu-transcription">اردو</Link>
-                  </li>
-                  <li>
-                    <Link href="/urdu-audio-to-roman-urdu">Roman Urdu</Link>
-                  </li>
-                  <li>
-                    <Link href="/urdu-audio-to-english-text">English</Link>
-                  </li>
-                  <li>
-                    <Link href="/bilingual-urdu-english-captions">
-                      Bilingual
-                    </Link>
-                  </li>
-                </ul>
-              </li>
-              <li className="bento-card bento-timing">
-                <div className="bento-head">
-                  <Timer size={20} aria-hidden="true" />
-                  <h3>Refine Urdu names and cue timing</h3>
-                </div>
-                <p>
-                  Fix names and numbers, then nudge each caption&rsquo;s start
-                  and end before you export.
-                </p>
-                <ol className="bento-cues" aria-label="Example cue edit">
-                  <li>
-                    <span className="bento-cue-time">00:00 – 00:04</span>
-                    <span className="bento-cue-text" lang="ur" dir="rtl">
-                      آج کچھ نیا بناتے ہیں۔
-                    </span>
-                  </li>
-                  <li data-active="">
-                    <span className="bento-cue-time">
-                      00:04 – <ins>00:07.6</ins>
-                    </span>
-                    <span className="bento-cue-text" lang="ur" dir="rtl">
-                      <del>عائیشہ</del> <ins>عائشہ</ins> کی کہانی
-                    </span>
-                  </li>
-                </ol>
-              </li>
-              <li className="bento-card bento-dark bento-export">
-                <div className="bento-head">
-                  <FileVideo size={20} aria-hidden="true" />
-                  <h3>Captions burned into MP4</h3>
-                </div>
-                <p>
-                  Render a ready-to-post video in clean, highlighted, or boxed
-                  styles, or take UTF-8 SRT and VTT to your editor.
-                </p>
-                <ul className="bento-formats" role="list">
-                  <li>TXT</li>
-                  <li>SRT</li>
-                  <li>VTT</li>
-                  <li>MP4</li>
-                </ul>
-              </li>
-              <li className="bento-card bento-private">
-                <div className="bento-head">
-                  <ShieldCheck size={20} aria-hidden="true" />
-                  <h3>Private S3 storage and timed expiry</h3>
-                </div>
-                <p>
-                  Recordings expire with your plan&rsquo;s retention period,
-                  never train models, and delete on demand inside Studio.
-                </p>
-              </li>
-              <li className="bento-card bento-local">
-                <div className="bento-head">
-                  <Wallet size={20} aria-hidden="true" />
-                  <h3>Priced in rupees</h3>
-                </div>
-                <p>
-                  Fixed monthly plans in Pakistani rupees with card checkout and
-                  local manual verification.
-                </p>
-              </li>
-            </ul>
-          </div>
-        </section>
-
-        <section
           id="workflow"
-          className="landing-section landing-workflow"
+          className="home-section home-workflow"
           aria-labelledby="workflow-title"
           tabIndex={-1}
         >
-          <div className="public-container landing-workflow-layout">
-            <div className="landing-section-heading">
+          <span className="ajrak-band" aria-hidden="true" />
+          <div className="public-container">
+            <div className="home-heading">
               <h2 id="workflow-title">
-                From Urdu recording to SRT, VTT, or MP4
+                From recording to captions in three steps
               </h2>
-              <ol className="landing-steps" role="list">
-                {workflow.map(({ title, description }, index) => (
-                  <li key={title}>
-                    <span aria-hidden="true">{index + 1}</span>
-                    <div>
-                      <h3>{title}</h3>
-                      <p>{description}</p>
-                    </div>
-                  </li>
-                ))}
-              </ol>
             </div>
-            <div className="landing-export-panel">
-              <div className="landing-export-heading">
-                <h3>Choose your export</h3>
-                <Link href="/supported-formats" className="public-inline-link">
-                  File requirements
-                </Link>
-              </div>
-              <ul className="landing-export-list" role="list">
-                {exportsList.map(
-                  ({ icon: Icon, name, description, format }) => (
-                    <li key={name}>
-                      <span className="landing-export-icon">
-                        <Icon size={22} aria-hidden="true" />
-                      </span>
-                      <div>
-                        <strong>{name}</strong>
-                        <small>{description}</small>
-                      </div>
-                      <span className="landing-export-format">{format}</span>
-                    </li>
-                  ),
-                )}
-              </ul>
-              <Link href="/urdu-transcription" className="public-inline-link">
-                Explore Urdu transcription
-              </Link>
+            <ol className="home-steps" role="list">
+              {workflow.map(({ title, description }, index) => (
+                <li key={title}>
+                  <span className="home-step-number" aria-hidden="true">
+                    {index + 1}
+                  </span>
+                  <h3>{title}</h3>
+                  <p>{description}</p>
+                </li>
+              ))}
+            </ol>
+            <ul className="home-exports" role="list" aria-label="Exports">
+              {exportsList.map(({ format, name }) => (
+                <li key={format}>
+                  <strong>{format}</strong>
+                  <span>{name}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <span className="ajrak-band" aria-hidden="true" />
+        </section>
+
+        <section
+          id="features"
+          className="home-section home-promises"
+          aria-labelledby="features-title"
+          tabIndex={-1}
+        >
+          <div className="public-container home-promises-layout">
+            <div className="home-heading">
+              <h2 id="features-title">Built for Urdu from the first word</h2>
+              <p>
+                Right-to-left reading, mixed Urdu-English speech, and the way
+                Pakistani creators actually publish.
+              </p>
+              <p
+                className="home-promises-urdu"
+                lang="ur"
+                dir="rtl"
+                aria-hidden="true"
+              >
+                آپ کی آواز، آپ کے الفاظ
+              </p>
             </div>
+            <dl className="home-promise-list">
+              {promises.map(({ title, text }) => (
+                <div key={title}>
+                  <dt>{title}</dt>
+                  <dd>{text}</dd>
+                </div>
+              ))}
+            </dl>
           </div>
         </section>
 
         <section
           id="pricing"
-          className="landing-section landing-section--spacious landing-pricing"
+          className="home-section home-pricing"
           aria-labelledby="pricing-title"
           tabIndex={-1}
         >
           <div className="public-container">
-            <div className="landing-section-heading landing-heading-row">
+            <div className="home-heading home-heading-row">
               <div>
                 <h2 id="pricing-title">Start with 10 free minutes</h2>
                 <p>
-                  Compare plans by minutes, video quality, and media retention.
+                  Then pick a monthly plan by minutes, video quality, and
+                  retention.
                 </p>
               </div>
-              <Link className="public-inline-link" href="/pricing">
-                See pricing details
+              <Link className="home-inline-link" href="/pricing">
+                Full pricing details
               </Link>
             </div>
-            <Plans showStart={false} />
+            <Plans showStart={false} showCardCta />
+          </div>
+        </section>
+
+        <section
+          className="home-section home-questions"
+          aria-labelledby="home-questions"
+        >
+          <div className="public-container home-questions-layout">
+            <div className="home-heading">
+              <h2 id="home-questions">Questions creators ask first</h2>
+              <p>
+                Media expires with your plan’s retention period, and you can
+                delete a project or your account in Studio.{" "}
+                <Link href="/security">Security &amp; retention</Link>
+              </p>
+              <Link className="home-inline-link" href="/faq">
+                See all questions
+              </Link>
+            </div>
+            <QuestionList questions={homeQuestions} openFirst />
+          </div>
+        </section>
+
+        <section
+          id="guides"
+          className="home-section home-guides"
+          aria-labelledby="home-guides"
+        >
+          <div className="public-container">
+            <div className="home-heading home-heading-row">
+              <h2 id="home-guides">Guides for Urdu audio and video</h2>
+              <Link className="home-inline-link" href="/guides">
+                All creator guides
+              </Link>
+            </div>
+            <GuideCards guides={publicGuides.slice(0, 3)} />
+            <nav className="home-guide-links" aria-label="Use cases and tools">
+              <Link href="/urdu-captions-for-reels-tiktok">
+                Reels &amp; TikTok captions
+              </Link>
+              <Link href="/youtube-urdu-subtitles">YouTube Urdu subtitles</Link>
+              <Link href="/urdu-podcast-transcription">
+                Podcast transcription
+              </Link>
+              <Link href="/compare">Compare caption tools</Link>
+              <Link href="/tools">Free subtitle tools</Link>
+              <Link href="/supported-formats">Supported formats</Link>
+            </nav>
           </div>
         </section>
 
         <section
           id="what-is-urduspeech"
-          className="landing-section landing-entity"
+          className="home-section home-entity"
           aria-labelledby="entity-title"
         >
-          <div className="public-container landing-entity-grid">
-            <div className="landing-entity-copy">
-              <h2 id="entity-title">
-                Automated AI Urdu caption and transcription studio
-              </h2>
+          <div className="public-container home-entity-layout">
+            <div>
+              <h2 id="entity-title">About UrduSpeech</h2>
               <p>
                 <strong>UrduSpeech</strong> (<code>urduspeech.com</code>),
                 operated by <strong>MoonSys Ltd</strong>, is a browser-based AI
                 studio for spoken Urdu audio and video. Upload MP3, FLAC, PCM
-                WAV, AAC M4A, MP4, or MOV files, review every word and timestamp
-                locally, and export UTF-8 TXT, SRT, VTT, or burned-in MP4.
+                WAV, AAC M4A, MP4, or MOV files, review every word and
+                timestamp, and export UTF-8 TXT, SRT, VTT, or burned-in MP4.
               </p>
               <p>
                 Processing is fully automated with zero model training on
                 uploads. UrduSpeech is independent creator software and is
                 unrelated to the academic ASLP-lab/UrduSpeech research corpus.
               </p>
-              <div className="guide-link-row">
-                <Link href="/about">
-                  About MoonSys Ltd <ArrowRight size={17} aria-hidden="true" />
-                </Link>
-                <Link href="/methodology">
-                  AI &amp; Nastaliq pipeline{" "}
-                  <ArrowRight size={17} aria-hidden="true" />
-                </Link>
-              </div>
+              <p className="home-entity-links">
+                <Link href="/about">About MoonSys Ltd</Link>
+                <Link href="/methodology">AI &amp; Nastaliq pipeline</Link>
+              </p>
             </div>
-            <aside
-              className="landing-entity-facts"
-              aria-label="Product summary"
-            >
-              <h3>Platform facts</h3>
-              <dl>
-                <div>
-                  <dt>Operator</dt>
-                  <dd>MoonSys Ltd (automated web studio)</dd>
-                </div>
-                <div>
-                  <dt>Input formats</dt>
-                  <dd>MP3, FLAC, PCM WAV, AAC M4A, MP4, MOV</dd>
-                </div>
-                <div>
-                  <dt>Outputs</dt>
-                  <dd>Urdu Nastaliq, Roman Urdu, English, Urdu + English</dd>
-                </div>
-                <div>
-                  <dt>Exports</dt>
-                  <dd>UTF-8 TXT, SRT, WebVTT, burned-in H.264 MP4</dd>
-                </div>
-                <div>
-                  <dt>Pricing</dt>
-                  <dd>PKR 999 to 5,999 / month after free trial</dd>
-                </div>
-              </dl>
-            </aside>
-          </div>
-        </section>
-
-        <section
-          id="guides"
-          className="landing-section landing-guides"
-          aria-labelledby="home-guides"
-        >
-          <div className="public-container">
-            <div className="landing-section-heading landing-heading-row">
+            <dl className="home-facts" aria-label="Product summary">
               <div>
-                <h2 id="home-guides">
-                  Practical workflows for Urdu audio &amp; video
-                </h2>
-                <p>
-                  Compare scripts, turn saved voice notes into text, and prepare
-                  SRT, VTT, or MP4 exports for YouTube and Reels.
-                </p>
+                <dt>Operator</dt>
+                <dd>MoonSys Ltd (automated web studio)</dd>
               </div>
-              <Link className="public-inline-link" href="/guides">
-                All creator guides
-              </Link>
-            </div>
-            <GuideCards guides={publicGuides.slice(0, 3)} />
-            <div className="guide-link-row">
-              <Link href="/urdu-captions-for-reels-tiktok">
-                Reels &amp; TikTok captions{" "}
-                <ArrowRight size={17} aria-hidden="true" />
-              </Link>
-              <Link href="/youtube-urdu-subtitles">
-                YouTube Urdu subtitles{" "}
-                <ArrowRight size={17} aria-hidden="true" />
-              </Link>
-              <Link href="/compare">
-                Compare caption tools{" "}
-                <ArrowRight size={17} aria-hidden="true" />
-              </Link>
-              <Link href="/tools">
-                Free Urdu subtitle tools{" "}
-                <ArrowRight size={17} aria-hidden="true" />
-              </Link>
-              <Link href="/urdu-caption-glossary">
-                Urdu Nastaliq glossary{" "}
-                <ArrowRight size={17} aria-hidden="true" />
-              </Link>
-              <Link href="/supported-formats">
-                Supported formats &amp; limits{" "}
-                <ArrowRight size={17} aria-hidden="true" />
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        <section
-          className="landing-section landing-questions"
-          aria-labelledby="home-questions"
-        >
-          <div className="public-container landing-questions-grid">
-            <div className="landing-section-heading">
-              <h2 id="home-questions">
-                Urdu captioning &amp; billing questions
-              </h2>
-              <div className="landing-privacy">
-                <div className="landing-privacy-head">
-                  <LockKeyhole size={20} aria-hidden="true" />
-                  <h3>Your recordings</h3>
-                </div>
-                <p>
-                  Media expires with your plan&rsquo;s retention period. You can
-                  request project or account deletion in Studio.
-                </p>
-                <Link className="public-inline-link" href="/security">
-                  Security &amp; retention
-                </Link>
+              <div>
+                <dt>Input formats</dt>
+                <dd>MP3, FLAC, PCM WAV, AAC M4A, MP4, MOV</dd>
               </div>
-            </div>
-            <div>
-              <QuestionList questions={homeQuestions} openFirst />
-              <Link className="public-inline-link" href="/faq">
-                See all questions
-              </Link>
-            </div>
+              <div>
+                <dt>Outputs</dt>
+                <dd>Urdu Nastaliq, Roman Urdu, English, Urdu + English</dd>
+              </div>
+              <div>
+                <dt>Exports</dt>
+                <dd>UTF-8 TXT, SRT, WebVTT, burned-in H.264 MP4</dd>
+              </div>
+              <div>
+                <dt>Pricing</dt>
+                <dd>PKR 999 to 5,999 / month after the free trial</dd>
+              </div>
+            </dl>
           </div>
         </section>
       </main>
       <PublicFooter
         intro={
-          <div className="landing-close">
-            <p
-              className="landing-close-urdu"
-              lang="ur"
-              dir="rtl"
-              aria-hidden="true"
-            >
-              آواز کو الفاظ دیں
-            </p>
-            <div>
+          <div className="ajrak-field home-close">
+            <span className="ajrak-band home-close-band" aria-hidden="true" />
+            <div className="home-close-copy">
+              <p
+                className="home-close-urdu"
+                lang="ur"
+                dir="rtl"
+                aria-hidden="true"
+              >
+                آواز کو الفاظ دیں
+              </p>
               <h2>Give your next video Urdu captions</h2>
               <p>
                 Start with a recording. Make the captions your own in Studio.
               </p>
-              <ul className="landing-close-ticks" role="list">
-                <li>
-                  <Check size={15} aria-hidden="true" /> Nastaliq &amp;
-                  bilingual
-                </li>
-                <li>
-                  <Check size={15} aria-hidden="true" /> UTF-8 SRT, VTT, MP4
-                </li>
-                <li>
-                  <Check size={15} aria-hidden="true" /> Edit before you publish
-                </li>
-              </ul>
+              <StartFree label="Try 10 free minutes" className="home-cta" />
             </div>
-            <StartFree label="Try 10 free min" />
+            <span className="ajrak-band home-close-band" aria-hidden="true" />
           </div>
         }
       />

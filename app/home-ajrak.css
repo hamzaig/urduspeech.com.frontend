@@ -1,0 +1,942 @@
+/* Homepage in the ajrak block-print world: madder fields, indigo ink,
+ * resist-white cloth, stamped borders, and captions printed layer by layer. */
+
+.ajrak-home {
+  --home-gap: clamp(64px, 7vw, 120px);
+}
+
+/* ---------- Hero: a madder field the sample frame is printed on ---------- */
+
+.home-hero {
+  padding-block: calc(14px + clamp(48px, 6vw, 96px)) 0;
+  overflow: clip;
+}
+
+.home-hero-copy {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+
+.home-hero h1 {
+  max-width: 16ch;
+  color: var(--color-madder-ink);
+  font-size: clamp(2.75rem, 5.4vw + 0.5rem, 5.75rem);
+  line-height: 0.98;
+  letter-spacing: -0.038em;
+}
+
+.home-hero-nastaliq {
+  margin-block-start: var(--space-sm);
+  color: var(--color-madder-ink);
+  font-family: var(--font-urdu);
+  font-size: clamp(1.6rem, 1.6vw + 1rem, 2.4rem);
+  line-height: 2;
+  opacity: 0.92;
+}
+
+.home-hero-lead {
+  max-width: 46ch;
+  margin-block-start: var(--space-xs);
+  color: var(--color-madder-muted);
+  font-size: var(--text-lead);
+  line-height: 1.5;
+}
+
+.home-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md) var(--space-lg);
+  margin-block-start: var(--space-lg);
+}
+
+/* Primary action: a resist-white block on the madder field, indigo print. */
+.button.home-cta {
+  min-height: 54px;
+  padding-inline: var(--space-lg);
+  border: 2px solid var(--color-keyline);
+  border-radius: var(--radius-control);
+  background: var(--color-resist);
+  color: var(--color-indigo);
+  font-size: 1.0625rem;
+  font-weight: 700;
+  box-shadow: 0 6px 16px oklch(15% 0.06 27 / 0.28);
+  transition:
+    transform var(--dur-micro) var(--ease-out),
+    box-shadow var(--dur-short) var(--ease-out);
+}
+
+.button.home-cta:hover {
+  background: var(--color-resist);
+  color: var(--color-indigo);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px oklch(15% 0.06 27 / 0.32);
+}
+
+.button.home-cta:active {
+  transform: translateY(1px);
+}
+
+.home-hero-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  min-height: 44px;
+  color: var(--color-madder-ink);
+  font-weight: 650;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 5px;
+}
+
+.home-hero-note {
+  margin-block-start: var(--space-sm);
+  color: var(--color-madder-muted);
+  font-size: var(--text-sm);
+}
+
+.home-hero-stage {
+  margin-block-start: clamp(40px, 5vw, 72px);
+}
+
+/* ---------- The stamp frame ---------- */
+
+.stamp-hero {
+  max-width: 64rem;
+  margin-inline: auto;
+  border: 2px solid var(--color-keyline);
+  border-block-end: 0;
+  border-radius: var(--radius-stage) var(--radius-stage) 0 0;
+  background: var(--color-indigo);
+  box-shadow: 0 -2px 0 oklch(97% 0.01 30 / 0.2) inset;
+}
+
+.stamp-frame {
+  position: relative;
+  margin: 0;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-radius: calc(var(--radius-stage) - 2px) calc(var(--radius-stage) - 2px)
+    0 0;
+}
+
+.stamp-still {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.stamp-sample,
+.stamp-ticket {
+  position: absolute;
+  inset-block-start: var(--space-md);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-3xs) var(--space-xs);
+  border-radius: var(--radius-strip);
+  background: var(--color-stage-pill-bg);
+  color: var(--color-stage-ink);
+  font-size: var(--text-xs);
+  font-weight: 600;
+}
+
+.stamp-sample {
+  inset-inline-start: var(--space-md);
+}
+
+/* Origin ticket: which script, which cue. */
+.stamp-ticket {
+  inset-inline-end: var(--space-md);
+  border: 1px dashed oklch(97% 0.01 255 / 0.45);
+  font-variant-numeric: tabular-nums;
+}
+
+.stamp-ticket [lang="ur"] {
+  font-family: var(--font-urdu);
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.stamp-caption {
+  position: absolute;
+  inset-inline: 6%;
+  inset-block-end: 8%;
+  display: grid;
+  justify-items: center;
+  gap: 0.15em;
+  text-align: center;
+  color: var(--color-caption-ink);
+  text-shadow:
+    0 2px 3px var(--color-caption-shadow),
+    0 0 14px var(--color-caption-shadow);
+}
+
+.stamp-line {
+  font-size: clamp(1rem, 1.8vw + 0.4rem, 1.75rem);
+  font-weight: 650;
+  line-height: 1.35;
+  animation: stamp-print 420ms var(--ease-out) both;
+}
+
+.stamp-line-urdu {
+  font-family: var(--font-urdu);
+  font-size: clamp(1.35rem, 2.6vw + 0.5rem, 2.6rem);
+  font-weight: 400;
+  line-height: 1.9;
+}
+
+/* A block pressed onto cloth: lands slightly large and soft, then settles. */
+@keyframes stamp-print {
+  from {
+    opacity: 0;
+    transform: scale(1.06);
+    filter: blur(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+.stamp-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm) var(--space-md);
+  padding: var(--space-md);
+}
+
+.stamp-blocks {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: var(--space-xs);
+  flex: 1 1 32rem;
+}
+
+/* Language controls are print blocks: square, keylined, with a carved face.
+ * Pressing one inks it in madder; the others stay as uninked wood. */
+.stamp-hero .stamp-block {
+  display: grid;
+  grid-template-rows: auto auto;
+  justify-items: center;
+  gap: var(--space-2xs);
+  min-height: 72px;
+  padding: var(--space-xs) var(--space-sm);
+  border: 2px solid var(--color-keyline);
+  border-radius: var(--radius-strip);
+  background: oklch(97% 0.01 255 / 0.08);
+  color: var(--color-stage-ink);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  box-shadow:
+    inset 0 0 0 1px oklch(97% 0.01 255 / 0.22),
+    0 3px 5px oklch(8% 0.04 266 / 0.55);
+  transition:
+    background var(--dur-short) var(--ease-out),
+    box-shadow var(--dur-micro) var(--ease-out),
+    transform var(--dur-micro) var(--ease-out);
+}
+
+.stamp-block-face {
+  width: 28px;
+  height: 14px;
+  background-color: currentColor;
+  opacity: 0.7;
+  -webkit-mask: var(--ajrak-band) no-repeat center / 28px 14px;
+  mask: var(--ajrak-band) no-repeat center / 28px 14px;
+}
+
+.stamp-hero .stamp-block:hover:not([aria-checked="true"]) {
+  background: oklch(97% 0.01 255 / 0.14);
+}
+
+.stamp-hero .stamp-block[aria-checked="true"] {
+  border-color: var(--color-keyline);
+  background: var(--color-madder);
+  color: var(--color-madder-ink);
+  transform: translateY(3px);
+  box-shadow:
+    inset 0 2px 6px oklch(12% 0.05 27 / 0.55),
+    0 0 0 0 var(--color-keyline);
+}
+
+.stamp-hero .stamp-block[aria-checked="true"] .stamp-block-face {
+  opacity: 1;
+}
+
+/* Cue times are a quieter secondary row, not part of the stamp set. */
+.stamp-cues {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2xs);
+}
+
+.stamp-cues-label {
+  margin-inline-end: var(--space-2xs);
+  color: var(--color-stage-muted);
+  font-size: var(--text-xs);
+  font-weight: 650;
+}
+
+.stamp-hero .stamp-cue {
+  min-height: 44px;
+  padding-inline: var(--space-sm);
+  border: 1px solid oklch(97% 0.01 255 / 0.2);
+  border-radius: var(--radius-strip);
+  background: transparent;
+  color: var(--color-stage-muted);
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+}
+
+.stamp-hero .stamp-cue[aria-pressed="true"] {
+  border-color: var(--color-stage-ink);
+  color: var(--color-stage-ink);
+}
+
+/* ---------- Manifest line ---------- */
+
+.home-manifest {
+  --band-ink: var(--color-print);
+  padding-block-end: var(--space-xl);
+  background: var(--color-paper);
+}
+
+.home-manifest .ajrak-band {
+  margin-block-end: var(--space-xl);
+}
+
+.home-manifest p {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-sm) var(--space-lg);
+  color: var(--color-ink);
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 1vw + 0.8rem, 1.6rem);
+  font-weight: 650;
+  letter-spacing: -0.015em;
+  text-align: center;
+}
+
+.home-manifest-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--color-accent);
+  transform: rotate(45deg);
+}
+
+/* ---------- Section rhythm ---------- */
+
+.home-section {
+  padding-block: var(--home-gap);
+  scroll-margin-top: calc(var(--site-nav-height) + var(--space-md));
+}
+
+.home-heading {
+  max-width: 44rem;
+}
+
+.home-heading h2 {
+  font-size: clamp(2rem, 2.6vw + 0.9rem, 3.4rem);
+  line-height: 1.02;
+}
+
+.home-heading p {
+  margin-block-start: var(--space-md);
+  color: var(--color-muted);
+  font-size: var(--text-lead);
+  line-height: 1.5;
+}
+
+.home-heading p a {
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--color-accent);
+}
+
+.home-heading-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  justify-content: space-between;
+  gap: var(--space-md) var(--space-xl);
+  max-width: none;
+}
+
+.home-heading-row > div {
+  max-width: 44rem;
+}
+
+.home-inline-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  min-height: 44px;
+  margin-block-start: var(--space-md);
+  color: var(--color-accent);
+  font-weight: 700;
+}
+
+.home-heading-row .home-inline-link {
+  margin-block-start: 0;
+}
+
+.home-inline-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+
+/* ---------- Four readings: printed cloth swatches ---------- */
+
+.home-reading-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: var(--space-2xl) 0 0;
+  padding: 0;
+  list-style: none;
+  border: 2px solid var(--color-keyline);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+html[data-theme="dark"] .home-reading-grid {
+  border-color: var(--color-rule-strong);
+}
+
+.home-reading {
+  display: grid;
+  align-content: start;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  border-inline-end: 1px solid var(--color-rule);
+}
+
+.home-reading:nth-child(3) {
+  border-inline-end: 0;
+}
+
+.home-reading:first-child p {
+  font-family: var(--font-urdu);
+  font-size: clamp(1.5rem, 1.2vw + 1rem, 2rem);
+  line-height: 1.95;
+}
+
+.home-reading p {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 0.8vw + 0.95rem, 1.6rem);
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+}
+
+.home-reading small {
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+/* Bilingual is the full-width bottom row printed on madder. */
+.home-reading-bilingual {
+  grid-column: 1 / -1;
+  grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr) auto;
+  align-items: center;
+  gap: var(--space-lg);
+  border-inline-end: 0;
+  border-block-start: 2px solid var(--color-keyline);
+  background: var(--color-madder);
+  color: var(--color-madder-ink);
+}
+
+html[data-theme="dark"] .home-reading-bilingual {
+  border-block-start-color: var(--color-rule-strong);
+}
+
+.home-reading-bilingual p[lang="ur"] {
+  font-family: var(--font-urdu);
+  font-size: clamp(1.5rem, 1.2vw + 1rem, 2rem);
+  font-weight: 400;
+  line-height: 1.95;
+}
+
+.home-reading-bilingual small {
+  color: var(--color-madder-muted);
+}
+
+.home-ticket {
+  display: inline-flex;
+  justify-self: start;
+  gap: var(--space-xs);
+  padding: var(--space-3xs) var(--space-xs);
+  border: 1px dashed var(--color-rule-strong);
+  border-radius: var(--radius-strip);
+  color: var(--color-muted);
+  font-size: var(--text-xs);
+  font-weight: 650;
+  font-variant-numeric: tabular-nums;
+}
+
+.home-reading-bilingual .home-ticket {
+  border-color: oklch(97% 0.01 30 / 0.5);
+  color: var(--color-madder-muted);
+}
+
+/* ---------- Caption styles ---------- */
+
+.home-styles {
+  background: var(--color-paper-2);
+}
+
+.home-styles-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: var(--space-2xl);
+  align-items: center;
+}
+
+/* ---------- Workflow on indigo cloth ---------- */
+
+.home-workflow {
+  --band-ink: var(--color-stage-accent);
+  padding-block: 0;
+  background: var(--color-indigo);
+  color: var(--color-stage-ink);
+}
+
+html[data-theme="dark"] .home-workflow {
+  background: var(--color-stage);
+}
+
+.home-workflow > .public-container {
+  padding-block: var(--home-gap);
+}
+
+.home-workflow .home-heading h2 {
+  color: var(--color-stage-ink);
+}
+
+.home-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin: var(--space-2xl) 0 0;
+  padding: 0;
+  list-style: none;
+  border: 2px solid var(--color-stage-rule);
+}
+
+/* Each step is one square block in the grid; its numeral fills the block. */
+.home-steps li {
+  display: grid;
+  grid-template-rows: 1fr auto auto;
+  align-content: end;
+  gap: var(--space-sm);
+  min-height: clamp(320px, 30vw, 440px);
+  padding: var(--space-lg);
+}
+
+.home-steps li + li {
+  border-inline-start: 2px solid var(--color-stage-rule);
+}
+
+.home-step-number {
+  align-self: start;
+  color: var(--color-stage-accent);
+  font-family: var(--font-display);
+  font-size: clamp(8rem, 13vw, 14rem);
+  font-weight: 700;
+  line-height: 0.78;
+  letter-spacing: -0.06em;
+  font-variant-numeric: tabular-nums;
+}
+
+.home-steps h3 {
+  color: var(--color-stage-ink);
+  font-size: var(--text-xl);
+}
+
+.home-steps p {
+  max-width: 34ch;
+  color: var(--color-stage-muted);
+  line-height: 1.55;
+}
+
+.home-exports {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border: 2px solid var(--color-stage-rule);
+  border-block-start: 0;
+}
+
+.home-exports li {
+  display: grid;
+  gap: var(--space-2xs);
+  padding: var(--space-md) var(--space-lg);
+}
+
+.home-exports li + li {
+  border-inline-start: 2px solid var(--color-stage-rule);
+}
+
+.home-exports strong {
+  color: var(--color-stage-ink);
+  font-family: var(--font-display);
+  font-size: var(--text-2xl);
+  letter-spacing: -0.02em;
+}
+
+.home-exports span {
+  color: var(--color-stage-muted);
+  font-size: var(--text-sm);
+}
+
+/* ---------- Promises: a printed list, not a card grid ---------- */
+
+.home-promises-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: var(--space-2xl);
+}
+
+.home-promises-urdu {
+  margin-block-start: var(--space-xl) !important;
+  color: var(--color-accent) !important;
+  font-family: var(--font-urdu);
+  font-size: clamp(1.6rem, 1.5vw + 1rem, 2.3rem) !important;
+  line-height: 2 !important;
+}
+
+.home-promise-list {
+  margin: 0;
+  border-block-start: 2px solid var(--color-ink);
+}
+
+.home-promise-list > div {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+  gap: var(--space-lg);
+  padding-block: var(--space-lg);
+  border-block-end: 1px solid var(--color-rule);
+}
+
+.home-promise-list dt {
+  font-family: var(--font-display);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+}
+
+.home-promise-list dd {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.55;
+}
+
+/* ---------- Pricing, questions, guides, entity ---------- */
+
+.home-pricing {
+  background: var(--color-paper-2);
+}
+
+.home-pricing .public-pricing {
+  margin-block-start: var(--space-2xl);
+}
+
+.home-questions-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: var(--space-2xl);
+  align-items: start;
+}
+
+.home-guides .guide-cards {
+  margin-block-start: var(--space-xl);
+}
+
+.home-guide-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  margin-block-start: var(--space-xl);
+}
+
+.home-guide-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: var(--space-md);
+  border: 1px solid var(--color-rule-strong);
+  border-radius: var(--radius-control);
+  color: var(--color-ink);
+  font-size: var(--text-sm);
+  font-weight: 650;
+}
+
+.home-guide-links a:hover {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.home-entity {
+  padding-block-start: 0;
+}
+
+.home-entity-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: var(--space-2xl);
+  padding-block-start: var(--home-gap);
+  border-block-start: 1px solid var(--color-rule);
+}
+
+.home-entity h2 {
+  font-size: var(--text-2xl);
+}
+
+.home-entity p {
+  max-width: 62ch;
+  margin-block-start: var(--space-md);
+  color: var(--color-muted);
+  line-height: 1.6;
+}
+
+.home-entity-links {
+  display: flex;
+  gap: var(--space-lg);
+}
+
+.home-entity-links a {
+  color: var(--color-accent);
+  font-weight: 650;
+}
+
+.home-facts {
+  margin: 0;
+}
+
+.home-facts > div {
+  display: grid;
+  gap: var(--space-3xs);
+  padding-block: var(--space-sm);
+  border-block-end: 1px solid var(--color-rule);
+}
+
+.home-facts dt {
+  color: var(--color-muted);
+  font-size: var(--text-xs);
+  font-weight: 650;
+}
+
+.home-facts dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+/* ---------- Close: a second madder field in the footer ---------- */
+
+.landing-footer {
+  overflow-x: clip;
+}
+
+.home-close {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-md);
+  margin: calc(-1 * (var(--space-2xl) + 18px)) calc(50% - 50vw) var(--space-2xl);
+  padding: calc(clamp(48px, 6vw, 88px) + 18px) var(--space-lg)
+    calc(clamp(48px, 6vw, 88px) + 18px);
+  text-align: center;
+}
+
+/* Printed borders along the band's top and bottom edges. */
+.home-close-band {
+  --band-ink: var(--color-keyline);
+  position: absolute;
+  inset-inline: 0;
+  background-color: var(--color-resist);
+}
+
+.home-close-band:first-child {
+  inset-block-start: 0;
+}
+
+.home-close-band:last-child {
+  inset-block-end: 0;
+}
+
+.home-close-urdu {
+  font-family: var(--font-urdu);
+  font-size: clamp(2rem, 3vw + 1rem, 3.6rem);
+  line-height: 1.9;
+}
+
+.home-close h2 {
+  max-width: 20ch;
+  color: var(--color-madder-ink);
+  font-size: clamp(1.9rem, 2.4vw + 0.9rem, 3.2rem);
+  line-height: 1.02;
+}
+
+.home-close > p:not(.home-close-urdu) {
+  color: var(--color-madder-muted);
+  font-size: var(--text-lead);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (max-width: 60rem) {
+  .home-styles-layout,
+  .home-promises-layout,
+  .home-questions-layout,
+  .home-entity-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-xl);
+  }
+
+  .home-reading-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .home-reading {
+    border-inline-end: 0;
+    border-block-end: 1px solid var(--color-rule);
+  }
+
+  .home-reading-bilingual {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-sm);
+  }
+
+  .home-steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .home-steps li {
+    min-height: 0;
+  }
+
+  .home-steps li + li {
+    border-inline-start: 0;
+    border-block-start: 2px solid var(--color-stage-rule);
+  }
+
+  .home-step-number {
+    font-size: clamp(6rem, 28vw, 9rem);
+  }
+
+  .home-exports {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .home-exports li:nth-child(3) {
+    border-inline-start: 0;
+  }
+
+  .home-exports li:nth-child(n + 3) {
+    border-block-start: 1px solid var(--color-stage-rule);
+  }
+
+  .home-promise-list > div {
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-xs);
+  }
+}
+
+@media (max-width: 40rem) {
+  .stamp-hero {
+    border-radius: var(--radius-card) var(--radius-card) 0 0;
+  }
+
+  .stamp-frame {
+    aspect-ratio: 4 / 3;
+  }
+
+  .stamp-controls {
+    padding: var(--space-sm);
+  }
+
+  .stamp-cues {
+    width: 100%;
+  }
+
+  .stamp-cue {
+    flex: 1;
+  }
+
+  .stamp-ticket {
+    inset-block-start: calc(var(--space-sm) + 30px);
+    inset-inline: auto auto;
+    inset-inline-start: var(--space-sm);
+  }
+
+  .stamp-sample {
+    inset-block-start: var(--space-sm);
+    inset-inline-start: var(--space-sm);
+  }
+
+  .stamp-blocks {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ajrak-home {
+    --home-gap: 56px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stamp-line {
+    animation: none;
+  }
+}
+
+/* Calm zones: the print fades to plain madder behind running text, so the
+ * resist dots never sit behind words (on /ur they read as Nastaliq nuqtas). */
+.home-hero-copy,
+.home-close-copy {
+  position: relative;
+  z-index: 0; /* own stacking context so the calm zone sits above both print layers */
+}
+
+.home-hero-copy::before,
+.home-close-copy::before {
+  content: "";
+  position: absolute;
+  inset: -40px -10%;
+  z-index: -1;
+  background: radial-gradient(
+    ellipse 50% 56% at 50% 50%,
+    var(--color-madder) 68%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+.home-close-copy {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-md);
+}
+
+@media (max-width: 40rem) {
+  .home-hero-copy::before,
+  .home-close-copy::before {
+    inset: -24px -16px;
+    background: radial-gradient(
+      ellipse 78% 58% at 50% 50%,
+      var(--color-madder) 72%,
+      transparent 100%
+    );
+  }
+}

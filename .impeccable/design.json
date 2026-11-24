@@ -1,310 +1,1350 @@
 {
   "schemaVersion": 2,
-  "generatedAt": "2026-11-19T14:31:24Z",
+  "generatedAt": "2026-11-24T16:48:31+00:00",
   "title": "Design System: UrduSpeech",
   "extensions": {
     "colorMeta": {
-      "primary": {
-        "role": "primary",
-        "displayName": "Action Green",
-        "description": "Primary buttons, wordmark, text actions, and focus on light surfaces."
-      },
-      "primary-hover": {
-        "role": "primary",
-        "displayName": "Deep Action Green",
-        "description": "Primary hover and text on selected Studio controls."
-      },
-      "wash": {
-        "role": "primary",
-        "displayName": "Green Wash",
-        "description": "Selected workspace controls and the public caption output surface."
-      },
-      "stage": {
+      "resist": {
         "role": "neutral",
-        "displayName": "Media Stage",
-        "description": "Dark surface behind local media and video caption examples."
-      },
-      "stage-accent": {
-        "role": "primary",
-        "displayName": "Stage Tint",
-        "description": "Light text or fitted caption strips on the media stage."
-      },
-      "subtitle-ink": {
-        "role": "neutral",
-        "displayName": "Subtitle Ink",
-        "description": "Dark fill behind Roman Urdu and English sample overlays."
-      },
-      "ink": {
-        "role": "neutral",
-        "displayName": "Ink",
-        "description": "Titles and primary text on light surfaces."
-      },
-      "muted": {
-        "role": "neutral",
-        "displayName": "Muted Ink",
-        "description": "Supporting text and inactive Studio destinations."
+        "displayName": "Resist White",
+        "canonical": "oklch(97.6% 0.006 255)",
+        "tonalRamp": [
+          "oklch(15% 0.004 255.0)",
+          "oklch(25% 0.004 255.0)",
+          "oklch(35% 0.005 255.0)",
+          "oklch(45% 0.005 255.0)",
+          "oklch(58% 0.005 255.0)",
+          "oklch(70% 0.004 255.0)",
+          "oklch(82% 0.004 255.0)",
+          "oklch(95% 0.004 255.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-resist",
+        "note": "--color-resist; equals --color-paper in light theme and stays fixed in dark theme as the CTA face and border-band strip."
       },
       "paper": {
         "role": "neutral",
-        "displayName": "Paper",
-        "description": "Studio backdrop, nested cue rows, and public pricing ground."
+        "displayName": "Resist White Ground",
+        "canonical": "oklch(97.6% 0.006 255)",
+        "tonalRamp": [
+          "oklch(15% 0.004 255.0)",
+          "oklch(25% 0.004 255.0)",
+          "oklch(35% 0.005 255.0)",
+          "oklch(45% 0.005 255.0)",
+          "oklch(58% 0.005 255.0)",
+          "oklch(70% 0.004 255.0)",
+          "oklch(82% 0.004 255.0)",
+          "oklch(95% 0.004 255.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-paper"
+      },
+      "paper-2": {
+        "role": "neutral",
+        "displayName": "Washed Cotton",
+        "canonical": "oklch(94.6% 0.013 258)",
+        "tonalRamp": [
+          "oklch(15% 0.005 258.0)",
+          "oklch(25% 0.008 258.0)",
+          "oklch(35% 0.01 258.0)",
+          "oklch(45% 0.012 258.0)",
+          "oklch(58% 0.011 258.0)",
+          "oklch(70% 0.009 258.0)",
+          "oklch(82% 0.006 258.0)",
+          "oklch(95% 0.004 258.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-paper-2"
+      },
+      "paper-3": {
+        "role": "neutral",
+        "displayName": "Deep Washed Cotton",
+        "canonical": "oklch(90.8% 0.022 260)",
+        "tonalRamp": [
+          "oklch(15% 0.009 260.0)",
+          "oklch(25% 0.013 260.0)",
+          "oklch(35% 0.017 260.0)",
+          "oklch(45% 0.02 260.0)",
+          "oklch(58% 0.019 260.0)",
+          "oklch(70% 0.015 260.0)",
+          "oklch(82% 0.01 260.0)",
+          "oklch(95% 0.005 260.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-paper-3"
       },
       "surface": {
         "role": "neutral",
-        "displayName": "White Surface",
-        "description": "Workspace panels, fields, and public reading surfaces.",
+        "displayName": "Bleached Surface",
+        "canonical": "oklch(99.3% 0.003 255)",
         "tonalRamp": [
-          "oklch(15% 0.0000 0.00)",
-          "oklch(25% 0.0000 0.00)",
-          "oklch(35% 0.0000 0.00)",
-          "oklch(45% 0.0000 0.00)",
-          "oklch(55% 0.0000 0.00)",
-          "oklch(65% 0.0000 0.00)",
-          "oklch(80% 0.0000 0.00)",
-          "oklch(95% 0.0000 0.00)"
-        ]
+          "oklch(15% 0.004 255.0)",
+          "oklch(25% 0.004 255.0)",
+          "oklch(35% 0.004 255.0)",
+          "oklch(45% 0.004 255.0)",
+          "oklch(58% 0.004 255.0)",
+          "oklch(70% 0.004 255.0)",
+          "oklch(82% 0.004 255.0)",
+          "oklch(95% 0.004 255.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-surface"
       },
-      "line": {
+      "surface-hover": {
         "role": "neutral",
-        "displayName": "Divider",
-        "description": "Fine panel outlines and table dividers."
+        "displayName": "Bleached Surface Hover",
+        "canonical": "oklch(95.4% 0.014 258)",
+        "tonalRamp": [
+          "oklch(15% 0.006 258.0)",
+          "oklch(25% 0.008 258.0)",
+          "oklch(35% 0.011 258.0)",
+          "oklch(45% 0.013 258.0)",
+          "oklch(58% 0.012 258.0)",
+          "oklch(70% 0.009 258.0)",
+          "oklch(82% 0.007 258.0)",
+          "oklch(95% 0.004 258.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-surface-hover"
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Indigo Text",
+        "canonical": "oklch(22% 0.062 266)",
+        "tonalRamp": [
+          "oklch(15% 0.026 266.0)",
+          "oklch(25% 0.036 266.0)",
+          "oklch(35% 0.046 266.0)",
+          "oklch(45% 0.057 266.0)",
+          "oklch(58% 0.054 266.0)",
+          "oklch(70% 0.041 266.0)",
+          "oklch(82% 0.029 266.0)",
+          "oklch(95% 0.015 266.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-ink"
+      },
+      "ink-2": {
+        "role": "neutral",
+        "displayName": "Indigo Text Secondary",
+        "canonical": "oklch(32% 0.06 266)",
+        "tonalRamp": [
+          "oklch(15% 0.025 266.0)",
+          "oklch(25% 0.035 266.0)",
+          "oklch(35% 0.045 266.0)",
+          "oklch(45% 0.055 266.0)",
+          "oklch(58% 0.052 266.0)",
+          "oklch(70% 0.04 266.0)",
+          "oklch(82% 0.028 266.0)",
+          "oklch(95% 0.015 266.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-ink-2"
+      },
+      "muted": {
+        "role": "neutral",
+        "displayName": "Faded Indigo",
+        "canonical": "oklch(43% 0.048 263)",
+        "tonalRamp": [
+          "oklch(15% 0.02 263.0)",
+          "oklch(25% 0.028 263.0)",
+          "oklch(35% 0.036 263.0)",
+          "oklch(45% 0.044 263.0)",
+          "oklch(58% 0.042 263.0)",
+          "oklch(70% 0.032 263.0)",
+          "oklch(82% 0.022 263.0)",
+          "oklch(95% 0.012 263.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-muted"
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Thread Rule",
+        "canonical": "oklch(86% 0.024 262)",
+        "tonalRamp": [
+          "oklch(15% 0.01 262.0)",
+          "oklch(25% 0.014 262.0)",
+          "oklch(35% 0.018 262.0)",
+          "oklch(45% 0.022 262.0)",
+          "oklch(58% 0.021 262.0)",
+          "oklch(70% 0.016 262.0)",
+          "oklch(82% 0.011 262.0)",
+          "oklch(95% 0.006 262.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-rule"
+      },
+      "rule-strong": {
+        "role": "neutral",
+        "displayName": "Strong Thread Rule",
+        "canonical": "oklch(68% 0.045 264)",
+        "tonalRamp": [
+          "oklch(15% 0.019 264.0)",
+          "oklch(25% 0.026 264.0)",
+          "oklch(35% 0.034 264.0)",
+          "oklch(45% 0.041 264.0)",
+          "oklch(58% 0.039 264.0)",
+          "oklch(70% 0.03 264.0)",
+          "oklch(82% 0.021 264.0)",
+          "oklch(95% 0.011 264.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-rule-strong"
       },
       "control": {
         "role": "neutral",
-        "displayName": "Control Outline",
-        "description": "Stronger border for fields and secondary controls."
-      },
-      "red": {
-        "role": "error",
-        "displayName": "Destructive Red",
-        "description": "Destructive buttons and deleted caption text.",
+        "displayName": "Control Stroke",
+        "canonical": "oklch(50% 0.055 264)",
         "tonalRamp": [
-          "oklch(15% 0.0378 12.03)",
-          "oklch(25% 0.0757 12.03)",
-          "oklch(35% 0.1152 12.03)",
-          "oklch(45% 0.1452 12.03)",
-          "oklch(55% 0.1578 12.03)",
-          "oklch(65% 0.1294 12.03)",
-          "oklch(80% 0.0773 12.03)",
-          "oklch(95% 0.0252 12.03)"
-        ]
+          "oklch(15% 0.023 264.0)",
+          "oklch(25% 0.032 264.0)",
+          "oklch(35% 0.041 264.0)",
+          "oklch(45% 0.05 264.0)",
+          "oklch(58% 0.048 264.0)",
+          "oklch(70% 0.037 264.0)",
+          "oklch(82% 0.026 264.0)",
+          "oklch(95% 0.014 264.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-control"
       },
-      "green": {
-        "role": "success",
-        "displayName": "Saved Green",
-        "description": "Saved feedback and inserted caption text.",
+      "madder": {
+        "role": "primary",
+        "displayName": "Madder Red",
+        "canonical": "oklch(46% 0.168 27)",
         "tonalRamp": [
-          "oklch(15% 0.0215 160.90)",
-          "oklch(25% 0.0431 160.90)",
-          "oklch(35% 0.0655 160.90)",
-          "oklch(45% 0.0826 160.90)",
-          "oklch(55% 0.0898 160.90)",
-          "oklch(65% 0.0736 160.90)",
-          "oklch(80% 0.0440 160.90)",
-          "oklch(95% 0.0161 160.90)"
-        ]
+          "oklch(15% 0.07 27.0)",
+          "oklch(25% 0.098 27.0)",
+          "oklch(35% 0.126 27.0)",
+          "oklch(45% 0.154 27.0)",
+          "oklch(58% 0.146 27.0)",
+          "oklch(70% 0.112 27.0)",
+          "oklch(82% 0.078 27.0)",
+          "oklch(95% 0.042 27.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-madder"
       },
-      "canvas": {
+      "madder-deep": {
+        "role": "primary",
+        "displayName": "Deep Madder",
+        "canonical": "oklch(37% 0.15 26)",
+        "tonalRamp": [
+          "oklch(15% 0.062 26.0)",
+          "oklch(25% 0.087 26.0)",
+          "oklch(35% 0.112 26.0)",
+          "oklch(45% 0.137 26.0)",
+          "oklch(58% 0.13 26.0)",
+          "oklch(70% 0.1 26.0)",
+          "oklch(82% 0.07 26.0)",
+          "oklch(95% 0.037 26.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-madder-deep"
+      },
+      "madder-ink": {
+        "role": "primary",
+        "displayName": "Madder Ink",
+        "canonical": "oklch(98.4% 0.008 40)",
+        "tonalRamp": [
+          "oklch(15% 0.004 40.0)",
+          "oklch(25% 0.005 40.0)",
+          "oklch(35% 0.006 40.0)",
+          "oklch(45% 0.007 40.0)",
+          "oklch(58% 0.007 40.0)",
+          "oklch(70% 0.005 40.0)",
+          "oklch(82% 0.004 40.0)",
+          "oklch(95% 0.004 40.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-madder-ink"
+      },
+      "madder-muted": {
+        "role": "primary",
+        "displayName": "Madder Muted",
+        "canonical": "oklch(90% 0.04 35)",
+        "tonalRamp": [
+          "oklch(15% 0.017 35.0)",
+          "oklch(25% 0.023 35.0)",
+          "oklch(35% 0.03 35.0)",
+          "oklch(45% 0.037 35.0)",
+          "oklch(58% 0.035 35.0)",
+          "oklch(70% 0.027 35.0)",
+          "oklch(82% 0.019 35.0)",
+          "oklch(95% 0.01 35.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-madder-muted"
+      },
+      "accent": {
+        "role": "primary",
+        "displayName": "Madder Text Red",
+        "canonical": "oklch(47% 0.168 27)",
+        "tonalRamp": [
+          "oklch(15% 0.07 27.0)",
+          "oklch(25% 0.098 27.0)",
+          "oklch(35% 0.126 27.0)",
+          "oklch(45% 0.154 27.0)",
+          "oklch(58% 0.146 27.0)",
+          "oklch(70% 0.112 27.0)",
+          "oklch(82% 0.078 27.0)",
+          "oklch(95% 0.042 27.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-accent"
+      },
+      "accent-hover": {
+        "role": "primary",
+        "displayName": "Madder Text Red Hover",
+        "canonical": "oklch(40.5% 0.155 27)",
+        "tonalRamp": [
+          "oklch(15% 0.065 27.0)",
+          "oklch(25% 0.09 27.0)",
+          "oklch(35% 0.116 27.0)",
+          "oklch(45% 0.142 27.0)",
+          "oklch(58% 0.134 27.0)",
+          "oklch(70% 0.103 27.0)",
+          "oklch(82% 0.072 27.0)",
+          "oklch(95% 0.039 27.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-accent-hover"
+      },
+      "accent-ink": {
+        "role": "primary",
+        "displayName": "On Madder Text Red",
+        "canonical": "oklch(98.6% 0.005 255)",
+        "tonalRamp": [
+          "oklch(15% 0.004 255.0)",
+          "oklch(25% 0.004 255.0)",
+          "oklch(35% 0.004 255.0)",
+          "oklch(45% 0.005 255.0)",
+          "oklch(58% 0.004 255.0)",
+          "oklch(70% 0.004 255.0)",
+          "oklch(82% 0.004 255.0)",
+          "oklch(95% 0.004 255.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-accent-ink"
+      },
+      "indigo": {
+        "role": "secondary",
+        "displayName": "Indigo Ink",
+        "canonical": "oklch(24.5% 0.078 266)",
+        "tonalRamp": [
+          "oklch(15% 0.032 266.0)",
+          "oklch(25% 0.045 266.0)",
+          "oklch(35% 0.058 266.0)",
+          "oklch(45% 0.071 266.0)",
+          "oklch(58% 0.068 266.0)",
+          "oklch(70% 0.052 266.0)",
+          "oklch(82% 0.036 266.0)",
+          "oklch(95% 0.019 266.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-indigo"
+      },
+      "print": {
+        "role": "secondary",
+        "displayName": "Print Ink",
+        "canonical": "oklch(24.5% 0.078 266)",
+        "tonalRamp": [
+          "oklch(15% 0.032 266.0)",
+          "oklch(25% 0.045 266.0)",
+          "oklch(35% 0.058 266.0)",
+          "oklch(45% 0.071 266.0)",
+          "oklch(58% 0.068 266.0)",
+          "oklch(70% 0.052 266.0)",
+          "oklch(82% 0.036 266.0)",
+          "oklch(95% 0.019 266.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-print",
+        "note": "Light theme aliases --color-indigo; dark theme is dark-print."
+      },
+      "keyline": {
+        "role": "tertiary",
+        "displayName": "Keyline Black",
+        "canonical": "oklch(15% 0.035 266)",
+        "tonalRamp": [
+          "oklch(15% 0.015 266.0)",
+          "oklch(25% 0.02 266.0)",
+          "oklch(35% 0.026 266.0)",
+          "oklch(45% 0.032 266.0)",
+          "oklch(58% 0.03 266.0)",
+          "oklch(70% 0.023 266.0)",
+          "oklch(82% 0.016 266.0)",
+          "oklch(95% 0.009 266.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-keyline"
+      },
+      "focus": {
+        "role": "secondary",
+        "displayName": "Focus Indigo",
+        "canonical": "oklch(48% 0.2 266)",
+        "tonalRamp": [
+          "oklch(15% 0.083 266.0)",
+          "oklch(25% 0.117 266.0)",
+          "oklch(35% 0.15 266.0)",
+          "oklch(45% 0.183 266.0)",
+          "oklch(58% 0.173 266.0)",
+          "oklch(70% 0.133 266.0)",
+          "oklch(82% 0.093 266.0)",
+          "oklch(95% 0.05 266.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-focus"
+      },
+      "stage": {
+        "role": "secondary",
+        "displayName": "Stage Indigo",
+        "canonical": "oklch(24.5% 0.078 266)",
+        "tonalRamp": [
+          "oklch(15% 0.032 266.0)",
+          "oklch(25% 0.045 266.0)",
+          "oklch(35% 0.058 266.0)",
+          "oklch(45% 0.071 266.0)",
+          "oklch(58% 0.068 266.0)",
+          "oklch(70% 0.052 266.0)",
+          "oklch(82% 0.036 266.0)",
+          "oklch(95% 0.019 266.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-stage"
+      },
+      "stage-deep": {
+        "role": "secondary",
+        "displayName": "Deep Stage Indigo",
+        "canonical": "oklch(18% 0.06 266)",
+        "tonalRamp": [
+          "oklch(15% 0.025 266.0)",
+          "oklch(25% 0.035 266.0)",
+          "oklch(35% 0.045 266.0)",
+          "oklch(45% 0.055 266.0)",
+          "oklch(58% 0.052 266.0)",
+          "oklch(70% 0.04 266.0)",
+          "oklch(82% 0.028 266.0)",
+          "oklch(95% 0.015 266.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-stage-deep"
+      },
+      "stage-ink": {
+        "role": "secondary",
+        "displayName": "Stage Ink",
+        "canonical": "oklch(97.4% 0.007 255)",
+        "tonalRamp": [
+          "oklch(15% 0.004 255.0)",
+          "oklch(25% 0.004 255.0)",
+          "oklch(35% 0.005 255.0)",
+          "oklch(45% 0.006 255.0)",
+          "oklch(58% 0.006 255.0)",
+          "oklch(70% 0.005 255.0)",
+          "oklch(82% 0.004 255.0)",
+          "oklch(95% 0.004 255.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-stage-ink"
+      },
+      "stage-muted": {
+        "role": "secondary",
+        "displayName": "Stage Muted",
+        "canonical": "oklch(84% 0.03 262)",
+        "tonalRamp": [
+          "oklch(15% 0.012 262.0)",
+          "oklch(25% 0.017 262.0)",
+          "oklch(35% 0.022 262.0)",
+          "oklch(45% 0.027 262.0)",
+          "oklch(58% 0.026 262.0)",
+          "oklch(70% 0.02 262.0)",
+          "oklch(82% 0.014 262.0)",
+          "oklch(95% 0.007 262.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-stage-muted"
+      },
+      "stage-accent": {
+        "role": "secondary",
+        "displayName": "Stage Coral",
+        "canonical": "oklch(74% 0.135 33)",
+        "tonalRamp": [
+          "oklch(15% 0.056 33.0)",
+          "oklch(25% 0.079 33.0)",
+          "oklch(35% 0.101 33.0)",
+          "oklch(45% 0.124 33.0)",
+          "oklch(58% 0.117 33.0)",
+          "oklch(70% 0.09 33.0)",
+          "oklch(82% 0.063 33.0)",
+          "oklch(95% 0.034 33.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-stage-accent"
+      },
+      "stage-rule": {
+        "role": "secondary",
+        "displayName": "Stage Rule",
+        "canonical": "oklch(90% 0.03 262 / 0.24)",
+        "tonalRamp": [
+          "oklch(15% 0.012 262.0)",
+          "oklch(25% 0.017 262.0)",
+          "oklch(35% 0.022 262.0)",
+          "oklch(45% 0.027 262.0)",
+          "oklch(58% 0.026 262.0)",
+          "oklch(70% 0.02 262.0)",
+          "oklch(82% 0.014 262.0)",
+          "oklch(95% 0.007 262.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-stage-rule"
+      },
+      "caption-ink": {
         "role": "neutral",
-        "displayName": "Canvas",
-        "description": "Shared background on public pages, account forms and Studio."
+        "displayName": "Caption Ink",
+        "canonical": "oklch(98% 0.005 112)",
+        "tonalRamp": [
+          "oklch(15% 0.004 112.0)",
+          "oklch(25% 0.004 112.0)",
+          "oklch(35% 0.004 112.0)",
+          "oklch(45% 0.005 112.0)",
+          "oklch(58% 0.004 112.0)",
+          "oklch(70% 0.004 112.0)",
+          "oklch(82% 0.004 112.0)",
+          "oklch(95% 0.004 112.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-caption-ink"
+      },
+      "caption-shadow": {
+        "role": "neutral",
+        "displayName": "Caption Shadow",
+        "canonical": "oklch(8% 0.03 266 / 0.88)",
+        "tonalRamp": [
+          "oklch(15% 0.012 266.0)",
+          "oklch(25% 0.017 266.0)",
+          "oklch(35% 0.022 266.0)",
+          "oklch(45% 0.027 266.0)",
+          "oklch(58% 0.026 266.0)",
+          "oklch(70% 0.02 266.0)",
+          "oklch(82% 0.014 266.0)",
+          "oklch(95% 0.007 266.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-caption-shadow"
+      },
+      "error": {
+        "role": "status",
+        "displayName": "Error",
+        "canonical": "oklch(48% 0.165 10)",
+        "tonalRamp": [
+          "oklch(15% 0.069 10.0)",
+          "oklch(25% 0.096 10.0)",
+          "oklch(35% 0.124 10.0)",
+          "oklch(45% 0.151 10.0)",
+          "oklch(58% 0.143 10.0)",
+          "oklch(70% 0.11 10.0)",
+          "oklch(82% 0.077 10.0)",
+          "oklch(95% 0.041 10.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-error"
+      },
+      "success": {
+        "role": "status",
+        "displayName": "Success",
+        "canonical": "oklch(46% 0.115 154)",
+        "tonalRamp": [
+          "oklch(15% 0.048 154.0)",
+          "oklch(25% 0.067 154.0)",
+          "oklch(35% 0.086 154.0)",
+          "oklch(45% 0.105 154.0)",
+          "oklch(58% 0.1 154.0)",
+          "oklch(70% 0.077 154.0)",
+          "oklch(82% 0.054 154.0)",
+          "oklch(95% 0.029 154.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-success"
+      },
+      "warn-ink": {
+        "role": "status",
+        "displayName": "Warning Ink",
+        "canonical": "oklch(41% 0.095 66)",
+        "tonalRamp": [
+          "oklch(15% 0.04 66.0)",
+          "oklch(25% 0.055 66.0)",
+          "oklch(35% 0.071 66.0)",
+          "oklch(45% 0.087 66.0)",
+          "oklch(58% 0.082 66.0)",
+          "oklch(70% 0.063 66.0)",
+          "oklch(82% 0.044 66.0)",
+          "oklch(95% 0.024 66.0)"
+        ],
+        "theme": "light",
+        "cssVar": "--color-warn-ink"
+      },
+      "dark-paper": {
+        "role": "neutral",
+        "displayName": "Resist White Ground (dark theme)",
+        "canonical": "oklch(24% 0.085 266)",
+        "tonalRamp": [
+          "oklch(15% 0.035 266.0)",
+          "oklch(25% 0.05 266.0)",
+          "oklch(35% 0.064 266.0)",
+          "oklch(45% 0.078 266.0)",
+          "oklch(58% 0.074 266.0)",
+          "oklch(70% 0.057 266.0)",
+          "oklch(82% 0.04 266.0)",
+          "oklch(95% 0.021 266.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-paper"
+      },
+      "dark-paper-2": {
+        "role": "neutral",
+        "displayName": "Washed Cotton (dark theme)",
+        "canonical": "oklch(28% 0.092 266)",
+        "tonalRamp": [
+          "oklch(15% 0.038 266.0)",
+          "oklch(25% 0.054 266.0)",
+          "oklch(35% 0.069 266.0)",
+          "oklch(45% 0.084 266.0)",
+          "oklch(58% 0.08 266.0)",
+          "oklch(70% 0.061 266.0)",
+          "oklch(82% 0.043 266.0)",
+          "oklch(95% 0.023 266.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-paper-2"
+      },
+      "dark-paper-3": {
+        "role": "neutral",
+        "displayName": "Deep Washed Cotton (dark theme)",
+        "canonical": "oklch(33% 0.097 266)",
+        "tonalRamp": [
+          "oklch(15% 0.04 266.0)",
+          "oklch(25% 0.057 266.0)",
+          "oklch(35% 0.073 266.0)",
+          "oklch(45% 0.089 266.0)",
+          "oklch(58% 0.084 266.0)",
+          "oklch(70% 0.065 266.0)",
+          "oklch(82% 0.045 266.0)",
+          "oklch(95% 0.024 266.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-paper-3"
+      },
+      "dark-surface": {
+        "role": "neutral",
+        "displayName": "Bleached Surface (dark theme)",
+        "canonical": "oklch(27% 0.09 266)",
+        "tonalRamp": [
+          "oklch(15% 0.037 266.0)",
+          "oklch(25% 0.052 266.0)",
+          "oklch(35% 0.068 266.0)",
+          "oklch(45% 0.082 266.0)",
+          "oklch(58% 0.078 266.0)",
+          "oklch(70% 0.06 266.0)",
+          "oklch(82% 0.042 266.0)",
+          "oklch(95% 0.022 266.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-surface"
+      },
+      "dark-surface-hover": {
+        "role": "neutral",
+        "displayName": "Bleached Surface Hover (dark theme)",
+        "canonical": "oklch(31.5% 0.095 266)",
+        "tonalRamp": [
+          "oklch(15% 0.04 266.0)",
+          "oklch(25% 0.055 266.0)",
+          "oklch(35% 0.071 266.0)",
+          "oklch(45% 0.087 266.0)",
+          "oklch(58% 0.082 266.0)",
+          "oklch(70% 0.063 266.0)",
+          "oklch(82% 0.044 266.0)",
+          "oklch(95% 0.024 266.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-surface-hover"
+      },
+      "dark-ink": {
+        "role": "neutral",
+        "displayName": "Indigo Text (dark theme)",
+        "canonical": "oklch(96.4% 0.01 255)",
+        "tonalRamp": [
+          "oklch(15% 0.004 255.0)",
+          "oklch(25% 0.006 255.0)",
+          "oklch(35% 0.007 255.0)",
+          "oklch(45% 0.009 255.0)",
+          "oklch(58% 0.009 255.0)",
+          "oklch(70% 0.007 255.0)",
+          "oklch(82% 0.005 255.0)",
+          "oklch(95% 0.004 255.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-ink"
+      },
+      "dark-ink-2": {
+        "role": "neutral",
+        "displayName": "Indigo Text Secondary (dark theme)",
+        "canonical": "oklch(88% 0.02 258)",
+        "tonalRamp": [
+          "oklch(15% 0.008 258.0)",
+          "oklch(25% 0.012 258.0)",
+          "oklch(35% 0.015 258.0)",
+          "oklch(45% 0.018 258.0)",
+          "oklch(58% 0.017 258.0)",
+          "oklch(70% 0.013 258.0)",
+          "oklch(82% 0.009 258.0)",
+          "oklch(95% 0.005 258.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-ink-2"
+      },
+      "dark-muted": {
+        "role": "neutral",
+        "displayName": "Faded Indigo (dark theme)",
+        "canonical": "oklch(79% 0.032 260)",
+        "tonalRamp": [
+          "oklch(15% 0.013 260.0)",
+          "oklch(25% 0.019 260.0)",
+          "oklch(35% 0.024 260.0)",
+          "oklch(45% 0.029 260.0)",
+          "oklch(58% 0.028 260.0)",
+          "oklch(70% 0.021 260.0)",
+          "oklch(82% 0.015 260.0)",
+          "oklch(95% 0.008 260.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-muted"
+      },
+      "dark-rule": {
+        "role": "neutral",
+        "displayName": "Thread Rule (dark theme)",
+        "canonical": "oklch(39% 0.08 266)",
+        "tonalRamp": [
+          "oklch(15% 0.033 266.0)",
+          "oklch(25% 0.047 266.0)",
+          "oklch(35% 0.06 266.0)",
+          "oklch(45% 0.073 266.0)",
+          "oklch(58% 0.069 266.0)",
+          "oklch(70% 0.053 266.0)",
+          "oklch(82% 0.037 266.0)",
+          "oklch(95% 0.02 266.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-rule"
+      },
+      "dark-rule-strong": {
+        "role": "neutral",
+        "displayName": "Strong Thread Rule (dark theme)",
+        "canonical": "oklch(53% 0.08 266)",
+        "tonalRamp": [
+          "oklch(15% 0.033 266.0)",
+          "oklch(25% 0.047 266.0)",
+          "oklch(35% 0.06 266.0)",
+          "oklch(45% 0.073 266.0)",
+          "oklch(58% 0.069 266.0)",
+          "oklch(70% 0.053 266.0)",
+          "oklch(82% 0.037 266.0)",
+          "oklch(95% 0.02 266.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-rule-strong"
+      },
+      "dark-control": {
+        "role": "neutral",
+        "displayName": "Control Stroke (dark theme)",
+        "canonical": "oklch(62% 0.06 262)",
+        "tonalRamp": [
+          "oklch(15% 0.025 262.0)",
+          "oklch(25% 0.035 262.0)",
+          "oklch(35% 0.045 262.0)",
+          "oklch(45% 0.055 262.0)",
+          "oklch(58% 0.052 262.0)",
+          "oklch(70% 0.04 262.0)",
+          "oklch(82% 0.028 262.0)",
+          "oklch(95% 0.015 262.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-control"
+      },
+      "dark-madder": {
+        "role": "primary",
+        "displayName": "Madder Red (dark theme)",
+        "canonical": "oklch(40% 0.15 27)",
+        "tonalRamp": [
+          "oklch(15% 0.062 27.0)",
+          "oklch(25% 0.087 27.0)",
+          "oklch(35% 0.112 27.0)",
+          "oklch(45% 0.137 27.0)",
+          "oklch(58% 0.13 27.0)",
+          "oklch(70% 0.1 27.0)",
+          "oklch(82% 0.07 27.0)",
+          "oklch(95% 0.037 27.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-madder"
+      },
+      "dark-madder-deep": {
+        "role": "primary",
+        "displayName": "Deep Madder (dark theme)",
+        "canonical": "oklch(31% 0.12 26)",
+        "tonalRamp": [
+          "oklch(15% 0.05 26.0)",
+          "oklch(25% 0.07 26.0)",
+          "oklch(35% 0.09 26.0)",
+          "oklch(45% 0.11 26.0)",
+          "oklch(58% 0.104 26.0)",
+          "oklch(70% 0.08 26.0)",
+          "oklch(82% 0.056 26.0)",
+          "oklch(95% 0.03 26.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-madder-deep"
+      },
+      "dark-madder-muted": {
+        "role": "primary",
+        "displayName": "Madder Muted (dark theme)",
+        "canonical": "oklch(88% 0.04 35)",
+        "tonalRamp": [
+          "oklch(15% 0.017 35.0)",
+          "oklch(25% 0.023 35.0)",
+          "oklch(35% 0.03 35.0)",
+          "oklch(45% 0.037 35.0)",
+          "oklch(58% 0.035 35.0)",
+          "oklch(70% 0.027 35.0)",
+          "oklch(82% 0.019 35.0)",
+          "oklch(95% 0.01 35.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-madder-muted"
+      },
+      "dark-accent": {
+        "role": "primary",
+        "displayName": "Madder Text Red (dark theme)",
+        "canonical": "oklch(70% 0.16 31)",
+        "tonalRamp": [
+          "oklch(15% 0.067 31.0)",
+          "oklch(25% 0.093 31.0)",
+          "oklch(35% 0.12 31.0)",
+          "oklch(45% 0.147 31.0)",
+          "oklch(58% 0.139 31.0)",
+          "oklch(70% 0.107 31.0)",
+          "oklch(82% 0.075 31.0)",
+          "oklch(95% 0.04 31.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-accent"
+      },
+      "dark-accent-hover": {
+        "role": "primary",
+        "displayName": "Madder Text Red Hover (dark theme)",
+        "canonical": "oklch(76% 0.14 33)",
+        "tonalRamp": [
+          "oklch(15% 0.058 33.0)",
+          "oklch(25% 0.082 33.0)",
+          "oklch(35% 0.105 33.0)",
+          "oklch(45% 0.128 33.0)",
+          "oklch(58% 0.121 33.0)",
+          "oklch(70% 0.093 33.0)",
+          "oklch(82% 0.065 33.0)",
+          "oklch(95% 0.035 33.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-accent-hover"
+      },
+      "dark-accent-ink": {
+        "role": "primary",
+        "displayName": "On Madder Text Red (dark theme)",
+        "canonical": "oklch(16% 0.045 266)",
+        "tonalRamp": [
+          "oklch(15% 0.019 266.0)",
+          "oklch(25% 0.026 266.0)",
+          "oklch(35% 0.034 266.0)",
+          "oklch(45% 0.041 266.0)",
+          "oklch(58% 0.039 266.0)",
+          "oklch(70% 0.03 266.0)",
+          "oklch(82% 0.021 266.0)",
+          "oklch(95% 0.011 266.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-accent-ink"
+      },
+      "dark-print": {
+        "role": "secondary",
+        "displayName": "Print Ink (dark theme)",
+        "canonical": "oklch(74% 0.14 33)",
+        "tonalRamp": [
+          "oklch(15% 0.058 33.0)",
+          "oklch(25% 0.082 33.0)",
+          "oklch(35% 0.105 33.0)",
+          "oklch(45% 0.128 33.0)",
+          "oklch(58% 0.121 33.0)",
+          "oklch(70% 0.093 33.0)",
+          "oklch(82% 0.065 33.0)",
+          "oklch(95% 0.035 33.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-print"
+      },
+      "dark-focus": {
+        "role": "secondary",
+        "displayName": "Focus Indigo (dark theme)",
+        "canonical": "oklch(82% 0.12 250)",
+        "tonalRamp": [
+          "oklch(15% 0.05 250.0)",
+          "oklch(25% 0.07 250.0)",
+          "oklch(35% 0.09 250.0)",
+          "oklch(45% 0.11 250.0)",
+          "oklch(58% 0.104 250.0)",
+          "oklch(70% 0.08 250.0)",
+          "oklch(82% 0.056 250.0)",
+          "oklch(95% 0.03 250.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-focus"
+      },
+      "dark-stage": {
+        "role": "secondary",
+        "displayName": "Stage Indigo (dark theme)",
+        "canonical": "oklch(17% 0.065 266)",
+        "tonalRamp": [
+          "oklch(15% 0.027 266.0)",
+          "oklch(25% 0.038 266.0)",
+          "oklch(35% 0.049 266.0)",
+          "oklch(45% 0.06 266.0)",
+          "oklch(58% 0.056 266.0)",
+          "oklch(70% 0.043 266.0)",
+          "oklch(82% 0.03 266.0)",
+          "oklch(95% 0.016 266.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-stage"
+      },
+      "dark-stage-deep": {
+        "role": "secondary",
+        "displayName": "Deep Stage Indigo (dark theme)",
+        "canonical": "oklch(13% 0.05 266)",
+        "tonalRamp": [
+          "oklch(15% 0.021 266.0)",
+          "oklch(25% 0.029 266.0)",
+          "oklch(35% 0.038 266.0)",
+          "oklch(45% 0.046 266.0)",
+          "oklch(58% 0.043 266.0)",
+          "oklch(70% 0.033 266.0)",
+          "oklch(82% 0.023 266.0)",
+          "oklch(95% 0.013 266.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-stage-deep"
+      },
+      "dark-stage-accent": {
+        "role": "secondary",
+        "displayName": "Stage Coral (dark theme)",
+        "canonical": "oklch(74% 0.14 33)",
+        "tonalRamp": [
+          "oklch(15% 0.058 33.0)",
+          "oklch(25% 0.082 33.0)",
+          "oklch(35% 0.105 33.0)",
+          "oklch(45% 0.128 33.0)",
+          "oklch(58% 0.121 33.0)",
+          "oklch(70% 0.093 33.0)",
+          "oklch(82% 0.065 33.0)",
+          "oklch(95% 0.035 33.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-stage-accent"
+      },
+      "dark-error": {
+        "role": "status",
+        "displayName": "Error (dark theme)",
+        "canonical": "oklch(74% 0.14 14)",
+        "tonalRamp": [
+          "oklch(15% 0.058 14.0)",
+          "oklch(25% 0.082 14.0)",
+          "oklch(35% 0.105 14.0)",
+          "oklch(45% 0.128 14.0)",
+          "oklch(58% 0.121 14.0)",
+          "oklch(70% 0.093 14.0)",
+          "oklch(82% 0.065 14.0)",
+          "oklch(95% 0.035 14.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-error"
+      },
+      "dark-success": {
+        "role": "status",
+        "displayName": "Success (dark theme)",
+        "canonical": "oklch(78% 0.125 154)",
+        "tonalRamp": [
+          "oklch(15% 0.052 154.0)",
+          "oklch(25% 0.073 154.0)",
+          "oklch(35% 0.094 154.0)",
+          "oklch(45% 0.115 154.0)",
+          "oklch(58% 0.108 154.0)",
+          "oklch(70% 0.083 154.0)",
+          "oklch(82% 0.058 154.0)",
+          "oklch(95% 0.031 154.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-success"
+      },
+      "dark-warn-ink": {
+        "role": "status",
+        "displayName": "Warning Ink (dark theme)",
+        "canonical": "oklch(85% 0.095 82)",
+        "tonalRamp": [
+          "oklch(15% 0.04 82.0)",
+          "oklch(25% 0.055 82.0)",
+          "oklch(35% 0.071 82.0)",
+          "oklch(45% 0.087 82.0)",
+          "oklch(58% 0.082 82.0)",
+          "oklch(70% 0.063 82.0)",
+          "oklch(82% 0.044 82.0)",
+          "oklch(95% 0.024 82.0)"
+        ],
+        "theme": "dark",
+        "cssVar": "--color-warn-ink"
       }
     },
     "typographyMeta": {
       "display": {
-        "displayName": "Public Masthead",
-        "purpose": "Oversized public opening title. The sample size is the upper end of its responsive scale."
+        "displayName": "Display",
+        "purpose": "Hero headline on the madder field, max 16ch."
       },
       "headline": {
-        "displayName": "Public Headline",
-        "purpose": "Public section and policy headings. The sample size is the upper end of its responsive scale."
+        "displayName": "Headline",
+        "purpose": "Section heads; base h2 token is --text-section."
       },
       "title": {
-        "displayName": "Workspace Title",
-        "purpose": "Project titles and Studio page headings."
+        "displayName": "Title",
+        "purpose": "h3, step titles, promise terms."
       },
-      "panel-title": {
-        "displayName": "Panel Title",
-        "purpose": "Studio panel and form section headings."
+      "numeral": {
+        "displayName": "Step Numeral",
+        "purpose": "Workflow step numbers filling their block in Stage Coral."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "Intro paragraphs, max 46ch."
       },
       "body": {
         "displayName": "Body",
-        "purpose": "Public workflow and pricing descriptions and workspace page introductions."
+        "purpose": "Running text, about 62ch max."
       },
       "label": {
-        "displayName": "Status Label",
-        "purpose": "Compact processing and readiness text."
+        "displayName": "Label",
+        "purpose": "Tickets, cue times, fact labels; sentence case, tabular numerals."
       },
-      "button": {
-        "displayName": "Button",
-        "purpose": "Primary, secondary, and destructive controls."
+      "urdu-display": {
+        "displayName": "Urdu Display (Nastaliq)",
+        "purpose": "Nastaliq line printed beneath the Latin hero headline and in the close."
       },
       "urdu-caption": {
-        "displayName": "Urdu Caption",
-        "purpose": "The public Urdu overlay with space for the Nastaliq script. The sample size is the upper end of its responsive scale."
+        "displayName": "Urdu Caption (Nastaliq)",
+        "purpose": "Urdu caption line on the sample frame."
+      },
+      "urdu-body": {
+        "displayName": "Urdu Body (Nastaliq)",
+        "purpose": "Running text on /ur, RTL, weight 400, never tracked."
+      },
+      "caption-latin": {
+        "displayName": "Caption Latin",
+        "purpose": "Roman Urdu and English caption lines with soft dark text-shadow."
       }
     },
-    "shadows": [],
-    "motion": [],
+    "typeScale": {
+      "text-xs": "0.8125rem",
+      "text-sm": "0.875rem",
+      "text-md": "1rem",
+      "text-lg": "1.25rem",
+      "text-xl": "1.5625rem",
+      "text-2xl": "1.953rem",
+      "text-3xl": "2.441rem",
+      "text-display-s": "clamp(2.25rem, 3.6vw + 0.5rem, 3.5rem)",
+      "text-display": "clamp(2.5rem, 4vw + 0.75rem, 4.25rem)",
+      "text-section": "clamp(2.25rem, 2.5vw + 1rem, 3.25rem)",
+      "text-title": "clamp(1.25rem, 0.75vw + 0.875rem, 1.55rem)",
+      "text-lead": "clamp(1.0625rem, 0.35vw + 0.95rem, 1.25rem)"
+    },
+    "fonts": [
+      {
+        "name": "Bricolage Grotesque Variable",
+        "role": "Latin display",
+        "source": "@fontsource-variable/bricolage-grotesque"
+      },
+      {
+        "name": "Public Sans Variable",
+        "role": "Body and UI",
+        "source": "@fontsource-variable/public-sans"
+      },
+      {
+        "name": "CaptionUrdu",
+        "role": "Urdu display and captions",
+        "source": "/fonts/NotoNastaliqUrdu-Regular.woff2 (Noto Nastaliq Urdu)",
+        "unicodeRange": "U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF, U+200C-200D"
+      }
+    ],
+    "shadows": [
+      {
+        "name": "shadow-card",
+        "value": "0 1px 2px oklch(20% 0.06 266 / 0.06)",
+        "dark": "0 1px 2px oklch(6% 0.04 266 / 0.45)",
+        "purpose": "Resting cards in app surfaces."
+      },
+      {
+        "name": "shadow-soft",
+        "value": "0 2px 8px oklch(20% 0.06 266 / 0.07)",
+        "dark": "0 4px 14px oklch(6% 0.04 266 / 0.48)",
+        "purpose": "Menus and raised controls."
+      },
+      {
+        "name": "shadow-lift",
+        "value": "0 8px 20px oklch(20% 0.06 266 / 0.12)",
+        "dark": "0 10px 24px oklch(6% 0.04 266 / 0.62)",
+        "purpose": "Overlays."
+      },
+      {
+        "name": "field-cta",
+        "value": "0 6px 16px oklch(15% 0.06 27 / 0.28)",
+        "hover": "0 10px 22px oklch(15% 0.06 27 / 0.32)",
+        "purpose": "Only the resist-white CTA on a madder field."
+      }
+    ],
+    "printLayers": [
+      {
+        "name": "field-ink",
+        "value": "oklch(14% 0.05 266 / 0.34)",
+        "masks": [
+          "--ajrak-field 64px",
+          "--ajrak-keys 64px"
+        ],
+        "purpose": "Indigo-black star blocks and keyline rings over madder."
+      },
+      {
+        "name": "field-resist",
+        "value": "oklch(97% 0.01 40 / 0.42)",
+        "masks": [
+          "--ajrak-resist 64px"
+        ],
+        "purpose": "Resist-white dots over madder."
+      },
+      {
+        "name": "product-hero-ink",
+        "value": "oklch(15% 0.04 266 / 0.16)",
+        "masks": [
+          "--ajrak-field 64px"
+        ],
+        "purpose": "Low-ink star blocks on interior product heroes."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "Default easing for state changes and the stamp print."
+      },
+      {
+        "name": "ease-in",
+        "value": "cubic-bezier(0.7, 0, 0.84, 0)",
+        "purpose": "Exits."
+      },
+      {
+        "name": "ease-in-out",
+        "value": "cubic-bezier(0.65, 0, 0.35, 1)",
+        "purpose": "Symmetric transitions."
+      },
+      {
+        "name": "dur-micro",
+        "value": "120ms",
+        "purpose": "Press and lift transforms."
+      },
+      {
+        "name": "dur-short",
+        "value": "220ms",
+        "purpose": "Background and shadow changes."
+      },
+      {
+        "name": "dur-long",
+        "value": "420ms",
+        "purpose": "The stamp-print caption animation."
+      },
+      {
+        "name": "stamp-print",
+        "value": "420ms ease-out; from opacity 0, scale(1.06), blur(3px); 140ms stagger per line",
+        "purpose": "A block pressed onto cloth: each caption line lands slightly large and soft, then settles. Disabled under prefers-reduced-motion."
+      }
+    ],
     "breakpoints": [
       {
-        "name": "Studio plan columns",
-        "value": "1150px"
+        "name": "collapse",
+        "value": "60rem",
+        "purpose": "Split layouts, reading grid and steps stack; exports go to 2 columns."
       },
       {
-        "name": "Editor stacks above preview",
-        "value": "880px"
+        "name": "desktop-nav",
+        "value": "961px",
+        "purpose": "Desktop navigation link treatment."
       },
       {
-        "name": "Studio links move below the wordmark",
-        "value": "845px"
-      },
-      {
-        "name": "Public content and pricing stack",
-        "value": "760px"
-      },
-      {
-        "name": "Public navigation moves below the wordmark",
-        "value": "680px"
-      },
-      {
-        "name": "Editor preview and exports stack",
-        "value": "660px"
-      },
-      {
-        "name": "Public caption demo stacks",
-        "value": "650px"
-      },
-      {
-        "name": "Studio titles and project rows compact",
-        "value": "590px"
-      },
-      {
-        "name": "Studio links form two columns",
-        "value": "535px"
-      },
-      {
-        "name": "Studio controls compact",
-        "value": "370px"
+        "name": "phone",
+        "value": "40rem",
+        "purpose": "4:3 sample frame, 2x2 stamp blocks, edge-to-edge product hero."
       }
-    ]
+    ],
+    "layout": {
+      "container": "1360px",
+      "gutter": "64px",
+      "gapColumns": "32px",
+      "navHeight": "72px",
+      "homeGap": "clamp(64px, 7vw, 120px)",
+      "sectionGaps": {
+        "s": "120px",
+        "m": "144px",
+        "l": "176px"
+      }
+    }
   },
   "components": [
     {
       "name": "Primary Button",
       "kind": "button",
       "refersTo": "button-primary",
-      "description": "Saturated green for the principal action in a control group.",
-      "html": "<button type=\"button\" class=\"ds-button-primary\"><svg aria-hidden=\"true\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M15.2 3a2 2 0 0 1 1.4.6l3.8 3.8a2 2 0 0 1 .6 1.4V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z\"/><path d=\"M17 21v-7a1 1 0 0 0-1-1H8a1 1 0 0 0-1 1v7\"/><path d=\"M7 3v4a1 1 0 0 0 1 1h7\"/></svg>Save</button>",
-      "css": ".ds-button-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px;\n    padding: 10px 16px; border: 1px solid transparent; border-radius: 9px;\n    font: 680 14px / 1.35 var(--body, \"Public Sans Variable\", CaptionUrdu, Arial, sans-serif); cursor: pointer; text-align: center;\n  background: var(--accent, #20583c); color: white;\n}\n.ds-button-primary:hover { background: var(--accent-hover, #16432d); }\n.ds-button-primary:focus-visible { outline: 2px solid var(--accent, #20583c); outline-offset: 3px; }\n.ds-button-primary:disabled { cursor: not-allowed; opacity: 0.55; }"
+      "description": "Default action on resist-white and washed-cotton grounds.",
+      "html": "<button class=\"ds-btn-primary\">Start transcribing</button>",
+      "css": ".ds-btn-primary { display:inline-flex; align-items:center; min-height:44px; padding:8px 16px; border:1px solid var(--color-accent, oklch(47% 0.168 27)); border-radius:var(--radius-control, 5px); background:var(--color-accent, oklch(47% 0.168 27)); color:var(--color-accent-ink, oklch(98.6% 0.005 255)); font:700 0.875rem/1.3 'Public Sans Variable', system-ui, sans-serif; cursor:pointer; transition:background 220ms cubic-bezier(0.16,1,0.3,1); } .ds-btn-primary:hover { background:var(--color-accent-hover, oklch(40.5% 0.155 27)); border-color:var(--color-accent-hover, oklch(40.5% 0.155 27)); } .ds-btn-primary:focus-visible { outline: 2px solid var(--color-focus, oklch(48% 0.2 266)); outline-offset: 3px; }"
     },
     {
       "name": "Secondary Button",
       "kind": "button",
       "refersTo": "button-secondary",
-      "description": "White with a defined outline for companion actions.",
-      "html": "<button type=\"button\" class=\"ds-button-secondary\"><svg aria-hidden=\"true\" width=\"16\" height=\"16\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8\"/><path d=\"M21 3v5h-5\"/><path d=\"M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16\"/><path d=\"M8 16H3v5\"/></svg>Refresh</button>",
-      "css": ".ds-button-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px;\n    padding: 10px 16px; border: 1px solid transparent; border-radius: 9px;\n    font: 680 14px / 1.35 var(--body, \"Public Sans Variable\", CaptionUrdu, Arial, sans-serif); cursor: pointer; text-align: center;\n  background: var(--surface, #fff); color: var(--ink, #19231c);\n  border-color: var(--control, #87988a);\n}\n.ds-button-secondary:hover { background: var(--wash, #eaf2e6); }\n.ds-button-secondary:focus-visible { outline: 2px solid var(--accent, #20583c); outline-offset: 3px; }\n.ds-button-secondary:disabled { cursor: not-allowed; opacity: 0.55; }"
+      "description": "Lower-emphasis action beside a primary.",
+      "html": "<button class=\"ds-btn-secondary\">View pricing</button>",
+      "css": ".ds-btn-secondary { display:inline-flex; align-items:center; min-height:44px; padding:8px 16px; border:1px solid var(--color-control, oklch(50% 0.055 264)); border-radius:var(--radius-control, 5px); background:var(--color-surface, oklch(99.3% 0.003 255)); color:var(--color-ink, oklch(22% 0.062 266)); font:700 0.875rem/1.3 'Public Sans Variable', system-ui, sans-serif; cursor:pointer; } .ds-btn-secondary:hover { background:var(--color-paper-3, oklch(90.8% 0.022 260)); border-color:var(--color-accent, oklch(47% 0.168 27)); } .ds-btn-secondary:focus-visible { outline: 2px solid var(--color-focus, oklch(48% 0.2 266)); outline-offset: 3px; }"
     },
     {
-      "name": "Text Action",
+      "name": "Field CTA",
       "kind": "button",
-      "refersTo": "button-text",
-      "description": "Quiet inline navigation or supporting action.",
-      "html": "<a class=\"ds-button-text\" href=\"#editor-exports\">Exports</a>",
-      "css": ".ds-button-text {\n  display: inline-flex; align-items: center; gap: 7px; min-height: 40px; padding: 4px 0; border: 0;\n  color: var(--accent, #20583c); background: transparent; font: 650 13px var(--body, \"Public Sans Variable\", CaptionUrdu, Arial, sans-serif);\n  text-decoration: none; text-underline-offset: 0.2em;\n}\n.ds-button-text:hover { text-decoration: underline; }\n.ds-button-text:focus-visible { outline: 2px solid var(--accent, #20583c); outline-offset: 3px; }"
+      "refersTo": "button-field-cta",
+      "description": "The primary action printed on a madder field: resist-white block, indigo text, keyline.",
+      "html": "<div class=\"ds-field-demo\"><a class=\"ds-btn-field\" href=\"#\">Try 10 free minutes</a></div>",
+      "css": ".ds-field-demo { padding:32px; background:var(--color-madder, oklch(46% 0.168 27)); } .ds-btn-field { display:inline-flex; align-items:center; min-height:54px; padding:0 24px; border:2px solid var(--color-keyline, oklch(15% 0.035 266)); border-radius:var(--radius-control, 5px); background:var(--color-resist, oklch(97.6% 0.006 255)); color:var(--color-indigo, oklch(24.5% 0.078 266)); font:700 1.0625rem/1.3 'Public Sans Variable', system-ui, sans-serif; text-decoration:none; box-shadow:0 6px 16px oklch(15% 0.06 27 / 0.28); transition:transform 120ms cubic-bezier(0.16,1,0.3,1), box-shadow 220ms cubic-bezier(0.16,1,0.3,1); } .ds-btn-field:hover { transform:translateY(-1px); box-shadow:0 10px 22px oklch(15% 0.06 27 / 0.32); } .ds-btn-field:active { transform:translateY(1px); } .ds-btn-field:focus-visible { outline:2px solid var(--color-madder-ink, oklch(98.4% 0.008 40)); outline-offset:3px; }"
     },
     {
-      "name": "Destructive Button",
-      "kind": "button",
-      "refersTo": "button-danger",
-      "description": "Red fill for an explicitly destructive action.",
-      "html": "<button type=\"button\" class=\"ds-button-danger\">Delete project</button>",
-      "css": ".ds-button-danger { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px;\n    padding: 10px 16px; border: 1px solid transparent; border-radius: 9px;\n    font: 680 14px / 1.35 var(--body, \"Public Sans Variable\", CaptionUrdu, Arial, sans-serif); cursor: pointer; text-align: center;\n  background: var(--red, #a62c48); color: white;\n}\n.ds-button-danger:hover { background: #8d223a; }\n.ds-button-danger:focus-visible { outline: 2px solid var(--accent, #20583c); outline-offset: 3px; }\n.ds-button-danger:disabled { cursor: not-allowed; opacity: 0.55; }"
+      "name": "Stamp Blocks",
+      "kind": "custom",
+      "refersTo": "stamp-block",
+      "description": "Signature script selector: square keylined print blocks; the pressed one is inked in madder.",
+      "html": "<div class=\"ds-stamps\" role=\"radiogroup\" aria-label=\"Caption script\"><button class=\"ds-stamp\" role=\"radio\" aria-checked=\"false\"><span class=\"ds-stamp-face\"></span>Urdu</button><button class=\"ds-stamp\" role=\"radio\" aria-checked=\"false\"><span class=\"ds-stamp-face\"></span>Roman Urdu</button><button class=\"ds-stamp\" role=\"radio\" aria-checked=\"false\"><span class=\"ds-stamp-face\"></span>English</button><button class=\"ds-stamp\" role=\"radio\" aria-checked=\"true\"><span class=\"ds-stamp-face\"></span>Bilingual</button></div>",
+      "css": ".ds-stamps { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:8px; padding:16px; background:var(--color-indigo, oklch(24.5% 0.078 266)); } .ds-stamp { display:grid; justify-items:center; gap:4px; min-height:72px; padding:8px 12px; border:2px solid var(--color-keyline, oklch(15% 0.035 266)); border-radius:var(--radius-strip, 2px); background:oklch(97% 0.01 255 / 0.08); color:var(--color-stage-ink, oklch(97.4% 0.007 255)); font:700 0.875rem/1.3 'Public Sans Variable', system-ui, sans-serif; cursor:pointer; box-shadow:inset 0 0 0 1px oklch(97% 0.01 255 / 0.22), 0 3px 0 0 var(--color-keyline, oklch(15% 0.035 266)); transition:background 220ms cubic-bezier(0.16,1,0.3,1), transform 120ms cubic-bezier(0.16,1,0.3,1), box-shadow 120ms cubic-bezier(0.16,1,0.3,1); } .ds-stamp-face { width:28px; height:14px; background-color:currentColor; opacity:0.7; -webkit-mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'%3E%3Cpath fill-rule='evenodd' d='M18 2L26 9L18 16L10 9ZM16 9a2 2 0 1 0 4 0a2 2 0 1 0 -4 0ZM1.3 9a1.7 1.7 0 1 0 3.4 0a1.7 1.7 0 1 0 -3.4 0ZM31.3 9a1.7 1.7 0 1 0 3.4 0a1.7 1.7 0 1 0 -3.4 0ZM0 0H36V1.4H0Z M0 16.6H36V18H0Z'/%3E%3C/svg%3E\") no-repeat center / 28px 14px; mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'%3E%3Cpath fill-rule='evenodd' d='M18 2L26 9L18 16L10 9ZM16 9a2 2 0 1 0 4 0a2 2 0 1 0 -4 0ZM1.3 9a1.7 1.7 0 1 0 3.4 0a1.7 1.7 0 1 0 -3.4 0ZM31.3 9a1.7 1.7 0 1 0 3.4 0a1.7 1.7 0 1 0 -3.4 0ZM0 0H36V1.4H0Z M0 16.6H36V18H0Z'/%3E%3C/svg%3E\") no-repeat center / 28px 14px; } .ds-stamp:hover:not([aria-checked='true']) { background:oklch(97% 0.01 255 / 0.14); } .ds-stamp[aria-checked='true'] { background:var(--color-madder, oklch(46% 0.168 27)); color:var(--color-madder-ink, oklch(98.4% 0.008 40)); transform:translateY(3px); box-shadow:inset 0 2px 6px oklch(12% 0.05 27 / 0.55); } .ds-stamp[aria-checked='true'] .ds-stamp-face { opacity:1; } .ds-stamp:focus-visible { outline:2px solid var(--color-madder-ink, oklch(98.4% 0.008 40)); outline-offset:3px; }"
     },
     {
-      "name": "Text Field",
-      "kind": "input",
-      "refersTo": "text-field",
-      "description": "Visible label and a control-colored outline in the white form surface.",
-      "html": "<label class=\"ds-field\">Email address<input type=\"email\" name=\"email\" autocomplete=\"email\" required></label>",
-      "css": ".ds-field {\n  display: grid; gap: 7px; min-width: 0; margin-block: 17px;\n  color: var(--ink, #19231c); font: 650 14px var(--body, \"Public Sans Variable\", CaptionUrdu, Arial, sans-serif);\n}\n.ds-field input {\n  box-sizing: border-box; min-width: 0; width: 100%; min-height: 44px; padding: 9px 11px;\n  border: 1px solid var(--control, #87988a); border-radius: 8px; background: var(--surface, #fff);\n  color: var(--ink, #19231c); font: 460 15px var(--body, \"Public Sans Variable\", CaptionUrdu, Arial, sans-serif);\n  caret-color: var(--accent, #20583c);\n}\n.ds-field input:focus-visible { outline: 2px solid var(--accent, #20583c); outline-offset: 3px; }\n.ds-field input:disabled { background: var(--paper, #f4f6f1); opacity: 0.75; }"
-    },
-    {
-      "name": "Studio Navigation",
-      "kind": "nav",
-      "refersTo": "workspace-nav-item",
-      "description": "Left rail links with small stroke icons and a tinted current destination.",
-      "html": "<nav class=\"ds-studio-nav\" aria-label=\"Main navigation\">\n  <a class=\"ds-studio-link\" href=\"/studio\" aria-current=\"page\"><svg aria-hidden=\"true\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2\"/></svg>My projects</a>\n  <a class=\"ds-studio-link\" href=\"/studio/new\"><svg aria-hidden=\"true\" width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M5 12h14\"/><path d=\"M12 5v14\"/></svg>New upload</a>\n</nav>",
-      "css": ".ds-studio-nav { display: grid; gap: 4px; }\n.ds-studio-link {\n  display: flex; align-items: center; gap: 10px; min-height: 44px; box-sizing: border-box;\n  padding: 9px 11px; border-radius: 8px; color: var(--muted, #4d5c51);\n  font: 610 14px var(--body, \"Public Sans Variable\", CaptionUrdu, Arial, sans-serif); text-decoration: none;\n}\n.ds-studio-link svg { flex-shrink: 0; }\n.ds-studio-link:hover { background: var(--paper, #f4f6f1); color: var(--ink, #19231c); }\n.ds-studio-link[aria-current] { background: var(--wash, #eaf2e6); color: var(--accent-hover, #16432d); font-weight: 720; }\n.ds-studio-link:focus-visible { outline: 2px solid var(--accent, #20583c); outline-offset: 3px; }\n@media (max-width: 820px) {\n  .ds-studio-nav { display: flex; flex-wrap: wrap; }\n  .ds-studio-link { padding: 5px 9px; min-height: 39px; gap: 6px; font-size: 13px; }\n  .ds-studio-link svg { width: 16px; }\n}"
-    },
-    {
-      "name": "Project Status Label",
+      "name": "Origin Ticket",
       "kind": "chip",
-      "refersTo": "status-label",
-      "description": "Compact processing state used within the Project status disclosure.",
-      "html": "<span class=\"ds-status\" role=\"status\">Captions ready</span>",
-      "css": ".ds-status {\n  display: inline-block; padding: 4px 9px; border-radius: 6px; background: var(--wash, #eaf2e6);\n  color: var(--accent-hover, #16432d); font: 660 12px / 1.35 var(--body, \"Public Sans Variable\", CaptionUrdu, Arial, sans-serif);\n}\n.ds-status::first-letter { text-transform: uppercase; }\n@media (max-width: 370px) {\n  .ds-status { padding-inline: 6px; font-size: 11px; }\n}"
+      "refersTo": "origin-ticket",
+      "description": "Dashed printed tag naming a caption's script and cue time.",
+      "html": "<span class=\"ds-ticket\"><span lang=\"ur\">اردو</span><span>00:04–00:08</span></span>",
+      "css": ".ds-ticket { display:inline-flex; align-items:center; gap:8px; padding:2px 8px; border:1px dashed var(--color-rule-strong, oklch(68% 0.045 264)); border-radius:var(--radius-strip, 2px); color:var(--color-muted, oklch(43% 0.048 263)); font:650 0.8125rem/1.3 'Public Sans Variable', system-ui, sans-serif; font-variant-numeric:tabular-nums; } .ds-ticket [lang='ur'] { font-family:CaptionUrdu, 'Noto Nastaliq Urdu', 'Public Sans Variable', serif; font-weight:400; line-height:1.6; }"
     },
     {
-      "name": "Studio Media Preview",
+      "name": "Input Field",
+      "kind": "input",
+      "refersTo": "input-field",
+      "description": "Text input for forms and the caption editor.",
+      "html": "<label class=\"ds-field\">Video title<input class=\"ds-input\" placeholder=\"Interview, episode 12\"></label>",
+      "css": ".ds-field { display:grid; gap:8px; font:700 0.875rem/1.3 'Public Sans Variable', system-ui, sans-serif; color:var(--color-ink, oklch(22% 0.062 266)); } .ds-input { min-height:44px; padding:8px 12px; border:1px solid var(--color-control, oklch(50% 0.055 264)); border-radius:var(--radius-control, 5px); background:var(--color-surface, oklch(99.3% 0.003 255)); color:var(--color-ink, oklch(22% 0.062 266)); font:400 1rem/1.4 'Public Sans Variable', system-ui, sans-serif; caret-color:var(--color-accent, oklch(47% 0.168 27)); } .ds-input:hover { border-color:var(--color-rule-strong, oklch(68% 0.045 264)); } .ds-input:focus-visible { outline: 2px solid var(--color-focus, oklch(48% 0.2 266)); outline-offset: 3px; } .ds-input:disabled { background:var(--color-paper-2, oklch(94.6% 0.013 258)); border-color:var(--color-rule, oklch(86% 0.024 262)); opacity:0.65; }"
+    },
+    {
+      "name": "Navigation",
+      "kind": "nav",
+      "description": "Sticky resist-white bar finished with a madder border band; current page underlined in accent.",
+      "html": "<nav class=\"ds-nav\"><strong class=\"ds-nav-brand\">UrduSpeech</strong><a href=\"#\" aria-current=\"page\">Captions</a><a href=\"#\">Pricing</a><a href=\"#\">Guides</a></nav>",
+      "css": ".ds-nav { position:relative; display:flex; align-items:center; gap:4px; min-height:72px; padding:0 24px; background:var(--color-paper, oklch(97.6% 0.006 255)); border-bottom:1px solid var(--color-rule, oklch(86% 0.024 262)); font:600 0.875rem/1.3 'Public Sans Variable', system-ui, sans-serif; } .ds-nav::after { content:''; position:absolute; inset:auto 0 -10px; height:10px; background-color:var(--color-madder, oklch(46% 0.168 27)); -webkit-mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'%3E%3Cpath fill-rule='evenodd' d='M18 2L26 9L18 16L10 9ZM16 9a2 2 0 1 0 4 0a2 2 0 1 0 -4 0ZM1.3 9a1.7 1.7 0 1 0 3.4 0a1.7 1.7 0 1 0 -3.4 0ZM31.3 9a1.7 1.7 0 1 0 3.4 0a1.7 1.7 0 1 0 -3.4 0ZM0 0H36V1.4H0Z M0 16.6H36V18H0Z'/%3E%3C/svg%3E\") repeat-x center / 20px 10px; mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'%3E%3Cpath fill-rule='evenodd' d='M18 2L26 9L18 16L10 9ZM16 9a2 2 0 1 0 4 0a2 2 0 1 0 -4 0ZM1.3 9a1.7 1.7 0 1 0 3.4 0a1.7 1.7 0 1 0 -3.4 0ZM31.3 9a1.7 1.7 0 1 0 3.4 0a1.7 1.7 0 1 0 -3.4 0ZM0 0H36V1.4H0Z M0 16.6H36V18H0Z'/%3E%3C/svg%3E\") repeat-x center / 20px 10px; } .ds-nav-brand { margin-inline-end:auto; font:700 1.25rem/1 'Bricolage Grotesque Variable', 'Public Sans Variable', system-ui, sans-serif; letter-spacing:-0.032em; color:var(--color-ink, oklch(22% 0.062 266)); } .ds-nav a { display:inline-flex; align-items:center; min-height:44px; padding:0 12px; border-radius:var(--radius-control, 5px); color:var(--color-ink, oklch(22% 0.062 266)); text-decoration:none; transition:background-color 220ms cubic-bezier(0.16,1,0.3,1); } .ds-nav a:hover { background:var(--color-surface-hover, oklch(95.4% 0.014 258)); } .ds-nav a[aria-current='page'] { text-decoration:underline; text-underline-offset:4px; text-decoration-color:var(--color-accent, oklch(47% 0.168 27)); } .ds-nav a:focus-visible { outline: 2px solid var(--color-focus, oklch(48% 0.2 266)); outline-offset: 3px; }"
+    },
+    {
+      "name": "Product Hero Panel",
       "kind": "card",
-      "refersTo": "media-preview-panel",
-      "description": "Bordered workspace panel with a local recording action and a caption sample on the indigo stage.",
-      "html": "<section class=\"ds-preview-panel\">\n  <h2>Media preview</h2>\n  <div class=\"ds-player-frame\">\n    <div class=\"ds-preview-placeholder\">\n      <button class=\"ds-choose-recording\" type=\"button\"><svg aria-hidden=\"true\" width=\"17\" height=\"17\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"m6 14 1.5-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.54 6a2 2 0 0 1-1.95 1.5H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h3.9a2 2 0 0 1 1.69.9l.81 1.2a2 2 0 0 0 1.67.9H18a2 2 0 0 1 2 2v2\"/></svg>Choose original recording</button>\n      <small>Preview stays on this device.</small>\n    </div>\n    <div class=\"ds-local-caption\"><p lang=\"ur\" dir=\"auto\">آج کچھ نیا بناتے ہیں۔</p></div>\n  </div>\n</section>",
-      "css": ".ds-preview-panel {\n  min-width: 0; padding: 15px; border: 1px solid var(--line, #d9e1d7); border-radius: 12px;\n  color: var(--ink, #19231c); background: var(--surface, #fff); font-family: var(--body, \"Public Sans Variable\", CaptionUrdu, Arial, sans-serif);\n}\n.ds-preview-panel h2 { margin: 0; font-size: 1.25rem; font-weight: 700; line-height: 1.22; letter-spacing: -0.023em; }\n.ds-player-frame {\n  position: relative; display: grid; grid-template-rows: 1fr auto; min-height: 154px; align-items: center; overflow: hidden;\n  margin-block: 13px 15px; border-radius: 9px; background: var(--stage, #1c2921);\n}\n.ds-preview-placeholder {\n  display: grid; justify-items: center; align-content: center; gap: 7px; padding: 17px 12px; text-align: center;\n}\n.ds-preview-placeholder small { color: var(--stage-accent, #dceadd); font-size: 13px; line-height: 1.55; }\n.ds-choose-recording {\n  display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 44px;\n  padding: 10px 16px; border: 1px solid var(--control, #87988a); border-radius: 9px; color: var(--ink, #19231c);\n  background: var(--surface, #fff); font-family: inherit; font-size: 14px; font-weight: 680; line-height: 1.35; cursor: pointer; text-align: center;\n}\n.ds-choose-recording:hover { background: var(--wash, #eaf2e6); }\n.ds-choose-recording:focus-visible { outline: 2px solid var(--accent, #20583c); outline-offset: 3px; }\n.ds-local-caption { display: grid; justify-items: center; margin: 0 10px 11px; pointer-events: none; }\n.ds-local-caption p {\n  margin: 0; max-width: 100%; max-height: 6rem; overflow: hidden; padding: 4px 9px; border-radius: 4px;\n  background: #1f152c; color: white; text-align: center; font-size: 18px; line-height: 2.06;\n  text-shadow: 0 1px 3px #101810; white-space: pre-line; overflow-wrap: anywhere;\n}\n@media (max-width: 660px) {\n  .ds-preview-panel { padding: 12px; }\n}"
+      "refersTo": "product-hero",
+      "description": "Interior-page hero printed on a madder panel with the star block at low ink.",
+      "html": "<section class=\"ds-product-hero\"><h2>Urdu video captions</h2><p>Nastaliq, Roman Urdu, English or bilingual, timed to your cut.</p></section>",
+      "css": ".ds-product-hero { position:relative; isolation:isolate; padding:clamp(28px,4vw,56px); border:2px solid var(--color-keyline, oklch(15% 0.035 266)); border-radius:var(--radius-stage, 8px); background:var(--color-madder, oklch(46% 0.168 27)); color:var(--color-madder-ink, oklch(98.4% 0.008 40)); overflow:hidden; } .ds-product-hero::before { content:''; position:absolute; inset:0; z-index:-1; background-color:oklch(15% 0.04 266 / 0.16); -webkit-mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cpath d='M32 15L36.82 20.36L44.02 19.98L43.64 27.18L49 32L43.64 36.82L44.02 44.02L36.82 43.64L32 49L27.18 43.64L19.98 44.02L20.36 36.82L15 32L20.36 27.18L19.98 19.98L27.18 20.36Z'/%3E%3C/svg%3E\") repeat center / 64px 64px; mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cpath d='M32 15L36.82 20.36L44.02 19.98L43.64 27.18L49 32L43.64 36.82L44.02 44.02L36.82 43.64L32 49L27.18 43.64L19.98 44.02L20.36 36.82L15 32L20.36 27.18L19.98 19.98L27.18 20.36Z'/%3E%3C/svg%3E\") repeat center / 64px 64px; } .ds-product-hero h2 { margin:0; font:700 clamp(2rem,2.6vw + 0.9rem,3.4rem)/1.02 'Bricolage Grotesque Variable', 'Public Sans Variable', system-ui, sans-serif; letter-spacing:-0.032em; } .ds-product-hero p { margin:12px 0 0; color:var(--color-madder-muted, oklch(90% 0.04 35)); font:400 1.125rem/1.5 'Public Sans Variable', system-ui, sans-serif; }"
     },
     {
-      "name": "Caption Format Selector",
+      "name": "Border Band",
       "kind": "custom",
-      "refersTo": "caption-format-selector",
-      "description": "A radio group for switching the example’s caption output.",
-      "html": "<div class=\"ds-format-stage\">\n  <fieldset class=\"ds-format-selector\">\n    <legend class=\"ds-visually-hidden\">Caption language</legend>\n    <label><input type=\"radio\" name=\"sample-language\" class=\"ds-visually-hidden\"><span>Urdu</span></label>\n    <label><input type=\"radio\" name=\"sample-language\" class=\"ds-visually-hidden\"><span>Roman Urdu</span></label>\n    <label><input type=\"radio\" name=\"sample-language\" class=\"ds-visually-hidden\"><span>English</span></label>\n    <label><input type=\"radio\" name=\"sample-language\" class=\"ds-visually-hidden\" checked><span>Bilingual</span></label>\n  </fieldset>\n</div>",
-      "css": ".ds-format-selector { display:flex; flex-wrap:wrap; gap:3px; padding:3px; border:0; background:#f4f6f1; border-radius:8px; }\n.ds-format-selector label { position:relative; cursor:pointer; }\n.ds-format-selector label span { display:block; padding:8px 11px; border-radius:6px; color:#4d5c51; }\n.ds-format-selector input { position:absolute; opacity:0; }\n.ds-format-selector input:checked + span { background:#20583c; color:#fff; }\n.ds-format-selector input:focus-visible + span { outline:2px solid #20583c; outline-offset:2px; }"
-    },
-    {
-      "name": "Bilingual Caption Strips",
-      "kind": "custom",
-      "refersTo": "caption-strip",
-      "description": "Live Nastaliq above a dark English strip, placed near the bottom of the frame.",
-      "html": "<div class=\"ds-caption-frame\">\n  <div class=\"ds-caption-lines\">\n    <span lang=\"ur\" dir=\"rtl\">آج کچھ نیا بناتے ہیں۔</span>\n    <span>Let’s make something new today.</span>\n  </div>\n</div>",
-      "css": ".ds-caption-frame {\n  position: relative; aspect-ratio: 16 / 8.8; width: 100%; overflow: hidden;\n  border-radius: 10px; background: #1c2921; font-family: var(--body, \"Public Sans Variable\", CaptionUrdu, Arial, sans-serif);\n}\n.ds-caption-lines {\n  position: absolute; inset: auto 9px clamp(12px, 5%, 28px); display: grid;\n  justify-items: center; gap: 4px; text-align: center;\n}\n.ds-caption-lines span {\n  padding: 4px 10px; border-radius: 4px; background: #101810; color: #fff;\n  font-size: clamp(0.825rem, 1.45vw, 1.35rem); font-weight: 650; line-height: 1.38;\n}\n.ds-caption-lines span:lang(ur) {\n  padding: 2px 12px 6px; font-family: CaptionUrdu, serif; font-size: clamp(1.05rem, 2.2vw, 2rem);\n  font-weight: 400; line-height: 2.08; color: var(--stage, #1c2921); background: var(--stage-accent, #dceadd);\n}\n@media (max-width: 560px) {\n  .ds-caption-frame { aspect-ratio: 16 / 9.5; }\n}"
+      "description": "18px stamped lozenge band between keylines, printed in the region's ink.",
+      "html": "<span class=\"ds-band\" aria-hidden=\"true\"></span>",
+      "css": ".ds-band { display:block; height:18px; background-color:var(--band-ink, var(--color-print, oklch(24.5% 0.078 266))); -webkit-mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'%3E%3Cpath fill-rule='evenodd' d='M18 2L26 9L18 16L10 9ZM16 9a2 2 0 1 0 4 0a2 2 0 1 0 -4 0ZM1.3 9a1.7 1.7 0 1 0 3.4 0a1.7 1.7 0 1 0 -3.4 0ZM31.3 9a1.7 1.7 0 1 0 3.4 0a1.7 1.7 0 1 0 -3.4 0ZM0 0H36V1.4H0Z M0 16.6H36V18H0Z'/%3E%3C/svg%3E\") repeat-x center / 36px 18px; mask:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'%3E%3Cpath fill-rule='evenodd' d='M18 2L26 9L18 16L10 9ZM16 9a2 2 0 1 0 4 0a2 2 0 1 0 -4 0ZM1.3 9a1.7 1.7 0 1 0 3.4 0a1.7 1.7 0 1 0 -3.4 0ZM31.3 9a1.7 1.7 0 1 0 3.4 0a1.7 1.7 0 1 0 -3.4 0ZM0 0H36V1.4H0Z M0 16.6H36V18H0Z'/%3E%3C/svg%3E\") repeat-x center / 36px 18px; }"
     }
   ],
   "narrative": {
-    "northStar": "Post-production screening sheet",
-    "overview": "The shared ink and green palette connects public pages, account forms and Studio. Public links, working controls and Urdu captions remain legible across screen sizes.",
+    "northStar": "The Ajrak Print Table",
+    "overview": "A recording is printed into captions the way ajrak is printed onto cloth: layer by layer, block by block. The whole public site is one bolt of cloth. In light theme the ground is resist-white cotton (cool, hue 255, never cream) printed in indigo ink, with madder red owning whole fields. In dark theme the cloth itself is indigo-dyed, and the same blocks print in madder and resist white. Motifs are authored SVG blocks (a sixteen-point star with keyline ring, resist dots, a lozenge border band) applied as CSS masks, so each one prints in whatever ink its region sets and reprints correctly in both themes.\n\nDensity is editorial and generous: wide madder bands at the top and close of the homepage, an indigo workflow band in the middle, and resist-white sections between them divided by stamped border bands and 2px keylines rather than cards. Nastaliq is the display voice for Urdu; Bricolage Grotesque carries Latin; Public Sans does the work. The sample caption frame, captioned in four scripts and re-printed by square block-stamp controls, is the system's signature.\n\nThe world refuses the category's black-ground-plus-one-neon split hero. Red is cloth here, not a warning light.",
     "keyCharacteristics": [
-      "An off-white canvas, green actions and quiet white working panels.",
-      "Nastaliq text in the caption demo and on sample media.",
-      "Shared public navigation and focused Studio controls."
+      "Madder fields as whole bands (hero, close, interior product hero), indigo as ink and as cloth.",
+      "Every motif is a mask-printed SVG block that takes its region's ink.",
+      "2px keylines frame print blocks; 1px rules divide within them.",
+      "Small, square corners (2 to 8px); tags are dashed printed tickets, not capsules.",
+      "Nastaliq set large, untracked, weight 400, line-height 1.9 to 2.1.",
+      "Motion is a stamp: a line lands slightly large and soft, then settles."
     ],
     "rules": [
       {
-        "name": "Green Selection",
-        "body": "Use green wash for current cues and navigation. Use the primary green fill for the selected caption format.",
+        "name": "The Madder Is Ground Rule",
+        "body": "Madder appears as a field that owns a whole band or block, never as a small tint chip or badge fill. Small red marks use `accent`. The recommended pricing column takes at most a 7% madder mix.",
         "section": "colors"
       },
       {
-        "name": "The Urdu Line Height Rule",
-        "body": "Allow about two ems of vertical space per Urdu caption line. Mark Urdu sample captions with their language and reading direction, and use directional isolation or automatic direction for user content.",
+        "name": "The Cool Resist Rule",
+        "body": "The light ground stays cool (hue 255, chroma ≤0.013). Warm or cream paper breaks the cloth.",
+        "section": "colors"
+      },
+      {
+        "name": "The Mask-Print Rule",
+        "body": "Motifs exist only as authored SVG masks (`--ajrak-field`, `--ajrak-keys`, `--ajrak-resist`, `--ajrak-band`, `--ajrak-dots`) colored by `background-color` from the region's ink (`--band-ink`, defaulting to `print`). Never bitmap patterns, never SVGs with baked-in fills.",
+        "section": "colors"
+      },
+      {
+        "name": "The Nastaliq Never-Tracks Rule",
+        "body": "Urdu is never letter-spaced, never bolded (weight 400) and never set below line-height 1.7 (1.9 to 2.1 for running text). Tracking breaks letter joining.",
         "section": "typography"
       },
       {
-        "name": "Panel Depth",
-        "body": "Keep routine panels flat and bordered. Reserve text shadow for captions placed on footage.",
+        "name": "The Two-Voice Rule",
+        "body": "Urdu text is always `lang=\"ur\"` in CaptionUrdu; Latin headlines are Bricolage. On `/ur`, everything is Nastaliq right-to-left except Latin values (prices, step numerals) which keep Bricolage, and the sample editor which stays an LTR English interface.",
+        "section": "typography"
+      },
+      {
+        "name": "The Calm Zone Rule",
+        "body": "Print layers fade to plain madder behind running text (a radial calm zone behind hero and close copy). Resist dots must never sit behind words; on `/ur` they read as Nastaliq nuqtas.",
         "section": "elevation"
+      },
+      {
+        "name": "The Keyline Rule",
+        "body": "A print block is outlined by a 2px `keyline` border (in dark theme, `rule-strong` where black would vanish). Inner divisions use 1px `rule`.",
+        "section": "shapes"
       }
     ],
     "dos": [
-      "Do preserve a clear selected state for formats, navigation, and the current cue.",
-      "Do keep Urdu script selectable and give it its own line height and direction.",
-      "Do keep captions legible over footage with fitted strips or the local preview text shadow."
+      "**Do** let madder own entire bands or blocks: hero, close, interior product hero, the bilingual row, an inked stamp.",
+      "**Do** print every motif through the SVG mask tokens with `--band-ink` so it reprints in both themes.",
+      "**Do** frame print blocks with a 2px `keyline` and divide inside them with 1px `rule`.",
+      "**Do** set Urdu in CaptionUrdu at weight 400, line-height 1.9 to 2.1, letter-spacing normal, with `lang=\"ur\"` and `dir=\"rtl\"`.",
+      "**Do** keep a calm zone of plain madder behind any text set on a printed field.",
+      "**Do** give every sample caption an origin ticket (script, cue time) in tabular numerals.",
+      "**Do** keep hit targets at 44px or more and respect `prefers-reduced-motion` (the stamp animation turns off)."
     ],
     "donts": [
-      "Don't bake captions into an illustrative still used for the interactive demo.",
-      "Don't add ambient shadow to routine Studio panels.",
-      "Don't apply the tight display leading to Urdu captions."
+      "**Don't** use a black ground with a single neon accent as the hero; the category does that.",
+      "**Don't** warm the light ground toward cream; resist white is cool.",
+      "**Don't** use madder as a small badge fill or tint chip; use `accent` for small red marks.",
+      "**Don't** letter-space, bold or tightly lead Nastaliq.",
+      "**Don't** round anything past 8px or make tags into capsules; tickets and badges are dashed printed tags.",
+      "**Don't** place resist dots or star blocks behind running text.",
+      "**Don't** use uppercase eyebrows or kickers above headings."
     ]
   }
 }

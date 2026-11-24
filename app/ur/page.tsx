@@ -1,15 +1,6 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import {
-  Captions,
-  Check,
-  FileText,
-  FileVideo,
-  Languages,
-  ShieldCheck,
-  Wallet,
-} from "lucide-react";
-import { CaptionStudioDemo } from "@/components/caption-studio-demo";
+import { StampHero } from "@/components/stamp-hero";
 import { SiteHeader } from "@/components/site-header";
 import { QuestionList, type QuestionItem } from "@/components/marketing";
 import { PublicFooter } from "@/components/public-site";
@@ -22,7 +13,7 @@ import {
   buildWebSiteJsonLd,
   publicMetadata,
 } from "@/lib/seo";
-import "../landing.css";
+import "../home-ajrak.css";
 import "./urdu.css";
 
 const title = "اردو کیپشن اور ٹرانسکرپٹ | UrduSpeech";
@@ -47,32 +38,26 @@ const proof = [
 
 const features = [
   {
-    icon: Languages,
     title: "اصل نستعلیق، سادہ فونٹ نہیں",
     text: "اردو کیپشن Noto Nastaliq Urdu میں بنتے ہیں، اس لیے ہر لفظ اسکرین پر صاف اور خوبصورت دکھائی دیتا ہے۔",
   },
   {
-    icon: Captions,
     title: "ایک ریکارڈنگ، چار انداز",
     text: "اپنے ناظرین کے مطابق اردو، رومن اردو، انگریزی ترجمہ یا اردو اور انگریزی ایک ساتھ چنیں۔",
   },
   {
-    icon: FileText,
     title: "نام اور وقت خود درست کریں",
     text: "ایکسپورٹ سے پہلے نام، نمبر اور الفاظ ٹھیک کریں، اور ہر کیپشن کے آنے اور جانے کا وقت آگے پیچھے کریں۔",
   },
   {
-    icon: FileVideo,
     title: "ویڈیو پر کیپشن تیار",
     text: "صاف، نمایاں یا باکس والے انداز میں کیپشن کے ساتھ MP4 بنائیں، یا SRT اور VTT اپنے ایڈیٹر میں لے جائیں۔",
   },
   {
-    icon: ShieldCheck,
     title: "آپ کی ریکارڈنگ محفوظ",
     text: "فائلیں آپ کے پلان کی مدت کے بعد خود ختم ہو جاتی ہیں، کسی ماڈل کی تربیت میں استعمال نہیں ہوتیں، اور آپ جب چاہیں حذف کر سکتے ہیں۔",
   },
   {
-    icon: Wallet,
     title: "قیمت پاکستانی روپوں میں",
     text: "کارڈ کے علاوہ بینک ٹرانسفر، JazzCash، Easypaisa، SadaPay اور NayaPay سے بھی ادائیگی ممکن ہے۔",
   },
@@ -174,109 +159,111 @@ export default function UrduHome() {
       <SiteHeader />
       <main
         id="main"
-        className="home-site urdu-home"
+        className="home-site ajrak-home urdu-home"
         lang="ur"
         dir="rtl"
         tabIndex={-1}
       >
-        <section className="landing-hero" aria-labelledby="ur-hero-title">
-          <div className="public-container landing-hero-stage">
-            <div className="landing-hero-intro">
-              <h1 id="ur-hero-title">اردو کیپشن، شائع کرنے کے لیے تیار۔</h1>
-              <div className="landing-hero-copy">
-                <p>
-                  اپنی اردو ریکارڈنگ کو نستعلیق، رومن اردو، انگریزی اور دو لسانی
-                  کیپشن میں بدلیں۔
-                </p>
-                <div className="landing-hero-actions">
-                  <Link className="button" href="/auth/register?source=ur_home">
-                    10 منٹ مفت آزمائیں
-                  </Link>
-                  <Link className="button secondary" href="/demo">
-                    نمونہ ایڈیٹ کریں
-                  </Link>
-                </div>
-                <small className="landing-hero-note">
-                  <Check size={15} aria-hidden="true" /> 10 منٹ مفت، کارڈ کی
-                  ضرورت نہیں۔
-                </small>
-              </div>
-            </div>
-            {/* The editor itself is an English, left-to-right interface. */}
-            <div lang="en" dir="ltr" className="urdu-home-demo">
-              <CaptionStudioDemo compact />
-            </div>
-          </div>
-        </section>
-
         <section
-          className="landing-proof-band"
-          aria-label="UrduSpeech کی خصوصیات"
+          className="ajrak-field home-hero"
+          aria-labelledby="ur-hero-title"
         >
+          <div className="public-container home-hero-copy">
+            <h1 id="ur-hero-title">اردو کیپشن، شائع کرنے کے لیے تیار۔</h1>
+            <p className="home-hero-lead">
+              اپنی اردو ریکارڈنگ کو نستعلیق، رومن اردو، انگریزی اور دو لسانی
+              کیپشن میں بدلیں، پھر درست کر کے ایکسپورٹ کریں۔
+            </p>
+            <div className="home-hero-actions">
+              <Link
+                className="button home-cta"
+                href="/auth/register?source=ur_home"
+              >
+                10 منٹ مفت آزمائیں
+              </Link>
+              <Link className="home-hero-link" href="/demo">
+                نمونہ ایڈیٹ کریں
+              </Link>
+            </div>
+            <p className="home-hero-note">
+              کارڈ کی ضرورت نہیں۔ بعد میں روپوں میں پلان۔
+            </p>
+          </div>
+          {/* The sample editor itself is an English, left-to-right interface. */}
+          <div className="public-container home-hero-stage" lang="en" dir="ltr">
+            <StampHero />
+          </div>
+        </section>
+
+        <section className="home-manifest" aria-label="UrduSpeech کی خصوصیات">
+          <span className="ajrak-band" aria-hidden="true" />
           <div className="public-container">
-            <ul className="landing-proof" role="list">
-              {proof.map(({ value, label }) => (
-                <li key={value}>
-                  <strong>{value}</strong>
-                  <span>{label}</span>
-                </li>
+            <p>
+              {proof.map(({ value }, index) => (
+                <span key={value} className="urdu-manifest-item">
+                  {index > 0 && (
+                    <span className="home-manifest-dot" aria-hidden="true" />
+                  )}
+                  <span>{value}</span>
+                </span>
               ))}
-            </ul>
+            </p>
           </div>
         </section>
 
         <section
-          className="landing-section landing-section--spacious"
+          className="home-section home-promises"
           aria-labelledby="ur-features-title"
         >
-          <div className="public-container">
-            <div className="landing-section-heading">
+          <div className="public-container home-promises-layout">
+            <div className="home-heading">
               <h2 id="ur-features-title">پہلے لفظ سے اردو کے لیے بنایا گیا</h2>
               <p>
                 نستعلیق، دائیں سے بائیں پڑھائی، اور اردو انگریزی ملی جلی زبان جو
                 پاکستانی کریئیٹرز بولتے ہیں، سب کو ذہن میں رکھ کر۔
               </p>
             </div>
-            <ul className="urdu-feature-grid" role="list">
-              {features.map(({ icon: Icon, title: heading, text }) => (
+            <dl className="home-promise-list">
+              {features.map(({ title: heading, text }) => (
+                <div key={heading}>
+                  <dt>{heading}</dt>
+                  <dd>{text}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
+        </section>
+
+        <section
+          className="home-section home-workflow"
+          aria-labelledby="ur-steps-title"
+        >
+          <span className="ajrak-band" aria-hidden="true" />
+          <div className="public-container">
+            <div className="home-heading">
+              <h2 id="ur-steps-title">ریکارڈنگ سے کیپشن تک، تین قدم</h2>
+            </div>
+            <ol className="home-steps" role="list">
+              {steps.map(({ title: heading, text }, index) => (
                 <li key={heading}>
-                  <Icon size={22} aria-hidden="true" />
+                  <span className="home-step-number" aria-hidden="true">
+                    {index + 1}
+                  </span>
                   <h3>{heading}</h3>
                   <p>{text}</p>
                 </li>
               ))}
-            </ul>
-          </div>
-        </section>
-
-        <section
-          className="landing-section landing-workflow"
-          aria-labelledby="ur-steps-title"
-        >
-          <div className="public-container">
-            <div className="landing-section-heading">
-              <h2 id="ur-steps-title">ریکارڈنگ سے کیپشن تک، تین قدم</h2>
-            </div>
-            <ol className="landing-steps urdu-steps" role="list">
-              {steps.map(({ title: heading, text }, index) => (
-                <li key={heading}>
-                  <span aria-hidden="true">{index + 1}</span>
-                  <div>
-                    <h3>{heading}</h3>
-                    <p>{text}</p>
-                  </div>
-                </li>
-              ))}
             </ol>
           </div>
+          <span className="ajrak-band" aria-hidden="true" />
         </section>
 
         <section
-          className="landing-section landing-section--spacious landing-pricing"
+          className="home-section home-pricing"
           aria-labelledby="ur-pricing-title"
         >
           <div className="public-container">
-            <div className="landing-section-heading landing-heading-row">
+            <div className="home-heading home-heading-row">
               <div>
                 <h2 id="ur-pricing-title">10 مفت منٹ سے شروع کریں</h2>
                 <p>
@@ -284,7 +271,7 @@ export default function UrduHome() {
                   چنیں۔
                 </p>
               </div>
-              <Link className="public-inline-link" href="/pricing">
+              <Link className="home-inline-link" href="/pricing">
                 قیمتوں کی مکمل تفصیل
               </Link>
             </div>
@@ -351,11 +338,11 @@ export default function UrduHome() {
         </section>
 
         <section
-          className="landing-section landing-questions"
+          className="home-section home-questions"
           aria-labelledby="ur-questions-title"
         >
-          <div className="public-container landing-questions-grid">
-            <div className="landing-section-heading">
+          <div className="public-container home-questions-layout">
+            <div className="home-heading">
               <h2 id="ur-questions-title">عام سوالات</h2>
               <p>
                 مزید تفصیل انگریزی میں{" "}
@@ -371,16 +358,25 @@ export default function UrduHome() {
       </main>
       <PublicFooter
         intro={
-          <div className="landing-close urdu-close" lang="ur" dir="rtl">
-            <div>
+          <div
+            className="ajrak-field home-close urdu-close"
+            lang="ur"
+            dir="rtl"
+          >
+            <span className="ajrak-band home-close-band" aria-hidden="true" />
+            <div className="home-close-copy">
               <h2>اپنی اگلی ویڈیو کو اردو کیپشن دیں</h2>
               <p>
                 ریکارڈنگ اپ لوڈ کریں، اور اسٹوڈیو میں کیپشن اپنے مطابق بنائیں۔
               </p>
+              <Link
+                className="button home-cta"
+                href="/auth/register?source=ur_close"
+              >
+                10 منٹ مفت آزمائیں
+              </Link>
             </div>
-            <Link className="button" href="/auth/register?source=ur_close">
-              10 منٹ مفت آزمائیں
-            </Link>
+            <span className="ajrak-band home-close-band" aria-hidden="true" />
           </div>
         }
       />
