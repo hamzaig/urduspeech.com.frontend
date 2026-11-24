@@ -10,6 +10,7 @@ const MARKETING_UPDATED = "2026-11-22";
 
 export const publicMarketingPaths = [
   "/",
+  "/ur",
   "/urdu-transcription",
   "/video-captions",
   "/urdu-audio-to-roman-urdu",

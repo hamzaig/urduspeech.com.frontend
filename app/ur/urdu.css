@@ -1,0 +1,117 @@
+/* Urdu homepage: right-to-left Nastaliq throughout. Nastaliq needs generous
+ * line height and must never be letter-spaced (it breaks letter joining). */
+.urdu-home,
+.urdu-close {
+  font-family: var(--font-urdu);
+  letter-spacing: normal;
+}
+
+.urdu-home :is(h1, h2, h3, p, li, dt, dd, summary, small, strong, span, a),
+.urdu-close :is(h2, p, a) {
+  font-family: var(--font-urdu);
+  letter-spacing: normal;
+  font-weight: 400;
+}
+
+.urdu-home p,
+.urdu-home li,
+.urdu-home dd,
+.urdu-home summary,
+.urdu-close p {
+  line-height: 2.1;
+}
+
+.urdu-home .landing-hero h1 {
+  max-width: 16ch;
+  font-size: clamp(2.1rem, 3.2vw + 0.6rem, 3.4rem);
+  line-height: 1.75;
+}
+
+.urdu-home h2,
+.urdu-close h2 {
+  font-size: clamp(1.6rem, 1.8vw + 0.9rem, 2.4rem);
+  line-height: 1.8;
+}
+
+.urdu-home h3 {
+  font-size: var(--text-lg);
+  line-height: 1.9;
+}
+
+.urdu-home .landing-hero-copy p {
+  font-size: var(--text-lg);
+}
+
+.urdu-home .button {
+  line-height: 2;
+  padding-block: var(--space-2xs);
+}
+
+/* Latin values (TXT, SRT, PKR amounts, plan IDs) stay in the interface font. */
+.urdu-home .public-price,
+.urdu-home .public-price span {
+  font-family: var(--font-display);
+}
+
+.urdu-home .landing-proof strong {
+  font-size: var(--text-xl);
+  line-height: 1.8;
+}
+
+/* The demo widget is an English, left-to-right editor. */
+.urdu-home-demo,
+.urdu-home-demo :is(h1, h2, h3, p, li, span, a, small, strong, button, label) {
+  font-family: var(--font-body);
+  line-height: normal;
+}
+
+.urdu-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-lg);
+  margin: var(--space-xl) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.urdu-feature-grid li {
+  display: grid;
+  align-content: start;
+  gap: var(--space-xs);
+  padding: var(--space-lg);
+  background: var(--color-surface);
+  border: 1px solid var(--color-rule);
+  border-radius: var(--radius-card);
+}
+
+.urdu-feature-grid svg {
+  color: var(--color-accent);
+}
+
+.urdu-feature-grid p {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+.urdu-steps {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.urdu-close {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+}
+
+@media (max-width: 60rem) {
+  .urdu-feature-grid,
+  .urdu-steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .urdu-close {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

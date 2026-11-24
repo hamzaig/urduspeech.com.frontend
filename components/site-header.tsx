@@ -77,6 +77,22 @@ export function SiteHeader() {
           />
         </nav>
         <div className="site-header-actions">
+          {/* Language switch between the English and Urdu homepages. */}
+          {pathname === "/ur" ? (
+            <Link href="/" className="site-language" lang="en" hrefLang="en">
+              English
+            </Link>
+          ) : (
+            <Link
+              href="/ur"
+              className="site-language"
+              lang="ur"
+              hrefLang="ur"
+              aria-label="اردو میں دیکھیں"
+            >
+              اردو
+            </Link>
+          )}
           <Link
             href="/auth/sign-in"
             className="site-desktop-sign-in"
