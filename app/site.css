@@ -1823,3 +1823,28 @@ table.public-pricing tbody th,
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* Header language switch (English ⇄ اردو homepage). */
+.site-language {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding-inline: var(--space-2xs);
+  color: var(--color-ink);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.site-language[lang="ur"] {
+  font-family: var(--font-urdu);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.site-language:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-color: var(--color-accent);
+}

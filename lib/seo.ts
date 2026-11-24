@@ -75,6 +75,9 @@ export function canonicalFor(path: `/${string}`) {
   return path === "/" ? SITE_URL : `${SITE_URL}${path}`;
 }
 
+// The English and Urdu homepages are translations of each other (hreflang pair).
+const HOME_LANGUAGE_PATHS: readonly string[] = ["/", "/ur"];
+
 export function publicMetadata({
   title,
   absoluteTitle,
@@ -86,6 +89,7 @@ export function publicMetadata({
   publishedTime,
   modifiedTime,
   markdownPath,
+  locale = "en_US",
 }: {
   title: string;
   absoluteTitle?: string;
@@ -97,6 +101,7 @@ export function publicMetadata({
   publishedTime?: string;
   modifiedTime?: string;
   markdownPath?: `/${string}`;
+  locale?: "en_US" | "ur_PK";
 }): Metadata {
   const canonicalUrl = canonicalFor(path);
   const displayTitle = absoluteTitle ?? `${title} | ${SITE_NAME}`;
@@ -106,7 +111,7 @@ export function publicMetadata({
 
   const openGraphBase = {
     siteName: SITE_NAME,
-    locale: "en_US",
+    locale,
     title: displayTitle,
     description,
     url: canonicalUrl,
@@ -126,6 +131,15 @@ export function publicMetadata({
     description,
     alternates: {
       canonical: canonicalUrl,
+      ...(HOME_LANGUAGE_PATHS.includes(path)
+        ? {
+            languages: {
+              en: canonicalFor("/"),
+              "ur-PK": canonicalFor("/ur"),
+              "x-default": canonicalFor("/"),
+            },
+          }
+        : {}),
       ...(markdownPath
         ? {
             types: {
@@ -254,6 +268,7 @@ export function buildWebPageJsonLd({
   hasBreadcrumb = true,
   aboutId,
   mainEntityId,
+  inLanguage = "en",
 }: {
   type?: "WebPage" | "AboutPage" | "ContactPage" | "CollectionPage";
   name: string;
@@ -265,6 +280,7 @@ export function buildWebPageJsonLd({
   hasBreadcrumb?: boolean;
   aboutId?: string;
   mainEntityId?: string;
+  inLanguage?: string;
 }) {
   const url = canonicalFor(path);
   return {
@@ -274,7 +290,7 @@ export function buildWebPageJsonLd({
     url,
     name,
     description,
-    inLanguage: "en",
+    inLanguage,
     isPartOf: {
       "@id": `${SITE_URL}/#website`,
     },
