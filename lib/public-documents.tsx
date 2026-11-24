@@ -189,7 +189,11 @@ export const publicDocuments: Record<PublicDocumentKey, PublicDocument> = {
               A successful canonical transcription commits its reserved minutes.
               A later export or caption-render problem does not by itself mean
               the transcription was never delivered. Failures before that commit
-              release the reservation. Contact us if your usage looks incorrect.
+              release the reservation. If you cancel processing or delete the
+              project after audio preparation or transcription has started, the
+              reserved minutes are committed; retrying the same file later does
+              not charge them again. Cancelling before that point releases them.
+              Contact us if your usage looks incorrect.
             </p>
             <p>
               When available, card subscriptions renew automatically until

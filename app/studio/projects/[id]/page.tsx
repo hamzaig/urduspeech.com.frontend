@@ -485,6 +485,16 @@ export default function ProjectEditor({
                         className="secondary"
                         disabled={busy}
                         onClick={() =>
+                          (![
+                            "created",
+                            "upload_pending",
+                            "uploaded",
+                            "validating",
+                            "quota_reserved",
+                          ].includes(job.state) &&
+                            !window.confirm(
+                              "Processing has already started, so these minutes will still be used. Retrying this file later will not charge them again. Cancel processing?",
+                            )) ||
                           action(async () =>
                             setJob(
                               await api<JobStatusV1>(
