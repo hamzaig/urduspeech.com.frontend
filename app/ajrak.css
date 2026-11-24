@@ -1,0 +1,238 @@
+/* Ajrak block-print material: authored SVG blocks used as masks, so every
+ * motif prints in whichever ink the region sets (light and dark themes). */
+:root {
+  --ajrak-resist: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cpath d='M13.9 16a2.1 2.1 0 1 0 4.2 0a2.1 2.1 0 1 0 -4.2 0ZM45.9 16a2.1 2.1 0 1 0 4.2 0a2.1 2.1 0 1 0 -4.2 0ZM13.9 48a2.1 2.1 0 1 0 4.2 0a2.1 2.1 0 1 0 -4.2 0ZM45.9 48a2.1 2.1 0 1 0 4.2 0a2.1 2.1 0 1 0 -4.2 0ZM30.8 8a1.2 1.2 0 1 0 2.4 0a1.2 1.2 0 1 0 -2.4 0ZM30.8 56a1.2 1.2 0 1 0 2.4 0a1.2 1.2 0 1 0 -2.4 0ZM6.8 32a1.2 1.2 0 1 0 2.4 0a1.2 1.2 0 1 0 -2.4 0ZM54.8 32a1.2 1.2 0 1 0 2.4 0a1.2 1.2 0 1 0 -2.4 0Z'/%3E%3C/svg%3E");
+  --ajrak-keys: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cpath fill-rule='evenodd' d='M10 32a22 22 0 1 0 44 0a22 22 0 1 0 -44 0ZM11.399999999999999 32a20.6 20.6 0 1 0 41.2 0a20.6 20.6 0 1 0 -41.2 0ZM0 0H64V1.2H0Z M0 0H1.2V64H0Z'/%3E%3C/svg%3E");
+  --ajrak-field: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64' viewBox='0 0 64 64'%3E%3Cpath fill-rule='evenodd' d='M32.00 15.00 L36.82 20.36 L44.02 19.98 L43.64 27.18 L49.00 32.00 L43.64 36.82 L44.02 44.02 L36.82 43.64 L32.00 49.00 L27.18 43.64 L19.98 44.02 L20.36 36.82 L15.00 32.00 L20.36 27.18 L19.98 19.98 L27.18 20.36ZM28 32a4 4 0 1 0 8 0a4 4 0 1 0 -8 0ZM0 -7L7 0L0 7L-7 0ZM64 -7L71 0L64 7L57 0ZM0 57L7 64L0 71L-7 64ZM64 57L71 64L64 71L57 64ZM30.4 1.5a1.6 1.6 0 1 0 3.2 0a1.6 1.6 0 1 0 -3.2 0ZM30.4 62.5a1.6 1.6 0 1 0 3.2 0a1.6 1.6 0 1 0 -3.2 0ZM-0.10000000000000009 32a1.6 1.6 0 1 0 3.2 0a1.6 1.6 0 1 0 -3.2 0ZM60.9 32a1.6 1.6 0 1 0 3.2 0a1.6 1.6 0 1 0 -3.2 0Z'/%3E%3C/svg%3E");
+  --ajrak-band: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='18' viewBox='0 0 36 18'%3E%3Cpath fill-rule='evenodd' d='M18 2L26 9L18 16L10 9ZM16 9a2 2 0 1 0 4 0a2 2 0 1 0 -4 0ZM1.3 9a1.7 1.7 0 1 0 3.4 0a1.7 1.7 0 1 0 -3.4 0ZM31.3 9a1.7 1.7 0 1 0 3.4 0a1.7 1.7 0 1 0 -3.4 0ZM0 0H36V1.4H0Z M0 16.6H36V18H0Z'/%3E%3C/svg%3E");
+  --ajrak-dots: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='6' viewBox='0 0 12 6'%3E%3Cpath d='M4.5 3a1.5 1.5 0 1 0 3.0 0a1.5 1.5 0 1 0 -3.0 0Z'/%3E%3C/svg%3E");
+}
+
+/* A printed border band: one row of stamped lozenges between keylines. */
+.ajrak-band {
+  display: block;
+  height: 18px;
+  background-color: var(--band-ink, var(--color-print));
+  -webkit-mask: var(--ajrak-band) repeat-x center / 36px 18px;
+  mask: var(--ajrak-band) repeat-x center / 36px 18px;
+}
+
+.ajrak-dots {
+  display: block;
+  height: 6px;
+  background-color: var(--band-ink, var(--color-print));
+  -webkit-mask: var(--ajrak-dots) repeat-x center / 12px 6px;
+  mask: var(--ajrak-dots) repeat-x center / 12px 6px;
+}
+
+/* A madder field printed with the star block at low ink. */
+.ajrak-field {
+  position: relative;
+  isolation: isolate;
+  background: var(--color-madder);
+  color: var(--color-madder-ink);
+}
+
+/* Two print layers over the madder ground: indigo-black star blocks with
+ * keyline rings, then resist-white dots, so the field reads as printed cloth. */
+.ajrak-field::before,
+.ajrak-field::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.ajrak-field::before {
+  background-color: oklch(14% 0.05 266 / 0.34);
+  -webkit-mask:
+    var(--ajrak-field) repeat center / 64px 64px,
+    var(--ajrak-keys) repeat center / 64px 64px;
+  mask:
+    var(--ajrak-field) repeat center / 64px 64px,
+    var(--ajrak-keys) repeat center / 64px 64px;
+}
+
+.ajrak-field::after {
+  background-color: oklch(97% 0.01 40 / 0.42);
+  -webkit-mask: var(--ajrak-resist) repeat center / 64px 64px;
+  mask: var(--ajrak-resist) repeat center / 64px 64px;
+}
+
+/* ---------- Site-wide world: every public page wears the same cloth ---------- */
+
+/* Header: resist-white bar finished with a printed border band. */
+.site-header {
+  position: sticky;
+}
+
+.site-header::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 -10px;
+  height: 10px;
+  background-color: var(--color-madder);
+  -webkit-mask: var(--ajrak-band) repeat-x center / 20px 10px;
+  mask: var(--ajrak-band) repeat-x center / 20px 10px;
+  pointer-events: none;
+}
+
+.site-header .button {
+  border-radius: var(--radius-control);
+}
+
+/* Over a madder hero the border band prints in keyline ink on a resist strip. */
+body:has(.ajrak-home) .site-header::after {
+  inset-block-end: -14px;
+  height: 14px;
+  background-color: var(--color-keyline);
+  -webkit-mask: var(--ajrak-band) repeat-x center / 28px 14px;
+  mask: var(--ajrak-band) repeat-x center / 28px 14px;
+}
+
+body:has(.ajrak-home) .site-header {
+  box-shadow: 0 14px 0 var(--color-resist);
+}
+
+/* Footer: indigo cloth with a stamped band along its top edge. */
+.public-footer {
+  position: relative;
+  padding-block-start: calc(var(--space-2xl) + 18px);
+}
+
+.public-footer::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 18px;
+  background-color: var(--color-stage-accent);
+  -webkit-mask: var(--ajrak-band) repeat-x center / 36px 18px;
+  mask: var(--ajrak-band) repeat-x center / 36px 18px;
+}
+
+.public-footer .brand-mark,
+.brand-mark {
+  border-radius: var(--radius-control);
+}
+
+/* Plan badges and pills are printed tags, not capsules. */
+.plan-badge {
+  border-radius: var(--radius-strip);
+  border: 1px dashed var(--color-accent);
+  background: transparent;
+}
+
+.public-pricing {
+  border-color: var(--color-rule-strong);
+}
+
+.public-pricing li[data-recommended] {
+  background: color-mix(in oklab, var(--color-madder) 7%, var(--color-surface));
+}
+
+.public-pricing li[data-recommended]::before {
+  height: 6px;
+  background-color: var(--color-madder);
+  -webkit-mask: var(--ajrak-dots) repeat-x center / 12px 6px;
+  mask: var(--ajrak-dots) repeat-x center / 12px 6px;
+}
+
+/* Browser surfaces carry the palette too. */
+::selection {
+  background: var(--color-madder);
+  color: var(--color-madder-ink);
+}
+
+html {
+  accent-color: var(--color-accent);
+  caret-color: var(--color-accent);
+  scrollbar-color: var(--color-rule-strong) var(--color-paper);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+.ajrak-field :focus-visible {
+  outline-color: var(--color-madder-ink);
+}
+
+/* ---------- Interior product heroes: printed on a madder panel ---------- */
+
+.product-hero {
+  position: relative;
+  isolation: isolate;
+  margin-block-end: var(--space-2xl);
+  padding: clamp(28px, 4vw, 56px);
+  border: 2px solid var(--color-keyline);
+  border-radius: var(--radius-stage);
+  background: var(--color-madder);
+  color: var(--color-madder-ink);
+  overflow: hidden;
+}
+
+.product-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-color: oklch(15% 0.04 266 / 0.16);
+  -webkit-mask: var(--ajrak-field) repeat center / 64px 64px;
+  mask: var(--ajrak-field) repeat center / 64px 64px;
+  pointer-events: none;
+}
+
+.product-hero .marketing-intro h1,
+.product-hero .marketing-intro strong {
+  color: var(--color-madder-ink);
+}
+
+.product-hero .marketing-intro p,
+.product-hero .marketing-intro small,
+.product-hero > div > p {
+  color: var(--color-madder-muted);
+}
+
+.product-hero .marketing-intro a:not(.button) {
+  color: var(--color-madder-ink);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.product-hero .button:not(.secondary) {
+  border: 2px solid var(--color-keyline);
+  background: var(--color-resist);
+  color: var(--color-indigo);
+}
+
+.product-hero .button:not(.secondary):hover {
+  background: var(--color-resist);
+  color: var(--color-indigo);
+}
+
+.product-hero .button.secondary {
+  border-color: oklch(98% 0.01 30 / 0.6);
+  background: transparent;
+  color: var(--color-madder-ink);
+}
+
+.product-hero .button.secondary:hover {
+  background: oklch(98% 0.01 30 / 0.12);
+  border-color: var(--color-madder-ink);
+}
+
+/* The demo or gallery beside the intro sits on resist cloth inside the panel. */
+.product-hero > :not(.marketing-intro):not(div:first-child) {
+  color: var(--color-ink);
+}
+
+@media (max-width: 40rem) {
+  .product-hero {
+    margin-inline: calc(-1 * var(--space-md));
+    padding: var(--space-lg) var(--space-md);
+    border-inline: 0;
+    border-radius: 0;
+  }
+}

@@ -8,6 +8,7 @@ import "./public.css";
 import "./site.css";
 import "./premium.css";
 import "./theme.css";
+import "./ajrak.css";
 import { AnalyticsProvider } from "@/components/analytics-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { THEME_INIT_SCRIPT } from "@/lib/theme-script";
@@ -16,8 +17,8 @@ export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#faf9f4" },
-    { media: "(prefers-color-scheme: dark)", color: "#0c1510" },
+    { media: "(prefers-color-scheme: light)", color: "#f3f6fa" },
+    { media: "(prefers-color-scheme: dark)", color: "#151d4a" },
   ],
 };
 

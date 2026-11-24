@@ -9,7 +9,7 @@ export default function manifest(): MetadataRoute.Manifest {
       "Turn spoken Urdu audio and video into editable Urdu Nastaliq, Roman Urdu, English, and bilingual transcripts and subtitles.",
     start_url: "/",
     display: "standalone",
-    background_color: "#faf9f4",
+    background_color: "#f3f6fa",
     theme_color: "#204d36",
     lang: "en",
     icons: [
