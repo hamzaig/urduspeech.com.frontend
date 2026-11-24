@@ -1823,3 +1823,19 @@ table.public-pricing tbody th,
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+/* The calculator sits inside page sections whose h2 is display-sized; keep the
+ * tool heading at title size so the icon stays aligned with its first line. */
+.tool-shell.plan-calculator .calc-heading {
+  align-items: flex-start;
+  max-width: 32ch;
+  font-size: var(--text-2xl);
+  line-height: 1.15;
+  text-wrap: balance;
+}
+
+.tool-shell.plan-calculator .calc-heading svg {
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-block-start: 0.32em;
+}
