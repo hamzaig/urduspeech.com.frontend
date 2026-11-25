@@ -6,13 +6,12 @@ import {
   ArrowLeft,
   Captions,
   ChevronDown,
-  FolderOpen,
   Play,
   Save,
   Download,
   RefreshCw,
 } from "lucide-react";
-import { api, mutation, explain } from "@/lib/api";
+import { api, mutation, explain, ApiError } from "@/lib/api";
 import { captionChanges } from "@/lib/caption-edits";
 import { startDownload } from "@/lib/download";
 import type {
@@ -59,19 +58,22 @@ export default function ProjectEditor({
     [busy, setBusy] = useState(false),
     [dirty, setDirty] = useState(false),
     [saved, setSaved] = useState(""),
-    [localMedia, setLocalMedia] = useState<{
+    [remoteMedia, setRemoteMedia] = useState<{
       url: string;
-      name: string;
       audio: boolean;
     } | null>(null),
-    [previewError, setPreviewError] = useState(false),
+    [previewState, setPreviewState] = useState<
+      "loading" | "ready" | "pending" | "expired" | "error"
+    >("loading"),
     [time, setTime] = useState(0),
     [remove, setRemove] = useState(false);
   const [mediaReady, setMediaReady] = useState(false);
   const [uploadId, setUploadId] = useState<string | null>(null);
   const [previewPosition, setPreviewPosition] = useState<number | null>(null);
   const player = useRef<HTMLMediaElement>(null);
-  const previewInput = useRef<HTMLInputElement>(null);
+  // Resume point and retry budget when a signed storage URL lapses mid-session.
+  const resumeAt = useRef(0);
+  const previewRetries = useRef(0);
   const pendingCaptionSave = useRef<{
     trackId: string;
     etag: string;
@@ -206,12 +208,35 @@ export default function ProjectEditor({
     }, 3000);
     return () => clearTimeout(timer);
   }, [render]);
-  useEffect(
-    () => () => {
-      if (localMedia) URL.revokeObjectURL(localMedia.url);
-    },
-    [localMedia],
-  );
+  // The editor always plays the uploaded source from storage (S3) through a
+  // short-lived signed URL; no local copy of the recording is needed.
+  async function loadPreview() {
+    try {
+      const preview = await api<{
+        url: string;
+        expiresIn: number;
+        kind: "video" | "audio";
+      }>(`/v1/projects/${id}/preview`);
+      if (!alive.current) return;
+      setRemoteMedia({ url: preview.url, audio: preview.kind === "audio" });
+      setPreviewState("ready");
+    } catch (e) {
+      if (!alive.current) return;
+      setRemoteMedia(null);
+      setPreviewState(
+        e instanceof ApiError && e.status === 410
+          ? "expired"
+          : e instanceof ApiError && e.status === 409
+            ? "pending"
+            : "error",
+      );
+    }
+  }
+  useEffect(() => {
+    if (remoteMedia) return;
+    void loadPreview();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, mediaReady]);
   useEffect(() => {
     if (!dirty) return;
     const warn = (e: BeforeUnloadEvent) => {
@@ -396,11 +421,11 @@ export default function ProjectEditor({
     });
   }
   const activeCue = cues.find((c) => time >= c.startMs && time < c.endMs);
-  const playableMedia = previewError ? null : localMedia;
+  const playableMedia = previewState === "ready" ? remoteMedia : null;
   const previewCue = playableMedia
     ? activeCue
     : (cues.find(({ position }) => position === previewPosition) ?? cues[0]);
-  const PreviewPlayer = localMedia?.audio ? "audio" : "video";
+  const PreviewPlayer = remoteMedia?.audio ? "audio" : "video";
   const previewPreset = presets.find(({ id }) => id === preset);
   const hasDraft = !!(track || transcript);
   const processingStatus =
@@ -771,26 +796,63 @@ export default function ProjectEditor({
                         player.current = element;
                       }}
                       className="local-player"
-                      aria-label={playableMedia.name}
+                      aria-label="Uploaded recording"
                       src={playableMedia.url}
                       controls
+                      preload="metadata"
                       playsInline={!playableMedia.audio || undefined}
-                      onError={() => setPreviewError(true)}
+                      onLoadedMetadata={(e) => {
+                        if (resumeAt.current)
+                          e.currentTarget.currentTime = resumeAt.current / 1000;
+                        resumeAt.current = 0;
+                      }}
+                      onPlaying={() => {
+                        previewRetries.current = 0;
+                      }}
+                      onError={() => {
+                        // A lapsed signed URL: fetch a fresh one and resume.
+                        if (previewRetries.current < 2) {
+                          previewRetries.current += 1;
+                          resumeAt.current = time;
+                          void loadPreview();
+                        } else setPreviewState("error");
+                      }}
                       onTimeUpdate={(e) =>
                         setTime(e.currentTarget.currentTime * 1000)
                       }
                     />
                   ) : (
-                    <div className="preview-placeholder">
-                      <button
-                        className="secondary"
-                        type="button"
-                        onClick={() => previewInput.current?.click()}
-                      >
-                        <FolderOpen size={17} aria-hidden="true" /> Choose
-                        recording
-                      </button>
-                      <small>Preview stays on this device.</small>
+                    <div className="preview-placeholder" role="status">
+                      {previewState === "loading" ? (
+                        <small>Loading your recording…</small>
+                      ) : previewState === "pending" ? (
+                        <small>
+                          Your recording will appear here once the upload
+                          finishes.
+                        </small>
+                      ) : previewState === "expired" ? (
+                        <small>
+                          The original recording was removed after its
+                          retention period. Captions and exports remain
+                          available.
+                        </small>
+                      ) : (
+                        <>
+                          <small>The recording could not be loaded.</small>
+                          <button
+                            className="secondary"
+                            type="button"
+                            onClick={() => {
+                              previewRetries.current = 0;
+                              setPreviewState("loading");
+                              void loadPreview();
+                            }}
+                          >
+                            <RefreshCw size={17} aria-hidden="true" /> Try
+                            again
+                          </button>
+                        </>
+                      )}
                     </div>
                   )}
                   {previewCue && previewPreset && (
@@ -833,46 +895,6 @@ export default function ProjectEditor({
                     </div>
                   )}
                 </div>
-                <input
-                  ref={previewInput}
-                  className="visually-hidden"
-                  type="file"
-                  aria-label="Original audio or video"
-                  tabIndex={-1}
-                  accept="audio/*,video/*"
-                  onChange={(e) => {
-                    const file = e.currentTarget.files?.[0];
-                    e.currentTarget.value = "";
-                    if (!file) return;
-                    setPreviewError(false);
-                    setTime(0);
-                    setLocalMedia({
-                      url: URL.createObjectURL(file),
-                      name: file.name,
-                      audio: file.type.startsWith("audio/"),
-                    });
-                  }}
-                />
-                {playableMedia && (
-                  <div className="preview-file">
-                    <small>
-                      <bdi>{playableMedia.name}</bdi>
-                    </small>
-                    <button
-                      className="text-button"
-                      type="button"
-                      onClick={() => previewInput.current?.click()}
-                    >
-                      Change recording
-                    </button>
-                  </div>
-                )}
-                {previewError && (
-                  <p className="notice" role="status">
-                    This browser could not play the selected file. Try a
-                    compatible copy of the recording.
-                  </p>
-                )}
                 <fieldset
                   className="editor-caption-presets"
                   disabled={busy}

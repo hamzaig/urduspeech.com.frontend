@@ -10,7 +10,8 @@ const CONTENT_SECURITY_POLICY = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data: blob:",
   "font-src 'self' data:",
-  "media-src 'self' blob:",
+  // Studio previews stream the uploaded source from S3 via signed URLs.
+  "media-src 'self' blob: https://*.amazonaws.com https://*.s3.amazonaws.com",
   "connect-src 'self' https://*.amazonaws.com https://*.s3.amazonaws.com",
   "upgrade-insecure-requests",
 ].join("; ");
