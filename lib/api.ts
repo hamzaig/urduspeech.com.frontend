@@ -46,6 +46,8 @@ export function explain(error: unknown) {
       return "You have several uploads in progress or reached today's upload limit. Finish or cancel an upload, then try again.";
     if (error.code === "DECISION_LIMIT")
       return "You have reached today's limit for correction decisions on this account. Try again tomorrow.";
+    if (error.code === "PRESET_REQUIRES_PLAN")
+      return "This caption template is part of the paid plans. Pick a free template, or upgrade in Plan & minutes to render it.";
     if (error.code === "CONTACT_BUSY")
       return "We are receiving a lot of messages right now. Please try again in a little while.";
     if (error.status === 429)

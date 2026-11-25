@@ -651,3 +651,155 @@ video.local-player {
   display: block;
   margin-block-start: var(--space-2xs);
 }
+
+/* ---------- Caption template gallery & styled preview ---------- */
+
+.template-field {
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.template-field legend {
+  margin-block-end: var(--space-xs);
+  font-weight: 650;
+}
+
+.template-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8rem, 1fr));
+  gap: var(--space-sm);
+}
+
+.template-option {
+  position: relative;
+  display: grid;
+  gap: var(--space-2xs);
+  cursor: pointer;
+}
+
+.template-option input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* A miniature dark frame in which the template's caption is drawn. */
+.template-frame {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1em;
+  aspect-ratio: 4 / 3;
+  padding: 0.55rem 0.35rem;
+  overflow: hidden;
+  border: 2px solid var(--color-rule);
+  border-radius: var(--radius-card);
+  background:
+    radial-gradient(120% 70% at 50% 25%, oklch(42% 0.03 60), transparent 70%),
+    linear-gradient(180deg, oklch(30% 0.02 60), oklch(16% 0.02 266));
+  container-type: inline-size;
+  font-size: clamp(0.62rem, 7.2cqi, 0.92rem);
+  line-height: 1.45;
+  text-align: center;
+  transition:
+    border-color var(--dur-short) var(--ease-out),
+    transform var(--dur-micro) var(--ease-out);
+}
+
+.template-frame[data-band]::before,
+.template-overlay[data-band]::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block: 0.35rem auto;
+  height: 3.2em;
+  background: var(--band);
+}
+
+.template-frame-plain {
+  justify-content: center;
+  color: oklch(95% 0.01 255);
+  font-weight: 650;
+}
+
+.template-line {
+  position: relative;
+  max-width: 100%;
+  border-radius: 2px;
+  overflow-wrap: anywhere;
+}
+
+.template-line[lang="ur"] {
+  font-family: var(--font-urdu);
+  line-height: 1.9;
+}
+
+.template-option:hover .template-frame {
+  border-color: var(--color-rule-strong);
+}
+
+.template-option:has(input:checked) .template-frame {
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px var(--color-accent);
+}
+
+.template-option:has(input:focus-visible) .template-frame {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 3px;
+}
+
+.template-option:has(input:disabled) {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.template-name {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-size: var(--text-sm);
+  font-weight: 650;
+}
+
+.template-badge {
+  padding: 0 var(--space-2xs);
+  border: 1px dashed var(--color-accent);
+  border-radius: var(--radius-strip);
+  color: var(--color-accent);
+  font-size: var(--text-xs);
+  font-weight: 700;
+}
+
+/* The local preview overlay takes the template's placement and look. */
+.local-caption.template-overlay {
+  inset: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15em;
+  font-size: var(--text-md);
+  text-align: center;
+}
+
+.editor-player-frame:has(video) .local-caption.template-overlay {
+  inset-block-end: var(--space-xl);
+}
+
+.template-overlay .template-line[lang="ur"] {
+  font-size: 1.25em;
+}
+
+/* The spoken word in karaoke grows; keep its neighbours from touching it. */
+.template-line .is-spoken {
+  display: inline-block;
+  margin-inline: 0.14em;
+}
+
+@media (max-width: 40rem) {
+  .template-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
