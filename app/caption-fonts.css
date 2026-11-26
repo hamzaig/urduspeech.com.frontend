@@ -1,0 +1,57 @@
+/* Caption preview faces: the same pinned OFL files the MP4 renderer uses. */
+@font-face {
+  font-family: "cap-noto-nastaliq";
+  src: url("/fonts/captions/NotoNastaliqUrdu-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "cap-gulzar";
+  src: url("/fonts/captions/Gulzar-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "cap-noto-naskh";
+  src: url("/fonts/captions/NotoNaskhArabic-Variable.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "cap-lateef";
+  src: url("/fonts/captions/Lateef-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "cap-inter";
+  src: url("/fonts/captions/Inter-Variable.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "cap-poppins";
+  src: url("/fonts/captions/Poppins-SemiBold.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "cap-bebas-neue";
+  src: url("/fonts/captions/BebasNeue-Regular.ttf") format("truetype");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "cap-playfair";
+  src: url("/fonts/captions/PlayfairDisplay-Variable.ttf") format("truetype");
+  font-display: swap;
+}
+
+.caption-fonts .template-line {
+  font-family: var(--cap-latin, inherit);
+}
+
+.caption-fonts .template-line[lang="ur"] {
+  font-family: var(--cap-urdu, var(--font-urdu));
+  font-size: calc(var(--cap-urdu-scale, 1) * 1.4em);
+}

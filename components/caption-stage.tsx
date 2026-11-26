@@ -12,6 +12,7 @@ import {
   templateFrame,
   type CaptionTemplate,
 } from "@/components/caption-template";
+import { fontVars, type CaptionFontChoice } from "@/lib/caption-fonts";
 
 /** Customer caption placement, mirrored by the API's `captionPlacement`. */
 export type CaptionPlacement = { y: number; scale: number };
@@ -58,6 +59,7 @@ export function CaptionStage({
   onError,
   onLoadedMetadata,
   label = "Uploaded recording",
+  fonts,
 }: {
   src: string;
   audio?: boolean;
@@ -73,6 +75,8 @@ export function CaptionStage({
   onError?: () => void;
   onLoadedMetadata?: (media: HTMLMediaElement) => void;
   label?: string;
+  /** Chosen caption fonts (ids from the catalog); defaults when absent. */
+  fonts?: CaptionFontChoice | null;
 }) {
   const frame = useRef<HTMLDivElement>(null);
   const drag = useRef<{
@@ -144,6 +148,7 @@ export function CaptionStage({
   // customer scale); `cqmin` follows the same side of the preview frame.
   const captionStyle = {
     ...templateFrame(template ?? fallbackTemplate),
+    ...fontVars(fonts),
     top: `${current.y * 100}%`,
     fontSize: `calc(${(0.042 * 1.21 * Math.min(1.6, sizeScale * current.scale)) / sizeScale} * 100cqmin)`,
   } as CSSProperties;
@@ -174,7 +179,10 @@ export function CaptionStage({
       />
       {!audio && lines.length > 0 && template && (
         <div
-          className={"caption-stage-caption" + (editable ? " is-editable" : "")}
+          className={
+            "caption-stage-caption caption-fonts" +
+            (editable ? " is-editable" : "")
+          }
           data-band={template.style?.boxStyle === "band" || undefined}
           style={captionStyle}
           tabIndex={editable ? 0 : undefined}

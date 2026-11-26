@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Shell } from "@/components/shell";
 import "../editor.css";
+import "../caption-fonts.css";
 import "./studio.css";
 
 export const metadata: Metadata = {

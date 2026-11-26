@@ -114,6 +114,7 @@ export type Defaults = {
   bilingualOrder?: "urdu-first" | "english-first";
   bilingualLayout?: "stacked";
   captionPlacement?: { y: number; scale: number } | null;
+  captionFonts?: { urdu?: string; latin?: string } | null;
 };
 export type PlanCatalog = {
   schemaVersion: "1";
