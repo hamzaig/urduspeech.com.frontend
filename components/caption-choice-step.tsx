@@ -26,7 +26,7 @@ import {
   defaultPlacement,
   type CaptionPlacement,
 } from "@/components/caption-stage";
-import { TemplatePicker } from "@/components/caption-template";
+import { TemplateBrowser } from "@/components/template-browser";
 import { FontPicker } from "@/components/font-picker";
 import { WizardRail, type RailStep } from "@/components/wizard-steps";
 import { outputLabel } from "@/components/output-options";
@@ -343,7 +343,7 @@ export function CaptionChoiceStep({
           {step === 3 && (
             <fieldset className="field template-field">
               <legend className="visually-hidden">Caption style</legend>
-              <TemplatePicker
+              <TemplateBrowser
                 templates={presets}
                 value={options.captionPresetVersionId}
                 onChange={(id) => id && set("captionPresetVersionId", id)}

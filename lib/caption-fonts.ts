@@ -24,7 +24,7 @@ export type CaptionFontOption = {
 };
 import { IMPORTED_CAPTION_FONTS } from "./caption-fonts-imported";
 
-export const CAPTION_FONTS: readonly CaptionFontOption[] = [
+const CATALOG: readonly CaptionFontOption[] = [
   { id: "noto-nastaliq", label: "Noto Nastaliq", script: "urdu", css: "cap-noto-nastaliq", optical: 1.4, note: "Classic Nastaliq", category: "Nastaliq" },
   { id: "gulzar", label: "Gulzar", script: "urdu", css: "cap-gulzar", optical: 1.3, note: "Bold Nastaliq", category: "Nastaliq" },
   { id: "noto-naskh", label: "Naskh", script: "urdu", css: "cap-noto-naskh", optical: 1.15, note: "Clear and modern", category: "Naskh" },
@@ -35,6 +35,29 @@ export const CAPTION_FONTS: readonly CaptionFontOption[] = [
   { id: "playfair", label: "Playfair Display", script: "latin", css: "cap-playfair", optical: 1, note: "Elegant serif", category: "Serif" },
   ...IMPORTED_CAPTION_FONTS,
 ];
+
+/** The best-known faces first, per script; the rest keep catalog order. */
+const POPULAR = [
+  // Urdu
+  "noto-nastaliq", "gulzar", "noto-naskh", "amiri", "scheherazade", "lateef",
+  "noto-sans-arabic", "cairo", "el-messiri", "vazirmatn", "almarai",
+  "ibm-plex-arabic", "changa", "harmattan", "markazi", "noto-kufi",
+  "reem-kufi", "lalezar", "rakkas", "baloo-bhaijaan", "lemonada",
+  // Latin
+  "inter", "poppins", "open-sans", "lato", "bebas-neue", "oswald", "anton",
+  "playfair", "dm-sans", "work-sans", "plus-jakarta", "lexend", "fira-sans",
+  "archivo-black", "kanit", "lobster", "pacifico", "dancing-script",
+  "permanent-marker", "caveat", "lora", "eb-garamond", "bangers", "righteous",
+];
+const rank = (id: string, index: number) => {
+  const listed = POPULAR.indexOf(id);
+  return listed < 0 ? POPULAR.length + index : listed;
+};
+export const CAPTION_FONTS: readonly CaptionFontOption[] = CATALOG.map(
+  (font, index) => ({ font, index }),
+)
+  .sort((a, b) => rank(a.font.id, a.index) - rank(b.font.id, b.index))
+  .map(({ font }) => font);
 export const DEFAULT_FONTS = { urdu: "noto-nastaliq", latin: "inter" } as const;
 export type CaptionFontChoice = { urdu?: string; latin?: string };
 

@@ -725,6 +725,15 @@ video.local-player {
   background: var(--band);
 }
 
+/* Thumbnail bands sit where the template draws its text. */
+.template-frame[data-band][data-position="bottom"]::before {
+  inset-block: auto 0.35rem;
+}
+
+.template-frame[data-band][data-position="middle"]::before {
+  inset-block: calc(50% - 1.6em) auto;
+}
+
 .template-frame-plain {
   justify-content: center;
   color: oklch(95% 0.01 255);
@@ -2149,4 +2158,9 @@ video.local-player {
 .font-tab[aria-selected="true"]:hover {
   background: var(--color-surface);
   color: var(--color-ink);
+}
+
+.template-browser {
+  display: grid;
+  gap: var(--space-sm);
 }
