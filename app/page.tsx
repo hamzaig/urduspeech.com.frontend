@@ -247,7 +247,8 @@ export default function Home() {
               </h2>
               <p>
                 Compare clean, highlighted, and boxed Nastaliq over real
-                lighting, then render a 1080p MP4 for Reels, TikTok, or YouTube.
+                lighting, then render an MP4 at your original quality for Reels, TikTok, or
+                YouTube.
               </p>
               <Link href="/video-captions" className="home-inline-link">
                 Explore video captions

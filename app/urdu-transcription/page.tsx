@@ -77,7 +77,7 @@ const transcriptionQuestions = [
         Every account starts with a one-time 10-minute free allowance with no
         card required. Audio and video uploads share the same duration-based
         minute pool. On the Free plan, each uploaded recording can be up to 10
-        minutes and 250 MiB, and captioned MP4 exports are up to 720p with a
+        minutes and 100 MiB, and captioned MP4 exports are up to 720p with a
         watermark. See <Link href="/pricing">plans and pricing</Link> for
         monthly plans.
       </p>
@@ -452,7 +452,7 @@ export default function UrduTranscription() {
           <h2 id="transcription-cta">Start transcribing your Urdu recording</h2>
           <p>
             Create an account to get a one-time 10-minute free allowance (up to
-            250 MiB per file, no card required), or test the interactive sample
+            100 MiB per file, no card required), or test the interactive sample
             editor first.
           </p>
         </div>

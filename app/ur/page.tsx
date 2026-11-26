@@ -307,7 +307,7 @@ export default function UrduHome() {
                       <dd>
                         {plan.watermark
                           ? "720p، واٹر مارک کے ساتھ"
-                          : "1080p، بغیر واٹر مارک"}
+                          : "اصل ریزولوشن (4K تک)، بغیر واٹر مارک"}
                       </dd>
                     </div>
                     <div>

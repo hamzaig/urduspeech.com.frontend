@@ -31,7 +31,7 @@ import {
 
 const title = "Pricing in PKR for Urdu Captions & Transcripts";
 const description =
-  "Compare Free, Starter, Creator, and Studio plans in Pakistani rupees by monthly minutes, max file duration, 1080p exports, and media retention.";
+  "Compare Free, Starter, Creator, and Studio plans in Pakistani rupees by monthly minutes, max file duration, original-quality exports, and media retention.";
 
 export const metadata: Metadata = publicMetadata({
   title,
@@ -75,7 +75,7 @@ export default function Pricing() {
       featureList: [
         "10 free minutes one-time trial with no card required",
         "Monthly PKR plans (Starter PKR 999, Creator PKR 2,499, Studio PKR 5,999)",
-        "1080p unwatermarked Nastaliq and bilingual MP4 video exports on paid plans",
+        "Original-resolution (up to 4K) unwatermarked Nastaliq and bilingual MP4 video exports on paid plans",
         "Card checkout via Stripe and manual Pakistani payment verification (bank transfer, JazzCash, Easypaisa, SadaPay, NayaPay)",
       ],
     }),
@@ -113,7 +113,7 @@ export default function Pricing() {
         <h2 id="plan-spec-table">Full plan limits side by side</h2>
         <p>
           Every paid plan removes the video watermark and raises burned-in MP4
-          exports to 1080p. See{" "}
+          exports to your original resolution (up to 4K). See{" "}
           <Link href="/supported-formats">
             supported formats and render limits
           </Link>{" "}

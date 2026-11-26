@@ -227,7 +227,10 @@ export default function Billing() {
         >
           <strong>What paid PKR plans include immediately</strong>
           <ul>
-            <li>Clean 1080p burned-in Nastaliq MP4 video without watermark</li>
+            <li>
+              Clean burned-in Nastaliq MP4 at your original resolution (up to
+              4K), without watermark
+            </li>
             <li>
               60 to 500 monthly minutes plus longer single uploads (1 to 6
               hours)
@@ -267,7 +270,11 @@ export default function Billing() {
               </small>
               <ul>
                 <li>{minutes(p.includedSeconds)} minutes included</li>
-                <li>Up to {p.maxRenderHeight}p video</li>
+                <li>
+                  {p.maxRenderHeight >= 2160
+                    ? "Original resolution video (up to 4K)"
+                    : `Up to ${p.maxRenderHeight}p video`}
+                </li>
                 <li>{p.sourceRetentionDays}-day media retention</li>
                 <li>
                   {p.watermark ? "Watermarked videos" : "No video watermark"}

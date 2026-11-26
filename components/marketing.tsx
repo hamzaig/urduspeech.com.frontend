@@ -51,7 +51,7 @@ export const commonQuestions: readonly QuestionItem[] = [
     answer: (
       <p>
         You get a one-time 10-minute free allowance per account with no card
-        required. Free uploads can be up to 10 minutes and 250 MiB, with full
+        required. Free uploads can be up to 10 minutes and 100 MiB, with full
         TXT, SRT, and VTT downloads plus captioned MP4 renders up to 720p with a
         watermark.
       </p>

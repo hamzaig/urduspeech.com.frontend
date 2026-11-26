@@ -107,7 +107,7 @@ function NewProjectWizard() {
       setError(
         canUpgradeSize
           ? `This file (${(f.size / 1024 ** 2).toFixed(0)} MiB) is above your ${usage?.plan.name} plan upload limit (${capLabel}). Upgrade your plan for up to 2 GiB uploads, or export a smaller M4A/MP3 audio bounce.`
-          : `This file is above the ${capLabel} scanning limit. For large 4K recordings, export a 1080p MP4 or a lightweight M4A/MP3 audio bounce to generate TXT, SRT, and VTT.`,
+          : `This file is above the ${capLabel} scanning limit. For very large recordings, export a smaller MP4 or a lightweight M4A/MP3 audio bounce to generate TXT, SRT, and VTT.`,
       );
       return;
     }
@@ -239,7 +239,7 @@ function NewProjectWizard() {
                 <ErrorNotice message={error} />
                 {oversizeUpgradeHint && (
                   <p className="field-help">
-                    Need larger uploads up to 1 to 2 GiB and 1080p clean video?{" "}
+                    Need larger uploads up to 1 to 5 GiB and clean original-quality video?{" "}
                     <Link href="/studio/billing">
                       Compare Starter, Creator, and Studio in Billing
                     </Link>

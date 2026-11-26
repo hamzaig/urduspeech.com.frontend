@@ -86,10 +86,10 @@ const romanUrduQuestions = [
     answer: (
       <p>
         Your account starts with a one-time 10-minute free allowance (no card
-        required) shared across audio and video uploads up to 250 MiB per file.
+        required) shared across audio and video uploads up to 100 MiB per file.
         You can download Roman Urdu TXT transcripts and SRT or VTT subtitles, or
         render a captioned MP4 up to 720p with a watermark. See{" "}
-        <Link href="/pricing">plans and pricing</Link> for 1080p unwatermarked
+        <Link href="/pricing">plans and pricing</Link> for original-quality unwatermarked
         video exports.
       </p>
     ),

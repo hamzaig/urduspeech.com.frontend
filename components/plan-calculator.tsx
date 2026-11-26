@@ -239,7 +239,7 @@ export function PlanCalculator({
                   updateField("needsClean1080p", e.target.checked)
                 }
               />
-              <span>I need clean 1080p MP4 exports without watermark</span>
+              <span>I need clean original-quality MP4 exports without watermark</span>
             </label>
           </div>
         </div>
