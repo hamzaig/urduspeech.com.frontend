@@ -12,7 +12,7 @@ export const initialDefaults: Defaults = {
   bilingualOrder: "urdu-first",
   bilingualLayout: "stacked",
 };
-const variants = [
+export const variants = [
   {
     id: "urdu",
     label: "Urdu",

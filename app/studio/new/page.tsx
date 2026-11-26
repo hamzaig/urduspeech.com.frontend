@@ -1,6 +1,6 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Upload, FileVideo, X, ShieldCheck } from "lucide-react";
 import { api, ApiError, mutation, explain } from "@/lib/api";
@@ -13,14 +13,31 @@ import type {
 } from "@/lib/contracts";
 import { finishUpload } from "@/lib/upload";
 import {
-  OutputOptions,
   outputLabel,
   initialDefaults,
   type Preset,
 } from "@/components/output-options";
 import { PageTitle, ErrorNotice } from "@/components/common";
+import { WizardSteps } from "@/components/wizard-steps";
+import { CaptionChoiceStep } from "@/components/caption-choice-step";
 export default function NewProject() {
+  return (
+    <Suspense
+      fallback={
+        <p className="loading" role="status">
+          Loading upload options…
+        </p>
+      }
+    >
+      <NewProjectWizard />
+    </Suspense>
+  );
+}
+function NewProjectWizard() {
   const router = useRouter();
+  const search = useSearchParams();
+  // Step 2 survives a reload: the uploaded project id lives in the URL.
+  const resumedProject = search.get("project");
   const input = useRef<HTMLInputElement>(null);
   const control = useRef<AbortController | null>(null);
   const createKey = useRef("");
@@ -34,7 +51,6 @@ export default function NewProject() {
     [setupError, setSetupError] = useState<unknown>(),
     [setupAttempt, setSetupAttempt] = useState(0),
     [rights, setRights] = useState(false),
-    [saveDefault, setSaveDefault] = useState(false),
     [error, setError] = useState(""),
     [oversizeUpgradeHint, setOversizeUpgradeHint] = useState(false),
     [busy, setBusy] = useState(false),
@@ -139,19 +155,14 @@ export default function NewProject() {
         controller.signal,
       );
       setStage("Checking the completed upload…");
-      if (saveDefault) await api("/v1/me/defaults", mutation("PATCH", options));
       trackEvent("project_upload_completed", {
         output_variant: options.outputVariant,
         file_kind: file.type.startsWith("video/") ? "video" : "audio",
         plan_slug: usage?.plan.slug ?? "unknown",
       });
-      // Validation is asynchronous; processing starts from the project screen once media is ready.
-      router.push(
-        "/studio/projects/" +
-          project.project.id +
-          "?upload=" +
-          project.upload.id,
-      );
+      // Validation is asynchronous; step 2 waits for it while the customer
+      // chooses captions on a preview of this upload.
+      router.replace("/studio/new?project=" + project.project.id);
     } catch (e) {
       setError(
         controller.signal.aborted
@@ -164,12 +175,48 @@ export default function NewProject() {
       setBusy(false);
     }
   }
+  if (resumedProject)
+    return (
+      <div className="page">
+        <PageTitle
+          title="Choose your captions"
+          description="Pick the language and style. You can see them on your own video."
+        />
+        <WizardSteps current={1} />
+        {!ready ? (
+          setupError ? (
+            <ErrorNotice
+              message={explain(setupError)}
+              signIn={needsSignIn}
+              retry={
+                needsSignIn
+                  ? undefined
+                  : () => setSetupAttempt((value) => value + 1)
+              }
+            />
+          ) : (
+            <p className="loading" role="status">
+              Loading caption options…
+            </p>
+          )
+        ) : (
+          <CaptionChoiceStep
+            key={resumedProject}
+            projectId={resumedProject}
+            presets={presets}
+            initial={options}
+            planSlug={usage?.plan.slug}
+          />
+        )}
+      </div>
+    );
   return (
     <div className="page">
       <PageTitle
         title="New upload"
-        description="Upload your media and choose the captions your audience will see."
+        description="Upload your audio or video. Next, you choose the captions and see them on your video."
       />
+      <WizardSteps current={0} />
       {!ready ? (
         setupError ? (
           <ErrorNotice
@@ -257,25 +304,7 @@ export default function NewProject() {
               </label>
             </section>
             <section className="form-section">
-              <h2>2. Caption options</h2>
-              <OutputOptions
-                value={options}
-                onChange={setOptions}
-                presets={presets}
-                disabled={busy || !!created}
-              />
-              <label className="check-row">
-                <input
-                  type="checkbox"
-                  checked={saveDefault}
-                  disabled={busy}
-                  onChange={(e) => setSaveDefault(e.target.checked)}
-                />
-                Make these choices my defaults for future uploads
-              </label>
-            </section>
-            <section className="form-section">
-              <h2>3. Confirm and upload</h2>
+              <h2>2. Confirm and upload</h2>
               <label className="check-row">
                 <input
                   type="checkbox"
@@ -309,7 +338,7 @@ export default function NewProject() {
                   onClick={start}
                 >
                   <FileVideo size={18} />
-                  {busy ? "Uploading…" : "Upload media"}
+                  {busy ? "Uploading…" : "Upload and continue"}
                 </button>
                 {busy && (
                   <button
@@ -332,7 +361,7 @@ export default function NewProject() {
                       )
                     }
                   >
-                    Open saved project
+                    Resume in the project
                   </button>
                 )}
               </div>
@@ -346,7 +375,7 @@ export default function NewProject() {
                 <dd>{file ? <bdi>{file.name}</bdi> : "No file selected"}</dd>
               </div>
               <div>
-                <dt>Caption output</dt>
+                <dt>Default captions</dt>
                 <dd>{outputLabel(options.outputVariant)}</dd>
               </div>
               {usage && (

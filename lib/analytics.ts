@@ -23,7 +23,8 @@ export type AnalyticsEventName =
   | "project_upload_completed"
   | "billing_checkout_started"
   | "manual_payment_requested"
-  | "manual_payment_submitted";
+  | "manual_payment_submitted"
+  | "captions_generation_started";
 
 export type EventScalar = string | number | boolean;
 export type EventProperties = Record<string, EventScalar | undefined>;

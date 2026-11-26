@@ -33,6 +33,14 @@ import {
   templateFrame,
 } from "@/components/caption-template";
 import { MediaReadiness } from "@/components/media-readiness";
+import {
+  CaptionStage,
+  PlacementControls,
+  defaultPlacement,
+  type CaptionPlacement,
+} from "@/components/caption-stage";
+import { GenerationPanel } from "@/components/generation-panel";
+import { WizardSteps } from "@/components/wizard-steps";
 import { ResumeUpload } from "@/components/resume-upload";
 type Cue = Track["content"]["cues"][number];
 const terminal = ["completed", "failed", "cancelled"];
@@ -66,7 +74,12 @@ export default function ProjectEditor({
       "loading" | "ready" | "pending" | "expired" | "error"
     >("loading"),
     [time, setTime] = useState(0),
-    [remove, setRemove] = useState(false);
+    [remove, setRemove] = useState(false),
+    [placement, setPlacement] = useState<CaptionPlacement | null>(null),
+    [placementStatus, setPlacementStatus] = useState(""),
+    [portrait, setPortrait] = useState(false);
+  // Bumped on each customer drag/resize; a debounced PATCH saves the latest.
+  const placementEdit = useRef(0);
   const [mediaReady, setMediaReady] = useState(false);
   const [uploadId, setUploadId] = useState<string | null>(null);
   const [previewPosition, setPreviewPosition] = useState<number | null>(null);
@@ -91,6 +104,13 @@ export default function ProjectEditor({
     ]);
     if (!alive.current) return;
     setProject(p);
+    if (!placementEdit.current) {
+      const saved = p.settings.captionPlacement as
+        | CaptionPlacement
+        | null
+        | undefined;
+      setPlacement(saved ?? null);
+    }
     setTracks(t.tracks);
     setPresets(styles.presets);
     setUploadId(
@@ -237,6 +257,36 @@ export default function ProjectEditor({
     void loadPreview();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, mediaReady]);
+  // Save the caption position/size to the project; the next MP4 uses it.
+  useEffect(() => {
+    if (!placementEdit.current) return;
+    const edit = placementEdit.current;
+    setPlacementStatus("Saving position…");
+    const timer = setTimeout(() => {
+      api<Project>(
+        "/v1/projects/" + id,
+        mutation("PATCH", { settings: { captionPlacement: placement } }),
+      )
+        .then((p) => {
+          if (!alive.current || edit !== placementEdit.current) return;
+          setProject(p);
+          setPlacementStatus(
+            render
+              ? "Position saved. Create the MP4 again to apply it."
+              : "Position saved. Your MP4 will use it.",
+          );
+        })
+        .catch((e) => {
+          if (alive.current) setPlacementStatus(explain(e));
+        });
+    }, 700);
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [placement]);
+  function changePlacement(next: CaptionPlacement | null) {
+    placementEdit.current += 1;
+    setPlacement(next);
+  }
   useEffect(() => {
     if (!dirty) return;
     const warn = (e: BeforeUnloadEvent) => {
@@ -425,7 +475,24 @@ export default function ProjectEditor({
   const previewCue = playableMedia
     ? activeCue
     : (cues.find(({ position }) => position === previewPosition) ?? cues[0]);
-  const PreviewPlayer = remoteMedia?.audio ? "audio" : "video";
+  // The stage shows the cue under the playhead, or the selected/first cue
+  // while paused at the start so its position can be adjusted.
+  const stageCue =
+    activeCue ??
+    (previewPosition !== null || time === 0
+      ? (cues.find(({ position }) => position === previewPosition) ?? cues[0])
+      : undefined);
+  const stageProgress = stageCue
+    ? Math.max(
+        0,
+        Math.min(
+          0.999,
+          (time - stageCue.startMs) /
+            Math.max(1, stageCue.endMs - stageCue.startMs),
+        ),
+      )
+    : 0;
+  const generating = !!job && !settledJobs.includes(job.state);
   const previewPreset = presets.find(({ id }) => id === preset);
   const hasDraft = !!(track || transcript);
   const processingStatus =
@@ -473,6 +540,15 @@ export default function ProjectEditor({
               key={uploadId}
               uploadId={uploadId}
               onComplete={load}
+            />
+          )}
+          {!track && <WizardSteps current={2} />}
+          {(!track || generating) && (
+            <GenerationPanel
+              job={job}
+              mediaReady={mediaReady}
+              busy={busy}
+              onStart={process}
             />
           )}
           <div className="project-status-bar">
@@ -779,35 +855,31 @@ export default function ProjectEditor({
                     Previewing caption {cues.indexOf(previewCue) + 1}.
                   </p>
                 )}
-                <div
-                  className={
-                    "editor-player-frame " +
-                    (playableMedia
-                      ? playableMedia.audio
-                        ? "audio-preview"
-                        : ""
-                      : "preview-empty")
-                  }
-                >
-                  {playableMedia ? (
-                    <PreviewPlayer
-                      key={playableMedia.url}
-                      ref={(element: HTMLMediaElement | null) => {
+                {playableMedia ? (
+                  <>
+                    <CaptionStage
+                      src={playableMedia.url}
+                      audio={playableMedia.audio}
+                      template={previewPreset}
+                      lines={stageCue ? stageCue.text.split("\n") : []}
+                      time={stageProgress}
+                      placement={placement}
+                      onPlacementChange={track ? changePlacement : undefined}
+                      playerRef={(element: HTMLMediaElement | null) => {
                         player.current = element;
                       }}
-                      className="local-player"
-                      aria-label="Uploaded recording"
-                      src={playableMedia.url}
-                      controls
-                      preload="metadata"
-                      playsInline={!playableMedia.audio || undefined}
-                      onLoadedMetadata={(e) => {
-                        if (resumeAt.current)
-                          e.currentTarget.currentTime = resumeAt.current / 1000;
-                        resumeAt.current = 0;
-                      }}
-                      onPlaying={() => {
+                      onTimeUpdate={(ms) => {
                         previewRetries.current = 0;
+                        setTime(ms);
+                      }}
+                      onLoadedMetadata={(media) => {
+                        if (resumeAt.current)
+                          media.currentTime = resumeAt.current / 1000;
+                        resumeAt.current = 0;
+                        setPortrait(
+                          media instanceof HTMLVideoElement &&
+                            media.videoHeight > media.videoWidth,
+                        );
                       }}
                       onError={() => {
                         // A lapsed signed URL: fetch a fresh one and resume.
@@ -817,11 +889,18 @@ export default function ProjectEditor({
                           void loadPreview();
                         } else setPreviewState("error");
                       }}
-                      onTimeUpdate={(e) =>
-                        setTime(e.currentTarget.currentTime * 1000)
-                      }
                     />
-                  ) : (
+                    {track && !playableMedia.audio && (
+                      <PlacementControls
+                        placement={placement}
+                        fallback={defaultPlacement(previewPreset, portrait)}
+                        onChange={changePlacement}
+                        status={placementStatus}
+                      />
+                    )}
+                  </>
+                ) : (
+                  <div className="editor-player-frame preview-empty">
                     <div className="preview-placeholder" role="status">
                       {previewState === "loading" ? (
                         <small>Loading your recording…</small>
@@ -854,47 +933,29 @@ export default function ProjectEditor({
                         </>
                       )}
                     </div>
-                  )}
-                  {previewCue && previewPreset && (
-                    <div
-                      className="local-caption template-overlay"
-                      data-band={
-                        previewPreset.style?.boxStyle === "band" || undefined
-                      }
-                      style={templateFrame(previewPreset)}
-                    >
-                      {previewCue.text.split("\n").map((line, index, all) => {
-                        // Karaoke: estimate the spoken word from time within the cue.
-                        const words = previewCue.text.split(/\s+/).length;
-                        const span = Math.max(
-                          1,
-                          previewCue.endMs - previewCue.startMs,
-                        );
-                        const spoken = Math.min(
-                          words - 1,
-                          Math.floor(
-                            ((time - previewCue.startMs) / span) * words,
-                          ),
-                        );
-                        const before = all
-                          .slice(0, index)
-                          .reduce((n, l) => n + l.split(" ").length, 0);
-                        return (
+                    {previewCue && previewPreset && (
+                      <div
+                        className="local-caption template-overlay"
+                        data-band={
+                          previewPreset.style?.boxStyle === "band" || undefined
+                        }
+                        style={templateFrame(previewPreset)}
+                      >
+                        {previewCue.text.split("\n").map((line, index) => (
                           <TemplateLine
                             key={index}
                             template={previewPreset}
                             text={line}
-                            highlight={spoken - before}
                             dir="auto"
                             lang={
                               /\p{Script=Arabic}/u.test(line) ? "ur" : undefined
                             }
                           />
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
                 <fieldset
                   className="editor-caption-presets"
                   disabled={busy}
