@@ -23,6 +23,9 @@ export type CaptionTemplate = {
   name: string;
   label?: string;
   tier?: "free" | "premium";
+  /** Picker group and rank (1 = most used) from the API. */
+  category?: string;
+  popularity?: number;
   color: string;
   box: boolean;
   style?: CaptionTemplateStyle;
@@ -195,7 +198,7 @@ export function TemplatePicker({
           <span className="template-name">{defaultLabel}</span>
         </label>
       )}
-      {templates.map((template) => (
+      {byPopularity(templates).map((template) => (
         <label key={template.id} className="template-option">
           <input
             type="radio"
@@ -208,6 +211,7 @@ export function TemplatePicker({
           <span
             className="template-frame"
             data-band={template.style?.boxStyle === "band" || undefined}
+            data-position={template.style?.position ?? "bottom"}
             style={templateFrame(template)}
             aria-hidden="true"
           >
@@ -235,4 +239,16 @@ export function TemplatePicker({
       ))}
     </div>
   );
+}
+
+/** Most used looks first; templates without a rank keep their order. */
+export function byPopularity<T extends CaptionTemplate>(templates: readonly T[]) {
+  return templates
+    .map((template, index) => ({ template, index }))
+    .sort(
+      (a, b) =>
+        (a.template.popularity ?? 1e6 + a.index) -
+        (b.template.popularity ?? 1e6 + b.index),
+    )
+    .map(({ template }) => template);
 }
