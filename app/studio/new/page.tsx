@@ -179,10 +179,9 @@ function NewProjectWizard() {
     return (
       <div className="page">
         <PageTitle
-          title="Choose your captions"
-          description="Pick the language and style. You can see them on your own video."
+          title="Set up your captions"
+          description="Choose captions, font, style and options. The preview uses your own video."
         />
-        <WizardSteps current={1} />
         {!ready ? (
           setupError ? (
             <ErrorNotice
@@ -205,7 +204,6 @@ function NewProjectWizard() {
             projectId={resumedProject}
             presets={presets}
             initial={options}
-            planSlug={usage?.plan.slug}
           />
         )}
       </div>
@@ -214,7 +212,7 @@ function NewProjectWizard() {
     <div className="page">
       <PageTitle
         title="New upload"
-        description="Upload your audio or video. Next, you choose the captions and see them on your video."
+        description="Upload your audio or video. Next you choose captions, font, style and options, then generate."
       />
       <WizardSteps current={0} />
       {!ready ? (

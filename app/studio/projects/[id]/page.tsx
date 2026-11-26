@@ -40,10 +40,18 @@ import {
   type CaptionPlacement,
 } from "@/components/caption-stage";
 import { GenerationPanel } from "@/components/generation-panel";
+import { sampleLines } from "@/components/caption-choice-step";
+import { initialDefaults } from "@/components/output-options";
+import type { Defaults } from "@/lib/contracts";
 import { WizardSteps } from "@/components/wizard-steps";
+import type { CaptionFontChoice } from "@/lib/caption-fonts";
 import { ResumeUpload } from "@/components/resume-upload";
 type Cue = Track["content"]["cues"][number];
 const terminal = ["completed", "failed", "cancelled"];
+/** Project settings as caption defaults (for the sample shown pre-captions). */
+function validDefaults(settings: Record<string, unknown>): Defaults {
+  return { ...initialDefaults, ...(settings as Partial<Defaults>) };
+}
 const settledJobs = [...terminal, "ready_for_review", "partial_ready"];
 export default function ProjectEditor({
   params,
@@ -283,6 +291,28 @@ export default function ProjectEditor({
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [placement]);
+  // Step 3 style choice: saved to the project so every later MP4 (including
+  // automatic ones) uses it.
+  function chooseStyle(next: string) {
+    setPreset(next);
+    setPlacementStatus("Saving style…");
+    api<Project>(
+      "/v1/projects/" + id,
+      mutation("PATCH", { settings: { captionPresetVersionId: next } }),
+    )
+      .then((p) => {
+        if (!alive.current) return;
+        setProject(p);
+        setPlacementStatus(
+          render
+            ? "Style saved. Create the MP4 again to apply it."
+            : "Style saved.",
+        );
+      })
+      .catch((e) => {
+        if (alive.current) setPlacementStatus(explain(e));
+      });
+  }
   function changePlacement(next: CaptionPlacement | null) {
     placementEdit.current += 1;
     setPlacement(next);
@@ -542,7 +572,7 @@ export default function ProjectEditor({
               onComplete={load}
             />
           )}
-          {!track && <WizardSteps current={2} />}
+          {!track && <WizardSteps current={5} />}
           {(!track || generating) && (
             <GenerationPanel
               job={job}
@@ -861,9 +891,21 @@ export default function ProjectEditor({
                       src={playableMedia.url}
                       audio={playableMedia.audio}
                       template={previewPreset}
-                      lines={stageCue ? stageCue.text.split("\n") : []}
+                      lines={
+                        stageCue
+                          ? stageCue.text.split("\n")
+                          : !track && project
+                            ? sampleLines(validDefaults(project.settings))
+                            : []
+                      }
                       time={stageProgress}
                       placement={placement}
+                      fonts={
+                        project?.settings.captionFonts as
+                          | CaptionFontChoice
+                          | null
+                          | undefined
+                      }
                       onPlacementChange={track ? changePlacement : undefined}
                       playerRef={(element: HTMLMediaElement | null) => {
                         player.current = element;
@@ -961,11 +1003,11 @@ export default function ProjectEditor({
                   disabled={busy}
                   aria-describedby="preset-preview-note"
                 >
-                  <legend>Caption template</legend>
+                  <legend>Caption style</legend>
                   <TemplatePicker
                     templates={presets}
                     value={preset || null}
-                    onChange={(id) => id && setPreset(id)}
+                    onChange={(next) => next && chooseStyle(next)}
                     name="render-preset"
                     disabled={busy}
                   />
