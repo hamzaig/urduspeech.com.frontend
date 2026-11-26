@@ -1,4 +1,4 @@
-import type { CSSProperties } from "react";
+import { Fragment, type CSSProperties } from "react";
 
 /** Style fields of the extended caption template catalog (see the API). */
 export type CaptionTemplateStyle = {
@@ -130,21 +130,24 @@ export function TemplateLine({
     >
       {karaoke
         ? text.split(" ").map((word, index) => (
-            <span
-              key={index}
-              className={index === highlight ? "is-spoken" : undefined}
-              style={
-                index === highlight
-                  ? {
-                      color: s.highlightColor ?? undefined,
-                      transform: `scale(${s.highlightScale})`,
-                    }
-                  : undefined
-              }
-            >
-              {word}
-              {index < text.split(" ").length - 1 ? " " : ""}
-            </span>
+            // The space sits outside the word so an inline-block spoken word
+            // never swallows it.
+            <Fragment key={index}>
+              {index > 0 && " "}
+              <span
+                className={index === highlight ? "is-spoken" : undefined}
+                style={
+                  index === highlight
+                    ? {
+                        color: s.highlightColor ?? undefined,
+                        transform: `scale(${s.highlightScale})`,
+                      }
+                    : undefined
+                }
+              >
+                {word}
+              </span>
+            </Fragment>
           ))
         : text}
     </span>

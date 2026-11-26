@@ -113,6 +113,7 @@ export type Defaults = {
   captionPresetVersionId: null | string;
   bilingualOrder?: "urdu-first" | "english-first";
   bilingualLayout?: "stacked";
+  captionPlacement?: { y: number; scale: number } | null;
 };
 export type PlanCatalog = {
   schemaVersion: "1";
