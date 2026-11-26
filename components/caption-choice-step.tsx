@@ -1,7 +1,20 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, ArrowRight, Sparkles } from "lucide-react";
+import {
+  ArrowLeft,
+  ArrowRight,
+  Check,
+  Film,
+  Languages,
+  LoaderCircle,
+  Palette,
+  SlidersHorizontal,
+  Sparkles,
+  Type,
+  UploadCloud,
+  Wand2,
+} from "lucide-react";
 import { api, ApiError, mutation, explain } from "@/lib/api";
 import { trackEvent } from "@/lib/analytics";
 import type { Defaults, JobStatusV1 } from "@/lib/contracts";
@@ -9,12 +22,13 @@ import { variants, type Preset } from "@/components/output-options";
 import {
   CaptionStage,
   PlacementControls,
+  StageTransport,
   defaultPlacement,
   type CaptionPlacement,
 } from "@/components/caption-stage";
 import { TemplatePicker } from "@/components/caption-template";
 import { FontPicker } from "@/components/font-picker";
-import { WizardSteps } from "@/components/wizard-steps";
+import { WizardRail, type RailStep } from "@/components/wizard-steps";
 import { outputLabel } from "@/components/output-options";
 import {
   CAPTION_FONTS,
@@ -91,10 +105,45 @@ export function useProjectPreview(projectId: string) {
 }
 
 type Step = 1 | 2 | 3 | 4 | 5;
+
+type Draft = {
+  step: Step;
+  options: Defaults;
+  fonts: CaptionFontChoice;
+  placement: CaptionPlacement | null;
+};
+const draftKey = (projectId: string) => `urduspeech-wizard:${projectId}`;
+/** A saved wizard draft for this project, if this browser has one. */
+function readDraft(projectId: string): Draft | null {
+  try {
+    const value = JSON.parse(
+      window.localStorage.getItem(draftKey(projectId)) ?? "null",
+    ) as Draft | null;
+    if (!value || ![1, 2, 3, 4, 5].includes(value.step) || !value.options)
+      return null;
+    return value;
+  } catch {
+    return null;
+  }
+}
+function writeDraft(projectId: string, draft: Draft) {
+  try {
+    window.localStorage.setItem(draftKey(projectId), JSON.stringify(draft));
+  } catch {
+    // Private mode or full storage: the wizard still works, just unsaved.
+  }
+}
+function clearDraft(projectId: string) {
+  try {
+    window.localStorage.removeItem(draftKey(projectId));
+  } catch {
+    // Nothing to clear.
+  }
+}
 const STEP_TITLES: Record<Step, { title: string; help: string }> = {
   1: { title: "Which captions?", help: "Choose the language and script for your captions." },
   2: { title: "Choose a font", help: "Pick how the letters look. The preview uses your choice." },
-  3: { title: "Choose a style", help: "Pick a caption style. Drag the caption on the video to move it; drag its corner to resize." },
+  3: { title: "Choose a style", help: "Pick a caption style. On the preview you can drag the caption to move it and drag its corner to resize it." },
   4: { title: "Caption options", help: "Both are on by default. You can switch them off." },
   5: { title: "Ready to generate", help: "Check your choices, then generate your captions." },
 };
@@ -115,21 +164,30 @@ export function CaptionChoiceStep({
   initial: Defaults;
 }) {
   const router = useRouter();
-  const [step, setStep] = useState<Step>(1);
+  // Refreshing the page keeps the customer on the same step with the same
+  // choices: the draft lives in this browser until captions are generated.
+  const [draft] = useState(() => readDraft(projectId));
+  const [step, setStep] = useState<Step>(draft?.step ?? 1);
   // AI correction and automatic MP4 are on by default in the wizard.
-  const [options, setOptions] = useState<Defaults>(() => ({
-    ...initial,
-    correctionEnabled: true,
-    autoEmbed: true,
-    captionPresetVersionId:
-      initial.captionPresetVersionId ?? presets[0]?.id ?? null,
-  }));
+  const [options, setOptions] = useState<Defaults>(
+    () =>
+      draft?.options ?? {
+        ...initial,
+        correctionEnabled: true,
+        autoEmbed: true,
+        captionPresetVersionId:
+          initial.captionPresetVersionId ?? presets[0]?.id ?? null,
+      },
+  );
   const [fonts, setFonts] = useState<CaptionFontChoice>(
-    () => initial.captionFonts ?? {},
+    () => draft?.fonts ?? initial.captionFonts ?? {},
   );
-  const [placement, setPlacement] = useState<CaptionPlacement | null>(
-    initial.captionPlacement ?? null,
+  const [placement, setPlacement] = useState<CaptionPlacement | null>(() =>
+    draft ? draft.placement : (initial.captionPlacement ?? null),
   );
+  useEffect(() => {
+    writeDraft(projectId, { step, options, fonts, placement });
+  }, [projectId, step, options, fonts, placement]);
   const [mediaReady, setMediaReady] = useState(false),
     [saveDefault, setSaveDefault] = useState(false),
     [busy, setBusy] = useState(false),
@@ -137,6 +195,7 @@ export function CaptionChoiceStep({
     [time, setTime] = useState(0),
     [portrait, setPortrait] = useState(false);
   const processKey = useRef(crypto.randomUUID());
+  const player = useRef<HTMLMediaElement | null>(null);
   const { preview, state, reload } = useProjectPreview(projectId);
   const template =
     presets.find(({ id }) => id === options.captionPresetVersionId) ??
@@ -181,6 +240,7 @@ export function CaptionChoiceStep({
       trackEvent("captions_generation_started", {
         output_variant: options.outputVariant,
       });
+      clearDraft(projectId);
       router.push(`/studio/projects/${projectId}?step=generate`);
     } catch (e) {
       setError(explain(e));
@@ -193,65 +253,47 @@ export function CaptionChoiceStep({
       ?.label ?? "";
   const usesUrdu = options.outputVariant === "urdu" || options.outputVariant === "bilingual";
   const usesLatin = options.outputVariant !== "urdu";
+  const fontSummary = [usesUrdu && fontLabel("urdu"), usesLatin && fontLabel("latin")]
+    .filter(Boolean)
+    .join(" + ");
+  const styleLabel = template?.label ?? template?.name ?? "Default";
+  const rail: RailStep[] = [
+    { label: "Upload", detail: "Done", icon: UploadCloud },
+    { label: "Captions", detail: outputLabel(options.outputVariant), icon: Languages },
+    { label: "Font", detail: fontSummary, icon: Type },
+    { label: "Style", detail: styleLabel, icon: Palette },
+    {
+      label: "Options",
+      detail: `AI fix ${options.correctionEnabled ? "on" : "off"} · MP4 ${options.autoEmbed ? "on" : "off"}`,
+      icon: SlidersHorizontal,
+    },
+    { label: "Generate", detail: mediaReady ? "Ready to start" : "Checking upload…", icon: Sparkles },
+  ];
+  const StepIcon = rail[step]!.icon;
   // Loop the sample's karaoke highlight over a two-second cycle.
   const cycle = (time % 2000) / 2000;
   return (
-    <>
-      <WizardSteps current={step} />
-      <div className="wizard-layout">
-        <section className="wizard-panel" aria-labelledby="wizard-preview-title">
-          <h2 id="wizard-preview-title">Preview on your video</h2>
-          {preview ? (
-            <>
-              <CaptionStage
-                src={preview.url}
-                audio={preview.audio}
-                template={template}
-                lines={sampleLines(options)}
-                time={cycle}
-                fonts={fonts}
-                placement={placement}
-                onPlacementChange={step === 3 ? setPlacement : undefined}
-                onTimeUpdate={setTime}
-                onError={reload}
-                onLoadedMetadata={(media) =>
-                  setPortrait(
-                    media instanceof HTMLVideoElement &&
-                      media.videoHeight > media.videoWidth,
-                  )
-                }
-              />
-              {step === 3 && !preview.audio && (
-                <PlacementControls
-                  placement={placement}
-                  fallback={defaultPlacement(template, portrait)}
-                  onChange={setPlacement}
-                />
-              )}
-            </>
-          ) : (
-            <div className="wizard-stage-wait" role="status">
-              {state === "expired"
-                ? "This recording is no longer stored."
-                : state === "error"
-                  ? "This browser could not play the recording. You can still continue; captions are generated on our servers."
-                  : "Getting your video ready for preview…"}
-            </div>
-          )}
-          <small className="field-help">
-            Sample text shows your choices. Your real captions appear after
-            generation, and the MP4 uses the same font, style, position and
-            size.
-          </small>
-          <MediaReadiness projectId={projectId} onReady={setMediaReady} />
-        </section>
-        <section className="wizard-panel" aria-labelledby="wizard-options-title">
-          <h2 id="wizard-options-title">{STEP_TITLES[step].title}</h2>
-          <p className="field-help">{STEP_TITLES[step].help}</p>
+    <div className="wizard-shell">
+      <WizardRail
+        steps={rail}
+        current={step}
+        onSelect={(index) => index > 0 && setStep(index as Step)}
+      />
+      <section className="wizard-card wizard-main" aria-labelledby="wizard-options-title">
+        <header className="wizard-head">
+          <span className="wizard-head-icon" aria-hidden="true">
+            <StepIcon size={20} />
+          </span>
+          <div>
+            <h2 id="wizard-options-title">{STEP_TITLES[step].title}</h2>
+            <p>{STEP_TITLES[step].help}</p>
+          </div>
+        </header>
+        <div className="wizard-body">
           {error && <ErrorNotice message={error} />}
           {step === 1 && (
             <>
-              <div className="variant-choices" role="radiogroup">
+              <div className="variant-choices" role="radiogroup" aria-label="Captions">
                 {variants.map((v) => (
                   <label className="variant-choice" key={v.id}>
                     <input
@@ -261,27 +303,33 @@ export function CaptionChoiceStep({
                       checked={options.outputVariant === v.id}
                       onChange={() => set("outputVariant", v.id)}
                     />
-                    <strong>{v.label}</strong>
-                    <small>{v.description}</small>
+                    <span className="variant-choice-text">
+                      <strong>{v.label}</strong>
+                      <small>{v.description}</small>
+                    </span>
+                    <span className="variant-choice-mark" aria-hidden="true">
+                      <Check size={13} />
+                    </span>
                   </label>
                 ))}
               </div>
               {options.outputVariant === "bilingual" && (
-                <label className="field">
-                  First caption line
-                  <select
-                    value={options.bilingualOrder ?? "urdu-first"}
-                    onChange={(e) =>
-                      set(
-                        "bilingualOrder",
-                        e.target.value as Defaults["bilingualOrder"],
-                      )
-                    }
-                  >
-                    <option value="urdu-first">Urdu first</option>
-                    <option value="english-first">English first</option>
-                  </select>
-                </label>
+                <div className="wizard-subchoice">
+                  <span className="wizard-subchoice-label">First caption line</span>
+                  <div className="segmented" role="radiogroup" aria-label="First caption line">
+                    {(["urdu-first", "english-first"] as const).map((order) => (
+                      <label key={order} className="segmented-option">
+                        <input
+                          type="radio"
+                          name="wizard-order"
+                          checked={(options.bilingualOrder ?? "urdu-first") === order}
+                          onChange={() => set("bilingualOrder", order)}
+                        />
+                        <span>{order === "urdu-first" ? "Urdu first" : "English first"}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
               )}
             </>
           )}
@@ -302,16 +350,19 @@ export function CaptionChoiceStep({
                 name="wizard-template"
               />
               {premiumOnFree && (
-                <small className="field-help">
+                <p className="wizard-note">
                   Premium style: captions and SRT/VTT work on every plan; the
                   captioned MP4 with this style needs a paid plan.
-                </small>
+                </p>
               )}
             </fieldset>
           )}
           {step === 4 && (
             <div className="toggle-list">
               <label className="toggle-row">
+                <span className="toggle-icon" aria-hidden="true">
+                  <Wand2 size={18} />
+                </span>
                 <span>
                   <strong>AI text correction</strong>
                   <small>Suggest and safely apply text corrections. You can review changes later.</small>
@@ -324,6 +375,9 @@ export function CaptionChoiceStep({
                 />
               </label>
               <label className="toggle-row">
+                <span className="toggle-icon" aria-hidden="true">
+                  <Film size={18} />
+                </span>
                 <span>
                   <strong>Automatically embed captions</strong>
                   <small>Create the captioned MP4 as soon as captions are ready.</small>
@@ -340,30 +394,22 @@ export function CaptionChoiceStep({
           {step === 5 && (
             <>
               <dl className="wizard-summary">
-                <div>
-                  <dt>Captions</dt>
-                  <dd>{outputLabel(options.outputVariant)}</dd>
-                </div>
-                <div>
-                  <dt>Font</dt>
-                  <dd>
-                    {[usesUrdu && fontLabel("urdu"), usesLatin && fontLabel("latin")]
-                      .filter(Boolean)
-                      .join(" + ")}
-                  </dd>
-                </div>
-                <div>
-                  <dt>Style</dt>
-                  <dd>{template?.label ?? template?.name ?? "Default"}</dd>
-                </div>
-                <div>
-                  <dt>AI text correction</dt>
-                  <dd>{options.correctionEnabled ? "On" : "Off"}</dd>
-                </div>
-                <div>
-                  <dt>Automatic MP4</dt>
-                  <dd>{options.autoEmbed ? "On" : "Off"}</dd>
-                </div>
+                {rail.slice(1, 5).map((item, index) => (
+                  <div key={item.label}>
+                    <dt>
+                      <item.icon size={16} aria-hidden="true" />
+                      {item.label}
+                    </dt>
+                    <dd>{item.detail}</dd>
+                    <button
+                      type="button"
+                      className="text-button"
+                      onClick={() => setStep((index + 1) as Step)}
+                    >
+                      Change
+                    </button>
+                  </div>
+                ))}
               </dl>
               <label className="check-row">
                 <input
@@ -376,33 +422,93 @@ export function CaptionChoiceStep({
               </label>
             </>
           )}
-          <div className="wizard-actions">
-            {step > 1 && (
-              <button
-                className="secondary"
-                disabled={busy}
-                onClick={() => setStep((s) => (s - 1) as Step)}
-              >
-                <ArrowLeft size={16} aria-hidden="true" /> Back
-              </button>
-            )}
-            {step < 5 ? (
-              <button onClick={() => setStep((s) => (s + 1) as Step)}>
-                Next <ArrowRight size={16} aria-hidden="true" />
-              </button>
-            ) : (
-              <button onClick={generate} disabled={busy || !mediaReady}>
+        </div>
+        <MediaReadiness projectId={projectId} onReady={setMediaReady} />
+        <footer className="wizard-foot">
+          {step > 1 ? (
+            <button
+              className="secondary"
+              disabled={busy}
+              onClick={() => setStep((s) => (s - 1) as Step)}
+            >
+              <ArrowLeft size={16} aria-hidden="true" /> Back
+            </button>
+          ) : (
+            <span />
+          )}
+          {step < 5 ? (
+            <button onClick={() => setStep((s) => (s + 1) as Step)}>
+              Next: {rail[step + 1]!.label} <ArrowRight size={16} aria-hidden="true" />
+            </button>
+          ) : (
+            <button onClick={generate} disabled={busy || !mediaReady}>
+              {busy || !mediaReady ? (
+                <LoaderCircle size={18} className="spin" aria-hidden="true" />
+              ) : (
                 <Sparkles size={18} aria-hidden="true" />
-                {busy
-                  ? "Starting…"
-                  : mediaReady
-                    ? "Generate captions"
-                    : "Checking your upload…"}
-              </button>
+              )}
+              {busy
+                ? "Starting…"
+                : mediaReady
+                  ? "Generate captions"
+                  : "Waiting for upload check…"}
+            </button>
+          )}
+        </footer>
+      </section>
+      <aside className="wizard-card wizard-preview" aria-labelledby="wizard-preview-title">
+        <header className="wizard-preview-head">
+          <h2 id="wizard-preview-title">Live preview</h2>
+          <span className="wizard-pill">Sample text</span>
+        </header>
+        {preview ? (
+          <>
+            <CaptionStage
+              src={preview.url}
+              audio={preview.audio}
+              template={template}
+              lines={sampleLines(options)}
+              time={cycle}
+              fonts={fonts}
+              placement={placement}
+              onPlacementChange={setPlacement}
+              playerRef={player}
+              controls={preview.audio}
+              coach
+              onTimeUpdate={setTime}
+              onError={reload}
+              onLoadedMetadata={(media) =>
+                setPortrait(
+                  media instanceof HTMLVideoElement &&
+                    media.videoHeight > media.videoWidth,
+                )
+              }
+            />
+            {!preview.audio && (
+              <>
+                <StageTransport media={player} source={preview.url} />
+                <PlacementControls
+                  placement={placement}
+                  fallback={defaultPlacement(template, portrait)}
+                  onChange={setPlacement}
+                />
+              </>
             )}
+          </>
+        ) : (
+          <div className="wizard-stage-wait" role="status">
+            {state === "expired"
+              ? "This recording is no longer stored."
+              : state === "error"
+                ? "This browser could not play the recording. You can still continue; captions are generated on our servers."
+                : "Getting your video ready for preview…"}
           </div>
-        </section>
-      </div>
-    </>
+        )}
+        <p className="wizard-note">
+          The MP4 uses the same font, style, position and size. Your real
+          captions replace the sample text after generation.
+        </p>
+      </aside>
+    </div>
   );
 }

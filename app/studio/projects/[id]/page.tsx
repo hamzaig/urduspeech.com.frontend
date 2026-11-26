@@ -111,6 +111,22 @@ export default function ProjectEditor({
       api<ProjectActivity>(`/v1/projects/${id}/activity`),
     ]);
     if (!alive.current) return;
+    // Before generation starts, the project is set up in the caption wizard
+    // (it restores the customer's step and choices), not on this page.
+    const uploaded = activity.uploads.length > 0,
+      uploading = activity.uploads.some((upload) =>
+        ["uploading", "completing"].includes(upload.state),
+      );
+    if (
+      uploaded &&
+      !uploading &&
+      !activity.jobs.length &&
+      !t.tracks.length &&
+      !v.versions.length
+    ) {
+      router.replace(`/studio/new?project=${id}`);
+      return;
+    }
     setProject(p);
     if (!placementEdit.current) {
       const saved = p.settings.captionPlacement as
