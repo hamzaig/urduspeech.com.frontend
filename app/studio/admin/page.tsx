@@ -338,7 +338,7 @@ function ModalAccounts({ fresh }: { fresh: boolean }) {
               </p>
               <small>
                 {account.config.appName} / {account.config.environment} ·{" "}
-                {account.config.imageId}
+                {account.config.imageId ?? "image building — next sync adds it"}
               </small>
               {account.config.alignmentImageId && (
                 <small>
@@ -420,7 +420,9 @@ function AccountEditor({
             tokenSecret: value("tokenSecret"),
             appName: value("appName"),
             environment: value("environment"),
-            imageId: value("imageId"),
+            ...(value("imageId").trim()
+              ? { imageId: value("imageId").trim() }
+              : {}),
             ...(value("alignmentImageId").trim()
               ? { alignmentImageId: value("alignmentImageId").trim() }
               : {}),
@@ -558,13 +560,17 @@ function AccountEditor({
                 />
               </label>
               <label className="field">
-                Immutable image ID
+                Immutable image ID (optional)
                 <input
                   name="imageId"
                   defaultValue={account?.config.imageId ?? ""}
-                  required
                   placeholder="im-…"
+                  pattern="im-[A-Za-z0-9]+"
                 />
+                <small>
+                  Leave empty for a new account: the image sync builds it in
+                  this Modal account automatically (within an hour).
+                </small>
               </label>
               <label className="field">
                 Acoustic alignment image ID (optional)

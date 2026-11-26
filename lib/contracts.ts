@@ -421,7 +421,8 @@ export type ComputeAccounts = {
       provider: "modal";
       appName: string;
       environment: string;
-      imageId: string;
+      imageId?: string;
+      imageSource?: string;
       alignmentImageId?: string;
       timeoutMs: number;
       cpu: number;
@@ -440,7 +441,7 @@ export type ComputeAccountInput = {
     tokenSecret: string;
     appName: string;
     environment: string;
-    imageId: string;
+    imageId?: string;
     alignmentImageId?: string;
     timeoutMs: number;
     cpu: number;
@@ -459,7 +460,7 @@ export type ComputeAccountPatch = {
     tokenSecret: string;
     appName: string;
     environment: string;
-    imageId: string;
+    imageId?: string;
     alignmentImageId?: string;
     timeoutMs: number;
     cpu: number;
