@@ -29,13 +29,15 @@ import { PageTitle, ErrorNotice, Saved } from "@/components/common";
 import { outputLabel, type Preset } from "@/components/output-options";
 import {
   TemplateLine,
-  TemplatePicker,
+  templateLabel,
   templateFrame,
 } from "@/components/caption-template";
+import { TemplateBrowser } from "@/components/template-browser";
 import { MediaReadiness } from "@/components/media-readiness";
 import {
   CaptionStage,
   PlacementControls,
+  StageTransport,
   defaultPlacement,
   type CaptionPlacement,
 } from "@/components/caption-stage";
@@ -913,6 +915,7 @@ export default function ProjectEditor({
                     <CaptionStage
                       src={playableMedia.url}
                       audio={playableMedia.audio}
+                      controls={playableMedia.audio}
                       template={previewPreset}
                       lines={
                         stageCue
@@ -955,6 +958,7 @@ export default function ProjectEditor({
                         } else setPreviewState("error");
                       }}
                     />
+                    {!playableMedia.audio && <StageTransport media={player} source={playableMedia.url} />}
                     {track && !playableMedia.audio && (
                       <PlacementControls
                         placement={placement}
@@ -1021,18 +1025,19 @@ export default function ProjectEditor({
                     )}
                   </div>
                 )}
+                <details className="editor-style-browser">
+                  <summary>Caption style · {previewPreset ? templateLabel(previewPreset) : "Choose a style"}</summary>
                 <fieldset
                   className="editor-caption-presets"
                   disabled={busy}
                   aria-describedby="preset-preview-note"
                 >
-                  <legend>Caption style</legend>
-                  <TemplatePicker
+                  <legend className="visually-hidden">Caption style</legend>
+                  <TemplateBrowser
                     templates={presets}
                     value={preset || null}
                     onChange={(next) => next && chooseStyle(next)}
                     name="render-preset"
-                    disabled={busy}
                   />
                   <small id="preset-preview-note">
                     {presets.length
@@ -1040,6 +1045,7 @@ export default function ProjectEditor({
                       : "Caption styles are unavailable."}
                   </small>
                 </fieldset>
+                </details>
               </section>
               <section
                 className="editor-exports"
