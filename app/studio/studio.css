@@ -326,13 +326,6 @@
   .wizard-shell[data-show-preview="false"] .wizard-preview { display: none; }
 }
 
-.generation-focus { display: grid; gap: var(--space-md); justify-items: start; max-width: 48rem; margin-inline: auto; padding: clamp(1.25rem, 4vw, 3rem); }
-.generation-focus h2 { font-size: clamp(1.45rem, 3vw, 2rem); }
-.generation-focus p { color: var(--color-muted); max-width: 54ch; }
-.generation-focus details { width: 100%; border-top: 1px solid var(--color-rule); padding-top: var(--space-sm); }
-.generation-focus summary { cursor: pointer; }
-.generation-symbol { display: grid; place-items: center; width: 3rem; height: 3rem; border-radius: var(--radius-card); color: var(--color-accent); background: var(--color-surface-hover); }
-
 .editor-preview .caption-stage:not(.is-audio) {
   width: min(100%, calc(46dvh * var(--stage-ratio)));
 }
@@ -340,4 +333,3 @@
 .editor-style-browser { margin-block-start: var(--space-sm); border-top: 1px solid var(--color-rule); }
 .editor-style-browser summary { cursor: pointer; padding-block: var(--space-sm); font-weight: 600; }
 .editor-style-browser .template-grid { max-height: 42dvh; overflow-y: auto; padding: .25rem; scrollbar-gutter: stable; }
-.cue-list .cue-text { min-height: 2.8rem; }
