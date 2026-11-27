@@ -5,6 +5,8 @@ import { useRouter } from "next/navigation";
 import {
   ArrowLeft,
   Captions,
+  Check,
+  Clock,
   ChevronDown,
   Play,
   Save,
@@ -54,13 +56,27 @@ const terminal = ["completed", "failed", "cancelled"];
 function validDefaults(settings: Record<string, unknown>): Defaults {
   return { ...initialDefaults, ...(settings as Partial<Defaults>) };
 }
-const settledJobs = [...terminal, "ready_for_review", "partial_ready"];
+const settledJobs = [
+  ...terminal,
+  "ready_for_review",
+  "partial_ready",
+  "validation_failed",
+  "deleting",
+  "deleted",
+];
+const trackExpected = (job: JobStatusV1) =>
+  job.capabilities.timedCaptionsReady ||
+  ["ready_for_review", "render_pending", "rendering"].includes(job.state);
 export default function ProjectEditor({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) {
   const { id } = use(params);
+  return <CaptionProject key={id} id={id} />;
+}
+
+function CaptionProject({ id }: { id: string }) {
   const router = useRouter();
   const [project, setProject] = useState<Project | null>(null),
     [tracks, setTracks] = useState<TrackList["tracks"]>([]),
@@ -90,8 +106,14 @@ export default function ProjectEditor({
     [portrait, setPortrait] = useState(false);
   // Bumped on each customer drag/resize; a debounced PATCH saves the latest.
   const placementEdit = useRef(0);
+  const [priorPlacementRender, setPriorPlacementRender] = useState<
+    string | undefined
+  >();
   const [mediaReady, setMediaReady] = useState(false);
   const [uploadId, setUploadId] = useState<string | null>(null);
+  const [mobileView, setMobileView] = useState<
+    "captions" | "preview" | "exports"
+  >("captions");
   const [previewPosition, setPreviewPosition] = useState<number | null>(null);
   const player = useRef<HTMLMediaElement>(null);
   // Resume point and retry budget when a signed storage URL lapses mid-session.
@@ -104,7 +126,7 @@ export default function ProjectEditor({
     key: string;
   } | null>(null);
   const alive = useRef(true);
-  async function load() {
+  async function load(selectLatestTrack = false) {
     const [p, t, v, styles, activity] = await Promise.all([
       api<Project>("/v1/projects/" + id),
       api<TrackList>(`/v1/projects/${id}/caption-tracks`),
@@ -131,9 +153,7 @@ export default function ProjectEditor({
     }
     if (!placementEdit.current) {
       const saved = p.settings.captionPlacement as
-        | CaptionPlacement
-        | null
-        | undefined;
+        CaptionPlacement | null | undefined;
       setPlacement(saved ?? null);
     }
     setTracks(t.tracks);
@@ -143,7 +163,18 @@ export default function ProjectEditor({
         ["uploading", "completing"].includes(upload.state),
       )?.id ?? null,
     );
-    const [recoveredJob, recoveredRender, recoveredFiles] = await Promise.all([
+    const preferred =
+      t.tracks.find(
+        (entry) => entry.variant === (p.settings.outputVariant ?? "urdu"),
+      ) ?? t.tracks[0];
+    const latest = v.versions.at(-1);
+    const [
+      recoveredJob,
+      recoveredRender,
+      recoveredFiles,
+      recoveredTranscript,
+      initialTrack,
+    ] = await Promise.all([
       activity.jobs[0]
         ? api<JobStatusV1>("/v1/jobs/" + activity.jobs[0].id)
         : Promise.resolve(null),
@@ -155,12 +186,21 @@ export default function ProjectEditor({
           api<ExportFile>("/v1/exports/" + file.id),
         ),
       ),
+      latest ? api<Transcript>("/v1/transcripts/" + latest.id) : null,
+      preferred && (!track || (selectLatestTrack && track.id !== preferred.id))
+        ? api<Track>("/v1/caption-tracks/" + preferred.id)
+        : null,
     ]);
     if (!alive.current) return;
+    setTranscript(recoveredTranscript);
+    if (initialTrack) {
+      setTrack(initialTrack);
+      setCues(initialTrack.content.cues);
+    }
     setProject(p);
     setJob(recoveredJob);
     setRender(recoveredRender);
-    const selectedTrackId = track?.id ?? t.tracks[0]?.id;
+    const selectedTrackId = initialTrack?.id ?? track?.id;
     setFiles(
       recoveredFiles.filter(
         (file) =>
@@ -175,16 +215,6 @@ export default function ProjectEditor({
           ? p.settings.captionPresetVersionId
           : (styles.presets[0]?.id ?? "")),
     );
-    const latest = v.versions.at(-1);
-    if (latest)
-      setTranscript(await api<Transcript>("/v1/transcripts/" + latest.id));
-    if (t.tracks.length && !track) {
-      const current = await api<Track>("/v1/caption-tracks/" + t.tracks[0].id);
-      if (alive.current) {
-        setTrack(current);
-        setCues(current.content.cues);
-      }
-    }
   }
   useEffect(() => {
     alive.current = true;
@@ -196,14 +226,27 @@ export default function ProjectEditor({
     };
   }, [id]);
   useEffect(() => {
-    if (!job || settledJobs.includes(job.state)) return;
+    if (
+      !job ||
+      (settledJobs.includes(job.state) && (track || !trackExpected(job)))
+    )
+      return;
     const timer = setTimeout(
       () => {
         api<JobStatusV1>("/v1/jobs/" + job.id)
           .then(async (j) => {
             if (!alive.current) return;
-            setJob(j);
-            if (settledJobs.includes(j.state) || (!track && j.capabilities.timedCaptionsReady)) await load();
+            if (
+              (!track && trackExpected(j)) ||
+              (!settledJobs.includes(job.state) &&
+                settledJobs.includes(j.state))
+            ) {
+              await load(
+                !settledJobs.includes(job.state) && !trackExpected(job),
+              );
+            } else {
+              setJob(j);
+            }
           })
           .catch((e) => {
             if (alive.current) {
@@ -215,7 +258,7 @@ export default function ProjectEditor({
       Math.max(2000, Math.min(job.retryAfterSeconds * 1000, 30000)),
     );
     return () => clearTimeout(timer);
-  }, [job]);
+  }, [job, track?.id]);
   useEffect(() => {
     if (!files.some((f) => f.state === "pending")) return;
     const timer = setTimeout(() => {
@@ -254,6 +297,71 @@ export default function ProjectEditor({
     }, 3000);
     return () => clearTimeout(timer);
   }, [render]);
+  // Automatic embedding is enqueued after alignment. A ready caption track can
+  // therefore arrive a few polls before the render exists.
+  const expectAutoRender =
+    project?.settings.autoEmbed === true &&
+    !!track?.content.timingReady &&
+    !track.parentTrackId &&
+    track.content.variant === (project.settings.outputVariant ?? "urdu") &&
+    !remoteMedia?.audio &&
+    (render?.trackId !== track.id || render.presetVersionId !== preset);
+  useEffect(() => {
+    if (!expectAutoRender || !track) return;
+    const trackId = track.id;
+    const controller = new AbortController();
+    const seen = new Set<string>();
+    let timer: ReturnType<typeof setTimeout>;
+    let delay = 2500;
+    let polling = false;
+    async function discover() {
+      if (document.hidden || polling || controller.signal.aborted) return;
+      clearTimeout(timer);
+      polling = true;
+      const options = { signal: controller.signal };
+      try {
+        const activity = await api<ProjectActivity>(
+          `/v1/projects/${id}/activity`,
+          options,
+        );
+        for (const item of activity.renders) {
+          if (seen.has(item.id)) continue;
+          const found = await api<Render>("/v1/renders/" + item.id, options);
+          seen.add(item.id);
+          if (found.trackId === trackId && found.presetVersionId === preset) {
+            if (!controller.signal.aborted)
+              setRender((old) => (old?.id === render?.id ? found : old));
+            return;
+          }
+        }
+      } catch {
+        // A transient lookup failure leaves the editable track available.
+      } finally {
+        polling = false;
+      }
+      if (controller.signal.aborted) return;
+      delay = Math.min(delay * 2, 60000);
+      timer = setTimeout(discover, delay);
+    }
+    timer = setTimeout(discover, delay);
+    document.addEventListener("visibilitychange", discover);
+    return () => {
+      controller.abort();
+      clearTimeout(timer);
+      document.removeEventListener("visibilitychange", discover);
+    };
+  }, [id, expectAutoRender, track?.id, preset, render?.id]);
+
+  useEffect(() => {
+    function showLinkedPanel() {
+      if (location.hash === "#media-preview") setMobileView("preview");
+      else if (location.hash === "#editor-exports") setMobileView("exports");
+      else setMobileView("captions");
+    }
+    showLinkedPanel();
+    window.addEventListener("hashchange", showLinkedPanel);
+    return () => window.removeEventListener("hashchange", showLinkedPanel);
+  }, [id]);
   // The editor always plays the uploaded source from storage (S3) through a
   // short-lived signed URL; no local copy of the recording is needed.
   async function loadPreview() {
@@ -333,6 +441,7 @@ export default function ProjectEditor({
   }
   function changePlacement(next: CaptionPlacement | null) {
     placementEdit.current += 1;
+    setPriorPlacementRender(render?.id);
     setPlacement(next);
   }
   useEffect(() => {
@@ -540,35 +649,46 @@ export default function ProjectEditor({
         ),
       )
     : 0;
-  const generating = !!job && !settledJobs.includes(job.state) && job.state !== "validation_failed";
-  const focusGeneration = generating && !track;
-  const cancelAction = job?.capabilities.canCancel && (
-      <button
-        className="secondary"
-        disabled={busy}
-        onClick={() =>
-          (![
-            "created",
-            "upload_pending",
-            "uploaded",
-            "validating",
-            "quota_reserved",
-          ].includes(job.state) &&
-            !window.confirm(
-              "Processing has already started, so these minutes will still be used. Retrying this file later will not charge them again. Cancel processing?",
-            )) ||
-          action(async () =>
-            setJob(
-              await api<JobStatusV1>(
-                "/v1/jobs/" + job.id + "/cancel",
-                mutation("POST", {}, crypto.randomUUID()),
-              ),
+  const generating =
+    !!job && !settledJobs.includes(job.state) && !trackExpected(job);
+  const focusGeneration = generating || (!!job && trackExpected(job) && !track);
+  const reviewing = !!track && !focusGeneration;
+  const reviewStatus = track?.content.timingReady
+    ? "Ready to review"
+    : "Review timing";
+  const hasCurrentRender =
+    !!track &&
+    render?.trackId === track.id &&
+    render.presetVersionId === preset &&
+    render.id !== priorPlacementRender;
+  const currentRender = hasCurrentRender ? render : null;
+  const cancelAction = generating && job.capabilities.canCancel && (
+    <button
+      className="secondary"
+      disabled={busy}
+      onClick={() =>
+        (![
+          "created",
+          "upload_pending",
+          "uploaded",
+          "validating",
+          "quota_reserved",
+        ].includes(job.state) &&
+          !window.confirm(
+            "Processing has already started, so these minutes will still be used. Retrying this file later will not charge them again. Cancel processing?",
+          )) ||
+        action(async () =>
+          setJob(
+            await api<JobStatusV1>(
+              "/v1/jobs/" + job.id + "/cancel",
+              mutation("POST", {}, crypto.randomUUID()),
             ),
-          )
-        }
-      >
-        Cancel processing
-      </button>
+          ),
+        )
+      }
+    >
+      Cancel processing
+    </button>
   );
   const previewPreset = presets.find(({ id }) => id === preset);
   const hasDraft = !!(track || transcript);
@@ -581,6 +701,73 @@ export default function ProjectEditor({
         : mediaReady
           ? "Ready to transcribe"
           : "Media check");
+  const projectDetails = (
+    <div className="project-status-bar">
+      <details className="processing-panel" open={!job && !hasDraft}>
+        <summary>
+          <strong>Project status</strong>
+          <span className="status-label" role="status">
+            {processingStatus}
+          </span>
+          <ChevronDown size={17} aria-hidden="true" />
+        </summary>
+        <div className="processing-grid">
+          <MediaReadiness projectId={id} onReady={setMediaReady} />
+          <section className="job-status" aria-label="Transcription">
+            <p>
+              {job
+                ? `Completed stages: ${job.completedStages.join(", ") || "Waiting to start"}`
+                : "Media is checked before processing. Start transcription once your upload has finished validation."}
+            </p>
+            {job?.errorCode && (
+              <p>
+                Processing stopped: {job.errorCode}. Support reference:{" "}
+                {job.supportId}.
+              </p>
+            )}
+            <div className="actions">
+              {track &&
+                !generating &&
+                mediaReady &&
+                !uploadId &&
+                (!job || settledJobs.includes(job.state)) && (
+                  <button onClick={process} disabled={busy || dirty}>
+                    <Play size={16} />
+                    Generate again
+                  </button>
+                )}
+              {hasDraft && (
+                <button
+                  className="text-button"
+                  disabled={busy}
+                  onClick={() =>
+                    action(async () => {
+                      await api(
+                        `/v1/projects/${id}/make-default`,
+                        mutation("POST", {}),
+                      );
+                      setSaved("These project choices are now your defaults.");
+                    })
+                  }
+                >
+                  Save as defaults
+                </button>
+              )}
+            </div>
+          </section>
+        </div>
+      </details>
+      <button
+        className="secondary refresh-project"
+        aria-label="Refresh project"
+        disabled={busy || dirty}
+        onClick={() => action(load)}
+      >
+        <RefreshCw size={16} aria-hidden="true" />
+        <span>Refresh</span>
+      </button>
+    </div>
+  );
   return (
     <div className="page editor-page">
       <Link
@@ -594,14 +781,62 @@ export default function ProjectEditor({
       >
         <ArrowLeft size={16} aria-hidden="true" /> My projects
       </Link>
-      <PageTitle
-        title={project ? <bdi>{project.title}</bdi> : "Your project"}
-        description={
-          project && !job && !hasDraft
-            ? "Check your recording and start transcription."
-            : undefined
-        }
-      />
+      <span className="sr-only" role="status" aria-atomic="true">
+        {reviewing ? reviewStatus : ""}
+      </span>
+      {reviewing && project ? (
+        <header className="review-heading">
+          <div className="review-title">
+            <h1>
+              <bdi>{project.title}</bdi>
+            </h1>
+            <span className="review-status">
+              <Check size={16} aria-hidden="true" />
+              {reviewStatus}
+            </span>
+          </div>
+          <div className="review-actions">
+            {currentRender?.state === "completed" && (
+              <button
+                disabled={busy || dirty}
+                title={
+                  dirty ? "Save your changes before exporting." : undefined
+                }
+                onClick={() =>
+                  action(() =>
+                    startDownload(
+                      "/v1/renders/" + currentRender.id + "/download",
+                    ),
+                  )
+                }
+              >
+                <Download size={16} aria-hidden="true" /> Download MP4
+              </button>
+            )}
+            {currentRender && !terminal.includes(currentRender.state) && (
+              <span className="mp4-progress" role="status">
+                <Clock size={15} aria-hidden="true" /> Preparing MP4
+              </span>
+            )}
+            <a
+              className="button secondary review-exports-link"
+              href="#editor-exports"
+              onClick={() => setMobileView("exports")}
+            >
+              Exports
+            </a>
+          </div>
+        </header>
+      ) : (
+        <PageTitle
+          title={project ? <bdi>{project.title}</bdi> : "Your project"}
+          description={
+            project && !job && !hasDraft
+              ? "Check your recording and start transcription."
+              : undefined
+          }
+        />
+      )}
       {error && (
         <ErrorNotice
           message={error}
@@ -620,88 +855,52 @@ export default function ProjectEditor({
             />
           )}
           {!job && !track && <WizardSteps current={5} />}
-          {(job || (!track && mediaReady && !uploadId)) && (
+          {(focusGeneration ||
+            (!track && !transcript && (job || (mediaReady && !uploadId)))) && (
             <GenerationPanel
               job={job}
-              reviewReady={!!track}
-              renderState={render?.state}
               cancelAction={cancelAction}
               mediaReady={mediaReady}
               busy={busy}
               onStart={process}
             />
           )}
-          {!focusGeneration && <>
-          <div className="project-status-bar">
-            <details className="processing-panel" open={!job && !hasDraft}>
-              <summary>
-                <strong>Project status</strong>
-                <span className="status-label" role="status">
-                  {processingStatus}
-                </span>
-                <ChevronDown size={17} aria-hidden="true" />
-              </summary>
-              <div className="processing-grid">
-                <MediaReadiness projectId={id} onReady={setMediaReady} />
-                <section className="job-status" aria-label="Transcription">
-                  <p>
-                    {job
-                      ? `Completed stages: ${job.completedStages.join(", ") || "Waiting to start"}`
-                      : "Media is checked before processing. Start transcription once your upload has finished validation."}
-                  </p>
-                  {job?.errorCode && (
-                    <p>
-                      Processing stopped: {job.errorCode}. Support reference:{" "}
-                      {job.supportId}.
-                    </p>
-                  )}
-                  <div className="actions">
-                    {track && !generating && mediaReady && !uploadId && (!job || settledJobs.includes(job.state)) && (
-                    <button
-                      onClick={process}
-                      disabled={
-                        busy ||
-                        !mediaReady ||
-                        (!!job && !settledJobs.includes(job.state))
-                      }
-                    >
-                      <Play size={16} />
-                      Start transcription
-                    </button>
-                    )}
-                    {hasDraft && <button
-                      className="text-button"
-                      disabled={busy}
-                      onClick={() =>
-                        action(async () => {
-                          await api(
-                            `/v1/projects/${id}/make-default`,
-                            mutation("POST", {}),
-                          );
-                          setSaved(
-                            "These project choices are now your defaults.",
-                          );
-                        })
-                      }
-                    >
-                      Save as defaults
-                    </button>}
-                  </div>
-                </section>
-              </div>
-            </details>
-            <button
-              className="secondary refresh-project"
-              aria-label="Refresh project"
-              disabled={busy || dirty}
-              onClick={() => action(load)}
-            >
-              <RefreshCw size={16} aria-hidden="true" />
-              <span>Refresh</span>
-            </button>
-          </div>
-          <div className="editor-grid">
+        </>
+      )}
+      {project && !focusGeneration && (
+        <>
+          {!reviewing && projectDetails}
+          {reviewing && (
+            <nav className="review-views" aria-label="Project workspace">
+              <button
+                aria-pressed={mobileView === "captions"}
+                aria-controls="caption-editor"
+                onClick={() => setMobileView("captions")}
+              >
+                Captions
+              </button>
+              <button
+                aria-pressed={mobileView === "preview"}
+                aria-controls="media-preview"
+                onClick={() => setMobileView("preview")}
+              >
+                Preview
+              </button>
+              <button
+                aria-pressed={mobileView === "exports"}
+                aria-controls="editor-exports"
+                onClick={() => setMobileView("exports")}
+              >
+                Exports
+              </button>
+            </nav>
+          )}
+          <div
+            className="editor-grid"
+            data-review-view={reviewing ? mobileView : undefined}
+          >
             <section
+              id="caption-editor"
               className="editor-content"
               aria-labelledby="caption-editor-title"
             >
@@ -710,20 +909,26 @@ export default function ProjectEditor({
                   <Captions size={19} aria-hidden="true" />
                   {track ? "Caption editor" : "Transcript"}
                 </h2>
-                <div className="editor-shortcuts">
-                  <a className="text-button editor-jump" href="#media-preview">
-                    Preview
-                  </a>
-                  <a className="text-button" href="#editor-exports">
-                    Exports
-                  </a>
-                </div>
+                {!reviewing && (
+                  <div className="editor-shortcuts">
+                    <a
+                      className="text-button editor-jump"
+                      href="#media-preview"
+                    >
+                      Preview
+                    </a>
+                    <a className="text-button" href="#editor-exports">
+                      Exports
+                    </a>
+                  </div>
+                )}
               </div>
               <div className="editor-controls">
                 {tracks.length > 0 && (
                   <label className="inline-select">
-                    <span>Output</span>
+                    <span id="caption-output-label">Output</span>
                     <select
+                      aria-labelledby="caption-output-label"
                       value={track?.id ?? ""}
                       onChange={(e) => switchTrack(e.target.value)}
                       disabled={busy}
@@ -755,9 +960,6 @@ export default function ProjectEditor({
               </div>
               {track ? (
                 <>
-                  <p className="subtitle">
-                    Times are in seconds. Saving creates a new version.
-                  </p>
                   {track.content.qa.defects.length > 0 && (
                     <p className="notice">
                       Timing needs attention:{" "}
@@ -798,45 +1000,58 @@ export default function ProjectEditor({
                             )}
                             {i + 1}
                           </button>
-                          <label>
-                            Start
-                            <input
-                              className="time-input"
-                              type="number"
-                              step="0.001"
-                              min={0}
-                              disabled={busy}
-                              value={c.startMs / 1000}
-                              onChange={(e) =>
-                                updateCue(
-                                  i,
-                                  "startMs",
-                                  Math.round(Number(e.target.value) * 1000),
-                                )
-                              }
-                            />
-                          </label>
-                          <label>
-                            End
-                            <input
-                              className="time-input"
-                              type="number"
-                              step="0.001"
-                              min={0}
-                              disabled={busy}
-                              value={c.endMs / 1000}
-                              onChange={(e) =>
-                                updateCue(
-                                  i,
-                                  "endMs",
-                                  Math.round(Number(e.target.value) * 1000),
-                                )
-                              }
-                            />
-                          </label>
+                          <details className="cue-timing">
+                            <summary
+                              aria-label={`Edit timing for caption ${i + 1}, ${c.startMs / 1000} to ${c.endMs / 1000} seconds`}
+                            >
+                              <span>
+                                {c.startMs / 1000} – {c.endMs / 1000} s
+                              </span>
+                              <ChevronDown size={14} aria-hidden="true" />
+                            </summary>
+                            <div className="cue-times">
+                              <label>
+                                Start (s)
+                                <input
+                                  className="time-input"
+                                  type="number"
+                                  step="0.001"
+                                  min={0}
+                                  disabled={busy}
+                                  value={c.startMs / 1000}
+                                  onChange={(e) =>
+                                    updateCue(
+                                      i,
+                                      "startMs",
+                                      Math.round(Number(e.target.value) * 1000),
+                                    )
+                                  }
+                                />
+                              </label>
+                              <label>
+                                End (s)
+                                <input
+                                  className="time-input"
+                                  type="number"
+                                  step="0.001"
+                                  min={0}
+                                  disabled={busy}
+                                  value={c.endMs / 1000}
+                                  onChange={(e) =>
+                                    updateCue(
+                                      i,
+                                      "endMs",
+                                      Math.round(Number(e.target.value) * 1000),
+                                    )
+                                  }
+                                />
+                              </label>
+                            </div>
+                          </details>
                           {c.fallback && <span>Review timing</span>}
                         </div>
                         <textarea
+                          rows={Math.min(5, c.text.split("\n").length)}
                           className="cue-text"
                           dir="auto"
                           lang={
@@ -928,9 +1143,7 @@ export default function ProjectEditor({
                       placement={placement}
                       fonts={
                         project?.settings.captionFonts as
-                          | CaptionFontChoice
-                          | null
-                          | undefined
+                          CaptionFontChoice | null | undefined
                       }
                       onPlacementChange={track ? changePlacement : undefined}
                       playerRef={(element: HTMLMediaElement | null) => {
@@ -958,7 +1171,12 @@ export default function ProjectEditor({
                         } else setPreviewState("error");
                       }}
                     />
-                    {!playableMedia.audio && <StageTransport media={player} source={playableMedia.url} />}
+                    {!playableMedia.audio && (
+                      <StageTransport
+                        media={player}
+                        source={playableMedia.url}
+                      />
+                    )}
                     {track && !playableMedia.audio && (
                       <PlacementControls
                         placement={placement}
@@ -980,9 +1198,8 @@ export default function ProjectEditor({
                         </small>
                       ) : previewState === "expired" ? (
                         <small>
-                          The original recording was removed after its
-                          retention period. Captions and exports remain
-                          available.
+                          The original recording was removed after its retention
+                          period. Captions and exports remain available.
                         </small>
                       ) : (
                         <>
@@ -996,8 +1213,7 @@ export default function ProjectEditor({
                               void loadPreview();
                             }}
                           >
-                            <RefreshCw size={17} aria-hidden="true" /> Try
-                            again
+                            <RefreshCw size={17} aria-hidden="true" /> Try again
                           </button>
                         </>
                       )}
@@ -1026,25 +1242,30 @@ export default function ProjectEditor({
                   </div>
                 )}
                 <details className="editor-style-browser">
-                  <summary>Caption style · {previewPreset ? templateLabel(previewPreset) : "Choose a style"}</summary>
-                <fieldset
-                  className="editor-caption-presets"
-                  disabled={busy}
-                  aria-describedby="preset-preview-note"
-                >
-                  <legend className="visually-hidden">Caption style</legend>
-                  <TemplateBrowser
-                    templates={presets}
-                    value={preset || null}
-                    onChange={(next) => next && chooseStyle(next)}
-                    name="render-preset"
-                  />
-                  <small id="preset-preview-note">
-                    {presets.length
-                      ? "Preview is approximate; the MP4 uses the server template. Premium templates need a paid plan."
-                      : "Caption styles are unavailable."}
-                  </small>
-                </fieldset>
+                  <summary>
+                    Caption style ·{" "}
+                    {previewPreset
+                      ? templateLabel(previewPreset)
+                      : "Choose a style"}
+                  </summary>
+                  <fieldset
+                    className="editor-caption-presets"
+                    disabled={busy}
+                    aria-describedby="preset-preview-note"
+                  >
+                    <legend className="visually-hidden">Caption style</legend>
+                    <TemplateBrowser
+                      templates={presets}
+                      value={preset || null}
+                      onChange={(next) => next && chooseStyle(next)}
+                      name="render-preset"
+                    />
+                    <small id="preset-preview-note">
+                      {presets.length
+                        ? "Preview is approximate; the MP4 uses the server template. Premium templates need a paid plan."
+                        : "Caption styles are unavailable."}
+                    </small>
+                  </fieldset>
                 </details>
               </section>
               <section
@@ -1103,7 +1324,12 @@ export default function ProjectEditor({
                 ))}
                 {render && (
                   <div className="notice">
-                    <p>Video render: {render.state}</p>
+                    <p>
+                      {hasCurrentRender ? "Captioned MP4" : "Previous MP4"} ·{" "}
+                      {render.state === "completed"
+                        ? "Ready to download"
+                        : render.state}
+                    </p>
                     {render.state === "completed" ? (
                       <button
                         className="button secondary"
@@ -1134,7 +1360,7 @@ export default function ProjectEditor({
                             )
                           }
                         >
-                          Cancel render
+                          Cancel video render
                         </button>
                       )
                     )}
@@ -1144,6 +1370,7 @@ export default function ProjectEditor({
               </section>
             </aside>
           </div>
+          {reviewing && projectDetails}
           <details className="danger-zone">
             <summary>Delete this project</summary>
             <p>Starts permanent deletion of this project and its media.</p>
@@ -1171,7 +1398,6 @@ export default function ProjectEditor({
               Delete project
             </button>
           </details>
-          </>}
         </>
       )}
     </div>
