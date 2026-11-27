@@ -45,7 +45,7 @@ export function WizardRail({
 }: {
   steps: readonly RailStep[];
   current: number;
-  onSelect: (index: number) => void;
+  onSelect?: (index: number) => void;
 }) {
   return (
     <nav className="wizard-rail" aria-label="Caption setup steps">
@@ -62,7 +62,7 @@ export function WizardRail({
         {steps.map(({ label, detail, icon: Icon }, index) => {
           const done = index < current,
             active = index === current,
-            locked = index === 0;
+            locked = index === 0 || !onSelect;
           return (
             <li key={label}>
               <button
@@ -71,7 +71,7 @@ export function WizardRail({
                 data-state={active ? "active" : done ? "done" : "todo"}
                 aria-current={active ? "step" : undefined}
                 disabled={locked}
-                onClick={() => onSelect(index)}
+                onClick={() => onSelect?.(index)}
               >
                 <span className="wizard-rail-icon" aria-hidden="true">
                   {done ? <Check size={16} /> : <Icon size={16} />}

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Play } from "lucide-react";
 import type { JobStatusV1 } from "@/lib/contracts";
 
@@ -37,7 +38,9 @@ export function GenerationPanel({
       <h2 id="generation-title">
         {failed
           ? "Caption generation stopped"
-          : job
+          : job?.freeQueueBusy
+            ? "Your video is in the Free queue"
+            : job
             ? "Generating your captions"
             : "Ready to generate captions"}
       </h2>
@@ -48,6 +51,11 @@ export function GenerationPanel({
             : "Processing did not finish."}{" "}
           Support reference: {job.supportId}. You can try again.
         </p>
+      ) : job?.freeQueueBusy ? (
+        <div>
+          <p role="status">Both Free workers are busy. Your video will start automatically when a slot opens. You can leave this page.</p>
+          <Link href="/studio/billing">Compare paid plans for separate processing slots</Link>
+        </div>
       ) : job ? (
         <>
           <p role="status">

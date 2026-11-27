@@ -289,7 +289,7 @@ export function CaptionChoiceStep({
             <p>{STEP_TITLES[step].help}</p>
           </div>
         </header>
-        <div className="wizard-body">
+        <div key={step} className="wizard-body">
           {error && <ErrorNotice message={error} />}
           {step === 1 && (
             <>
