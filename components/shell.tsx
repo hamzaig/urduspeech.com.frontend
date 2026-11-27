@@ -8,8 +8,9 @@ import {
   Wallet,
   LogOut,
   Settings,
+  Menu,
 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { api, mutation, explain, ApiError } from "@/lib/api";
 import { Brand } from "@/components/brand";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -23,6 +24,37 @@ const links = [
 export function Shell({ children }: { children: React.ReactNode }) {
   const path = usePathname();
   const router = useRouter();
+  const projectRoute = path.startsWith("/studio/projects/");
+  const [navOpen, setNavOpen] = useState(false);
+  const header = useRef<HTMLElement>(null);
+  const navButton = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    setNavOpen(false);
+  }, [path]);
+  useEffect(() => {
+    if (!navOpen) return;
+    function outside(event: PointerEvent | FocusEvent) {
+      if (
+        event.target instanceof Node &&
+        !header.current?.contains(event.target)
+      )
+        setNavOpen(false);
+    }
+    function escape(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setNavOpen(false);
+        navButton.current?.focus();
+      }
+    }
+    document.addEventListener("pointerdown", outside);
+    document.addEventListener("focusin", outside);
+    document.addEventListener("keydown", escape);
+    return () => {
+      document.removeEventListener("pointerdown", outside);
+      document.removeEventListener("focusin", outside);
+      document.removeEventListener("keydown", escape);
+    };
+  }, [navOpen]);
   const [session, setSession] = useState<Session | null>(null);
   const [error, setError] = useState("");
   const [admin, setAdmin] = useState(false);
@@ -67,10 +99,30 @@ export function Shell({ children }: { children: React.ReactNode }) {
   }
   return (
     <div className="app-shell">
-      <header className="studio-header">
+      <header
+        ref={header}
+        className={"studio-header" + (projectRoute ? " project-nav" : "")}
+      >
         <div className="studio-header-inner">
           <Brand studio />
-          <nav aria-label="Studio navigation">
+          {projectRoute && (
+            <button
+              type="button"
+              ref={navButton}
+              className="studio-menu-trigger secondary"
+              aria-expanded={navOpen}
+              aria-controls="studio-navigation"
+              onClick={() => setNavOpen((open) => !open)}
+            >
+              <Menu size={18} aria-hidden="true" />
+              Menu
+            </button>
+          )}
+          <nav
+            id="studio-navigation"
+            aria-label="Studio navigation"
+            data-open={navOpen || undefined}
+          >
             {links.map(({ href, label, icon: Icon }) => {
               const active =
                 path === href ||
@@ -100,6 +152,16 @@ export function Shell({ children }: { children: React.ReactNode }) {
                 <Settings size={18} aria-hidden="true" />
                 Operations
               </Link>
+            )}
+            {projectRoute && session && (
+              <button
+                className="project-mobile-signout text-button"
+                disabled={signingOut}
+                onClick={signOut}
+              >
+                <LogOut size={16} />
+                Sign out
+              </button>
             )}
           </nav>
           <div className="workspace-account">

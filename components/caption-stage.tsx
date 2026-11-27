@@ -1,6 +1,7 @@
 "use client";
 import {
   useEffect,
+  useMemo,
   useRef,
   useState,
   type RefObject,
@@ -360,10 +361,13 @@ const clock = (seconds: number) => {
 export function StageTransport({
   media,
   source,
+  cues,
 }: {
   media: RefObject<HTMLMediaElement | null>;
   /** Changes when the stage loads a different recording. */
   source: string;
+  /** Draw the timed caption intervals beneath the project playhead. */
+  cues?: readonly { startMs: number; endMs: number }[];
 }) {
   const [playing, setPlaying] = useState(false),
     [muted, setMuted] = useState(false),
@@ -378,35 +382,85 @@ export function StageTransport({
       setAt(element.currentTime);
       setLength(Number.isFinite(element.duration) ? element.duration : 0);
     };
-    const events = ["play", "pause", "timeupdate", "loadedmetadata", "volumechange", "ended"];
+    const events = [
+      "play",
+      "pause",
+      "timeupdate",
+      "loadedmetadata",
+      "volumechange",
+      "ended",
+    ];
     events.forEach((name) => element.addEventListener(name, sync));
     sync();
-    return () => events.forEach((name) => element.removeEventListener(name, sync));
+    return () =>
+      events.forEach((name) => element.removeEventListener(name, sync));
   }, [media, source]);
+  const intervals = useMemo(() => {
+    if (!cues || !length) return "";
+    const scale = 1 / length; // seconds x 1000 viewBox units / milliseconds
+    return cues
+      .map(({ startMs, endMs }) => {
+        const x = Math.max(0, Math.min(1000, startMs * scale));
+        const end = Math.max(x, Math.min(1000, endMs * scale));
+        const gap = Math.min(2, (end - x) / 3);
+        return `M${x.toFixed(2)} 6H${(end - gap).toFixed(2)}`;
+      })
+      .join(" ");
+  }, [cues, length]);
   const element = media.current;
+  const seek = (
+    <input
+      type="range"
+      className="stage-transport-seek"
+      aria-label="Seek"
+      aria-valuetext={`${clock(at)} of ${clock(length)}`}
+      min={0}
+      max={length || 1}
+      step={0.05}
+      value={Math.min(at, length || 1)}
+      style={{ ["--seek" as string]: `${length ? (at / length) * 100 : 0}%` }}
+      onChange={(e) => {
+        if (element) element.currentTime = Number(e.target.value);
+      }}
+    />
+  );
   return (
     <div className="stage-transport">
       <button
         type="button"
         className="stage-transport-button"
         aria-label={playing ? "Pause" : "Play"}
-        onClick={() => (element?.paused ? void element.play() : element?.pause())}
-      >
-        {playing ? <Pause size={16} aria-hidden="true" /> : <Play size={16} aria-hidden="true" />}
-      </button>
-      <input
-        type="range"
-        className="stage-transport-seek"
-        aria-label="Seek"
-        min={0}
-        max={length || 1}
-        step={0.05}
-        value={Math.min(at, length || 1)}
-        style={{ ["--seek" as string]: `${length ? (at / length) * 100 : 0}%` }}
-        onChange={(e) => {
-          if (element) element.currentTime = Number(e.target.value);
+        onClick={() => {
+          const el = media.current;
+          if (el?.paused) void el.play().catch(() => {});
+          else el?.pause();
         }}
-      />
+      >
+        {playing ? (
+          <Pause size={16} aria-hidden="true" />
+        ) : (
+          <Play size={16} aria-hidden="true" />
+        )}
+      </button>
+      {cues?.length ? (
+        <div className="project-scrubber">
+          <svg
+            viewBox="0 0 1000 12"
+            preserveAspectRatio="none"
+            aria-hidden="true"
+          >
+            <path d={intervals} />
+          </svg>
+          <i
+            className="project-playhead"
+            aria-hidden="true"
+            style={{ left: `${length ? (at / length) * 100 : 0}%` }}
+          />
+          {seek}
+        </div>
+      ) : (
+        seek
+      )}
       <span className="stage-transport-time">
         {clock(at)} / {clock(length)}
       </span>
@@ -418,7 +472,11 @@ export function StageTransport({
           if (element) element.muted = !element.muted;
         }}
       >
-        {muted ? <VolumeX size={16} aria-hidden="true" /> : <Volume2 size={16} aria-hidden="true" />}
+        {muted ? (
+          <VolumeX size={16} aria-hidden="true" />
+        ) : (
+          <Volume2 size={16} aria-hidden="true" />
+        )}
       </button>
     </div>
   );
