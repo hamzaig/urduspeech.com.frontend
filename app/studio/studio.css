@@ -311,3 +311,17 @@
     .page:has(> .wizard-shell) .page-heading p { display: none; }
   }
 }
+
+/* Reserve the video's full aspect-ratio box before laying out its controls. */
+.wizard-shell .wizard-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.wizard-shell .wizard-preview > * { flex: none; }
+.wizard-preview .caption-stage:not(.is-audio) {
+  width: min(100%, calc(43dvh * var(--stage-ratio)));
+}
+@media (max-width: 56rem) and (min-height: 36rem) {
+  .wizard-shell[data-show-preview="false"] .wizard-preview { display: none; }
+}
