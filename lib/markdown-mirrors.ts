@@ -193,7 +193,7 @@ export function renderMarkdownMirror(
           `| ${p.name}${p.recommended ? " (Recommended)" : ""} | PKR ${p.priceDisplay}${p.billingPeriod === "monthly" ? "/mo" : " once"} | ${p.minutes} | ${p.maxDurationMinutes} min | ${p.maxUploadLabel} | ${p.videoQuality} | ${p.retentionDays} days |`,
       ),
     ].join("\n");
-    return `# UrduSpeech Pricing in Pakistani Rupees (PKR)\n\nCanonical URL: ${SITE_URL}/pricing\n\n${table}\n\n- Audio and video share one duration-based minute allowance.\n- Available payment rails inside Studio Billing: card checkout (Stripe) and local manual verification (${MANUAL_PAYMENT_METHODS.join(", ")}).\n- Unused monthly minutes do not roll over.\n- Refund & payment review policy: ${SITE_URL}/refunds\n`;
+    return `# UrduSpeech Pricing in Pakistani Rupees (PKR)\n\nCanonical URL: ${SITE_URL}/pricing\n\n${table}\n\n- All caption templates are included on every plan for MP4 exports.\n- Audio and video share one duration-based minute allowance.\n- Available payment rails inside Studio Billing: card checkout (Stripe) and local manual verification (${MANUAL_PAYMENT_METHODS.join(", ")}).\n- Unused monthly minutes do not roll over.\n- Refund & payment review policy: ${SITE_URL}/refunds\n`;
   }
 
   if (key === "about") {

@@ -27,14 +27,13 @@ export function TemplateBrowser({
   const categories = useMemo(() => {
     const seen = new Set<string>();
     for (const t of templates) if (t.category) seen.add(t.category);
-    return ["All", "Free", ...seen];
+    return ["All", ...seen];
   }, [templates]);
   const needle = query.trim().toLowerCase();
   const shown = templates.filter(
     (t) =>
       t.id === value ||
-      ((category === "All" ||
-        (category === "Free" ? t.tier !== "premium" : t.category === category)) &&
+      ((category === "All" || t.category === category) &&
         (!needle ||
           templateLabel(t).toLowerCase().includes(needle) ||
           (t.category ?? "").toLowerCase().includes(needle))),

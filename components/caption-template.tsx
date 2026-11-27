@@ -22,7 +22,6 @@ export type CaptionTemplate = {
   id: string;
   name: string;
   label?: string;
-  tier?: "free" | "premium";
   /** Picker group and rank (1 = most used) from the API. */
   category?: string;
   popularity?: number;
@@ -161,10 +160,7 @@ export function templateLabel(template: CaptionTemplate) {
   return template.label ?? template.name.replaceAll("-", " ");
 }
 
-/**
- * Template gallery: each option shows a live miniature of its look. Premium
- * templates carry a badge; paid plans render them, Free shows the limit.
- */
+/** Each option previews the template on a sample caption. */
 export function TemplatePicker({
   templates,
   value,
@@ -229,12 +225,7 @@ export function TemplatePicker({
               highlight={1}
             />
           </span>
-          <span className="template-name">
-            {templateLabel(template)}
-            {template.tier === "premium" && (
-              <span className="template-badge">Premium</span>
-            )}
-          </span>
+          <span className="template-name">{templateLabel(template)}</span>
         </label>
       ))}
     </div>

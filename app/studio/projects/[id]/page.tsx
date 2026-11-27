@@ -1262,7 +1262,7 @@ function CaptionProject({ id }: { id: string }) {
                     />
                     <small id="preset-preview-note">
                       {presets.length
-                        ? "Preview is approximate; the MP4 uses the server template. Premium templates need a paid plan."
+                        ? "The preview approximates how your selected style will look in the MP4."
                         : "Caption styles are unavailable."}
                     </small>
                   </fieldset>
