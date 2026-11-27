@@ -127,7 +127,6 @@ export default function ProjectEditor({
       router.replace(`/studio/new?project=${id}`);
       return;
     }
-    setProject(p);
     if (!placementEdit.current) {
       const saved = p.settings.captionPlacement as
         | CaptionPlacement
@@ -156,6 +155,7 @@ export default function ProjectEditor({
       ),
     ]);
     if (!alive.current) return;
+    setProject(p);
     setJob(recoveredJob);
     setRender(recoveredRender);
     const selectedTrackId = track?.id ?? t.tracks[0]?.id;
@@ -589,7 +589,7 @@ export default function ProjectEditor({
             />
           )}
           {!track && <WizardSteps current={5} />}
-          {(!track || generating) && (
+          {(!track || generating) && (job || (mediaReady && !uploadId)) && (
             <GenerationPanel
               job={job}
               mediaReady={mediaReady}
@@ -621,6 +621,7 @@ export default function ProjectEditor({
                     </p>
                   )}
                   <div className="actions">
+                    {track && !generating && mediaReady && !uploadId && (!job || settledJobs.includes(job.state)) && (
                     <button
                       onClick={process}
                       disabled={
@@ -632,6 +633,7 @@ export default function ProjectEditor({
                       <Play size={16} />
                       Start transcription
                     </button>
+                    )}
                     {job?.capabilities.canCancel && (
                       <button
                         className="secondary"

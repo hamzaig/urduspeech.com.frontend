@@ -82,7 +82,7 @@ export function GenerationPanel({
             : "We are checking your recording. This takes a moment after upload."}
         </p>
       )}
-      {(!job || failed) && (
+      {mediaReady && (!job || failed) && (
         <div className="wizard-actions">
           <button onClick={onStart} disabled={busy || !mediaReady}>
             <Play size={16} aria-hidden="true" />
