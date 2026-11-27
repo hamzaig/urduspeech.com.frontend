@@ -76,10 +76,13 @@ test(
         const controls = doc.querySelector(".stage-transport").getBoundingClientRect();
         return [video.x, video.y, video.width, video.height, controls.y, controls.bottom];
       });
-      document.body.textContent = JSON.stringify(results);
+      const output = document.createElement("output");
+      output.id = "stage-measurements";
+      output.textContent = JSON.stringify(results);
+      document.body.replaceChildren(output);
     </script></body>`,
       );
-      const { stdout } = await promisify(execFile)(
+      const { stdout, stderr } = await promisify(execFile)(
         chrome!,
         [
           "--headless",
@@ -90,11 +93,17 @@ test(
           "--dump-dom",
           pathToFileURL(page).href,
         ],
-        { timeout: 20_000 },
+        { signal: AbortSignal.timeout(45_000) },
       );
-      const results = JSON.parse(
-        stdout.match(/<body>(\[.*?\])<\/body>/s)![1],
-      ) as number[][];
+      const measurements = stdout.match(
+        /<output id="stage-measurements">([^<]+)<\/output>/,
+      )?.[1];
+      assert.ok(
+        measurements,
+        `Chrome did not return layout measurements (${Buffer.byteLength(stdout)} bytes of HTML). ${stderr.slice(-500)}`,
+      );
+      const results = JSON.parse(measurements) as number[][];
+      assert.equal(results.length, samples.length);
       for (const [i, sample] of samples.entries()) {
         const [x, y, w, h, barTop, barBottom] = results[i];
         const width = Math.min(sample.width, barTop * sample.ratio);
