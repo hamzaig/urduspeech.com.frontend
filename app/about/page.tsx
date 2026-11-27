@@ -182,7 +182,7 @@ export default function AboutPage() {
         <p>
           Every guide and comparison adheres to strict factual verification: we
           document actual Studio limits (including the 2 GiB scanning ceiling,
-          256 MiB MP4 render limit, 720p Free watermark, and unsupported
+          256 MiB MP4 render limit (100 MiB on Free), 720p Free watermark, and unsupported
           workflows like live dictation or speaker diarization), link primary
           standards such as W3C WebVTT and YouTube Help, and never publish
           unverified accuracy percentages or fabricated customer reviews.

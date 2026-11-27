@@ -161,8 +161,9 @@ const sections: readonly DocumentSection[] = [
           Properly tagged BT.2020 HLG and PQ HDR phone videos are tone-mapped to
           standard 8-bit SDR BT.709 H.264 MP4 with AAC audio so playback looks
           consistent across mobile social feeds. Rendered videos respect plan
-          height tiers (720p watermarked on Free; 1080p unwatermarked on paid
-          plans) and the 256 MiB operational safety limit.
+          height tiers (720p watermarked on Free; original resolution up to 4K,
+          unwatermarked, on paid plans) and their MP4 size limits (100 MiB on
+          Free, 256 MiB on paid plans).
         </p>
       </>
     ),

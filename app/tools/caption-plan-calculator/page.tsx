@@ -53,7 +53,7 @@ export default function CaptionPlanCalculatorPage() {
       includeOffers: true,
       featureList: [
         "Interactive monthly minute estimator across Reels, TikTok, YouTube videos, podcasts, and voice notes",
-        "Single-recording duration limit and 1080p unwatermarked video matching",
+        "Single-recording duration limit and original-quality unwatermarked video matching",
         "Exact Pakistani rupee (PKR) cost-per-minute breakdown for Free, Starter, Creator, and Studio tiers",
       ],
     }),
@@ -105,7 +105,7 @@ export default function CaptionPlanCalculatorPage() {
             <Wallet size={24} aria-hidden="true" />
             <h3>Fixed PKR prices, local payment rails</h3>
             <p>
-              Every paid tier includes clean 1080p unwatermarked MP4 exports and
+              Every paid tier includes clean original-quality unwatermarked MP4 exports and
               supports Stripe card checkout plus Pakistani manual verification
               (Bank transfer, JazzCash, Easypaisa, SadaPay, NayaPay) when
               enabled.

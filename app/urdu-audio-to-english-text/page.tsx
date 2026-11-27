@@ -386,7 +386,7 @@ export default function UrduAudioToEnglishText() {
                 </td>
                 <td>
                   Burned-in stacked Nastaliq Urdu + Inter English captions (720p
-                  watermarked on Free; 1080p unwatermarked on{" "}
+                  watermarked on Free; original resolution, unwatermarked, on{" "}
                   <Link href="/pricing">paid plans</Link>)
                 </td>
               </tr>

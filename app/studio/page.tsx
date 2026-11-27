@@ -111,7 +111,7 @@ export default function Studio() {
             </strong>
             <p>
               {usage.plan.slug === "free"
-                ? "Upgrade to Starter (PKR 999 for 60 min) or Creator (PKR 2,499 for 200 min) for clean 1080p MP4 exports without watermarks and longer recordings. Existing TXT, SRT, and VTT transcripts remain downloadable."
+                ? "Upgrade to Starter (PKR 999 for 60 min) or Creator (PKR 2,499 for 200 min) for clean original-quality MP4 exports without watermarks and longer recordings. Existing TXT, SRT, and VTT transcripts remain downloadable."
                 : "Renew or upgrade in Studio Billing via card checkout or local Pakistani transfer to continue transcribing new recordings."}
             </p>
           </div>

@@ -65,8 +65,8 @@ const videoCaptionQuestions = [
         required). On the Free plan, rendered captioned MP4 videos are up to
         720p (<code>1280×720</code> landscape or <code>720×1280</code> portrait)
         with a watermark. Paid plans (
-        <Link href="/pricing">Starter, Creator, and Studio</Link>) render up to
-        1080p without a watermark. Generated MP4 files currently have a 256 MiB
+        <Link href="/pricing">Starter, Creator, and Studio</Link>) render at the
+        original resolution (up to 4K) without a watermark. Generated MP4 files currently have a 256 MiB
         operational safety limit, while TXT, SRT, and VTT files remain
         downloadable separately.
       </p>
@@ -165,7 +165,7 @@ export default function VideoCaptions() {
           <p className="free-note">
             10 free minutes once per account, no card required. Free MP4 exports
             up to 720p with watermark.{" "}
-            <Link href="/pricing">See 1080p unwatermarked plans</Link>
+            <Link href="/pricing">See original-quality unwatermarked plans</Link>
           </p>
         </MarketingIntro>
         <CaptionStyleGallery preload />
@@ -319,7 +319,7 @@ export default function VideoCaptions() {
                   safe-area margins
                 </td>
                 <td>
-                  Free: up to 720p with watermark; Paid: up to 1080p without
+                  Free: up to 720p with watermark; Paid: original resolution (up to 4K) without
                   watermark; 256 MiB output cap
                 </td>
               </tr>
@@ -361,7 +361,7 @@ export default function VideoCaptions() {
             <h3>Orientation, HDR, and file limits</h3>
             <p>
               Landscape, portrait, and square videos keep their aspect ratio up
-              to your plan’s 720p or 1080p tier. Properly tagged BT.2020 HLG or
+              to your plan’s tier (720p on Free, original resolution on paid plans). Properly tagged BT.2020 HLG or
               PQ HDR phone videos are tone-mapped to SDR BT.709 MP4. See{" "}
               <Link href="/supported-formats">
                 supported formats and render limits
@@ -411,7 +411,7 @@ export default function VideoCaptions() {
         <div className="product-actions">
           <StartFree />
           <Link href="/pricing" className="button secondary">
-            Compare plans &amp; 1080p exports
+            Compare plans &amp; original-quality exports
           </Link>
         </div>
       </section>
