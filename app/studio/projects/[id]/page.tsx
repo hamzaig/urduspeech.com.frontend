@@ -6,7 +6,6 @@ import {
   ArrowLeft,
   Captions,
   Clock,
-  Check,
   Ellipsis,
   Film,
   Music2,
@@ -25,6 +24,7 @@ import {
 import { api, mutation, explain, ApiError } from "@/lib/api";
 import { captionChanges } from "@/lib/caption-edits";
 import { startDownload } from "@/lib/download";
+import { sameRenderAppearance } from "@/lib/render-appearance";
 import type {
   Project,
   Track,
@@ -35,6 +35,7 @@ import type {
   Render,
   ExportFile,
   ProjectActivity,
+  Usage,
 } from "@/lib/contracts";
 import { PageTitle, ErrorNotice, Saved } from "@/components/common";
 import { outputLabel, type Preset } from "@/components/output-options";
@@ -45,6 +46,7 @@ import {
 } from "@/components/caption-template";
 import { ProjectCaptionLines } from "@/components/project-caption-lines";
 import { ProjectExports } from "@/components/project-exports";
+import { FinalVideoReview } from "@/components/final-video-review";
 import { ProjectStyle } from "@/components/project-style";
 import "./workspace.css";
 import { MediaReadiness } from "@/components/media-readiness";
@@ -118,11 +120,18 @@ function CaptionProject({ id }: { id: string }) {
     string | undefined
   >();
   const [mediaReady, setMediaReady] = useState(false);
+  const [maxRenderHeight, setMaxRenderHeight] =
+    useState<Usage["plan"]["maxRenderHeight"]>(720);
   const [uploadId, setUploadId] = useState<string | null>(null);
   const [tool, setTool] = useState<"captions" | "style">("captions");
   const [previewEnlarged, setPreviewEnlarged] = useState(false);
   const [previewCollapsed, setPreviewCollapsed] = useState(false);
   const [exportOpen, setExportOpen] = useState(false);
+  const [watching, setWatching] = useState<{
+    id: string;
+    style: string;
+  } | null>(null);
+  const watchButton = useRef<HTMLButtonElement>(null);
   const exportDialog = useRef<HTMLDialogElement>(null);
   const detailDialog = useRef<HTMLDialogElement>(null);
   const [mediaDimensions, setMediaDimensions] = useState<{
@@ -467,7 +476,7 @@ function CaptionProject({ id }: { id: string }) {
   }
   function changePlacement(next: CaptionPlacement | null) {
     if (next?.y === placement?.y && next?.scale === placement?.scale) return;
-    if (render && render.id !== priorPlacementRender) {
+    if (render && !render.appearance && render.id !== priorPlacementRender) {
       setPriorPlacementRender(render.id);
       try {
         sessionStorage.setItem("urduspeech:placement-render:" + id, render.id);
@@ -719,20 +728,21 @@ function CaptionProject({ id }: { id: string }) {
   // while paused at the start so its position can be adjusted.
   const stageCue =
     activeCue ?? (!playableMedia || time === 0 ? previewCue : undefined);
-  const stageProgress = stageCue
-    ? Math.max(
-        0,
-        Math.min(
-          0.999,
-          (time - stageCue.startMs) /
-            Math.max(1, stageCue.endMs - stageCue.startMs),
-        ),
-      )
-    : 0;
   const generating =
     !!job && !settledJobs.includes(job.state) && !trackExpected(job);
   const focusGeneration = generating || (!!job && trackExpected(job) && !track);
   const reviewing = !!(track || transcript) && !focusGeneration;
+  useEffect(() => {
+    if (!reviewing) return;
+    const controller = new AbortController();
+    api<Usage>("/v1/usage", { signal: controller.signal })
+      .then(({ plan }) => {
+        if (!controller.signal.aborted)
+          setMaxRenderHeight(plan.maxRenderHeight);
+      })
+      .catch(() => {});
+    return () => controller.abort();
+  }, [reviewing]);
   useEffect(() => {
     const dialog = exportDialog.current;
     if (!reviewing || !dialog) return;
@@ -743,7 +753,14 @@ function CaptionProject({ id }: { id: string }) {
     !!track &&
     render?.trackId === track.id &&
     render.presetVersionId === preset &&
-    render.id !== priorPlacementRender;
+    (render.appearance
+      ? sameRenderAppearance(
+          render.appearance.captionPlacement,
+          render.appearance.captionFonts,
+          placement,
+          project?.settings.captionFonts as CaptionFontChoice | undefined,
+        )
+      : render.id !== priorPlacementRender);
   const currentRender =
     hasCurrentRender && appearanceStatus === "saved" ? render : null;
   const visibleFiles = files.filter((file) =>
@@ -754,6 +771,11 @@ function CaptionProject({ id }: { id: string }) {
         (!transcriptVariant || file.variant === transcriptVariant.kind),
   );
   const previewPreset = presets.find(({ id }) => id === preset);
+  const renderedPreset = presets.find((p) => p.id === render?.presetVersionId);
+  const renderedStyle = renderedPreset
+    ? templateLabel(renderedPreset)
+    : (render?.presetVersionId.split(":")[0].replaceAll("-", " ") ??
+      "Saved style");
   const videoBlock =
     appearanceStatus === "saving"
       ? "Saving your style and placement…"
@@ -991,6 +1013,13 @@ function CaptionProject({ id }: { id: string }) {
     setExportOpen(true);
     window.history.replaceState(window.history.state, "", "#editor-exports");
   };
+  function watchFinal() {
+    if (!currentRender || currentRender.state !== "completed" || dirty) return;
+    player.current?.pause();
+    exportDialog.current?.close();
+    setExportOpen(false);
+    setWatching({ id: currentRender.id, style: renderedStyle });
+  }
 
   return (
     <div
@@ -1021,10 +1050,18 @@ function CaptionProject({ id }: { id: string }) {
             </span>
           )}
           {fileReady && !dirty && (
-            <span className="desk-save-state">
-              <Check size={15} />
-              MP4 ready
-            </span>
+            <button
+              type="button"
+              className="secondary watch-final"
+              ref={watchButton}
+              onClick={watchFinal}
+              aria-haspopup="dialog"
+              aria-label="Watch final video"
+              title="Watch final video"
+            >
+              <Play size={16} aria-hidden="true" />
+              <span>Watch final video</span>
+            </button>
           )}
           <button
             className="desk-primary"
@@ -1293,7 +1330,20 @@ function CaptionProject({ id }: { id: string }) {
                   controls={playableMedia.audio}
                   template={previewPreset}
                   lines={stageCue ? stageCue.text.split("\n") : []}
-                  time={stageProgress}
+                  cues={cues}
+                  cue={stageCue}
+                  playheadMs={time}
+                  maxRenderHeight={maxRenderHeight}
+                  outputFrame={
+                    currentRender &&
+                    currentRender.width > 0 &&
+                    currentRender.height > 0
+                      ? {
+                          width: currentRender.width,
+                          height: currentRender.height,
+                        }
+                      : undefined
+                  }
                   placement={placement}
                   fonts={
                     project?.settings.captionFonts as
@@ -1473,6 +1523,11 @@ function CaptionProject({ id }: { id: string }) {
           dirty={dirty}
           videoBlock={videoBlock}
           files={visibleFiles}
+          selectedStyle={
+            previewPreset ? templateLabel(previewPreset) : "Selected style"
+          }
+          renderedStyle={renderedStyle}
+          onWatch={watchFinal}
           onEdit={() => {
             exportDialog.current?.close();
             openTool("captions");
@@ -1496,6 +1551,17 @@ function CaptionProject({ id }: { id: string }) {
           }
         />
       </dialog>
+      {watching && (
+        <FinalVideoReview
+          key={watching.id}
+          renderId={watching.id}
+          styleLabel={watching.style}
+          onClose={() => {
+            setWatching(null);
+            requestAnimationFrame(() => watchButton.current?.focus());
+          }}
+        />
+      )}
       <dialog
         className="desk-dialog"
         ref={detailDialog}

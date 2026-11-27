@@ -21,12 +21,19 @@ import {
   Volume2,
   VolumeX,
 } from "lucide-react";
+import type { CaptionTemplate } from "@/components/caption-template";
+import { PreviewCaptionLines } from "@/components/preview-caption-lines";
+import type { CaptionFontChoice } from "@/lib/caption-fonts";
 import {
-  TemplateLine,
-  templateFrame,
-  type CaptionTemplate,
-} from "@/components/caption-template";
-import { fontVars, type CaptionFontChoice } from "@/lib/caption-fonts";
+  fitPreviewScale,
+  layoutCaptionPreview,
+  observeCaptionFrames,
+  previewCueAt,
+  previewOutputFrame,
+  type PreviewCue,
+  type PreviewFrame,
+} from "@/lib/caption-preview";
+import { StageFullscreenControl } from "@/components/stage-fullscreen";
 
 /** Customer caption placement, mirrored by the API's `captionPlacement`. */
 export type CaptionPlacement = { y: number; scale: number };
@@ -65,7 +72,12 @@ export function CaptionStage({
   audio = false,
   template,
   lines,
-  time = 0,
+  time,
+  cue,
+  cues,
+  playheadMs,
+  outputFrame,
+  maxRenderHeight = 720,
   placement,
   onPlacementChange,
   playerRef,
@@ -81,9 +93,16 @@ export function CaptionStage({
   audio?: boolean;
   template: CaptionTemplate | undefined;
   /** Caption text lines for the current moment (empty hides the caption). */
-  lines: string[];
-  /** Cue-relative progress (0..1) used to light karaoke words. */
+  lines?: readonly string[];
+  /** Progress of the two-second untimed wizard sample (0..1). */
   time?: number;
+  cue?: Pick<PreviewCue, "startMs" | "endMs"> | null;
+  /** The complete editable track lets playback select the cue on the presented frame. */
+  cues?: readonly PreviewCue[];
+  playheadMs?: number;
+  /** Actual encoded dimensions take precedence over the plan's output cap. */
+  outputFrame?: PreviewFrame | null;
+  maxRenderHeight?: 720 | 1080 | 2160;
   placement: CaptionPlacement | null;
   onPlacementChange?: (next: CaptionPlacement) => void;
   playerRef?: Ref<HTMLMediaElement>;
@@ -105,12 +124,99 @@ export function CaptionStage({
     y: number;
     start: CaptionPlacement;
   } | null>(null);
-  const [ratio, setRatio] = useState<number | null>(null);
+  const [source, setSource] = useState<(PreviewFrame & { src: string }) | null>(
+    null,
+  );
+  const [clock, setClock] = useState<{
+    src: string;
+    ms: number;
+    paused: boolean;
+  } | null>(null);
   const [touched, setTouched] = useState(false);
-  const portrait = ratio !== null && ratio < 1;
-  const current = placement ?? defaultPlacement(template, portrait);
+  const native = source?.src === src ? source : null;
+  const encodedWidth = outputFrame?.width ?? 0;
+  const encodedHeight = outputFrame?.height ?? 0;
+  const size = useMemo(() => {
+    if (encodedWidth > 0 && encodedHeight > 0)
+      return { width: encodedWidth, height: encodedHeight };
+    return native ? previewOutputFrame(native, maxRenderHeight) : null;
+  }, [native, encodedWidth, encodedHeight, maxRenderHeight]);
+  const display = native ?? size;
+  const ratio = display ? display.width / display.height : null;
   const editable = !!onPlacementChange && !audio;
-  const sizeScale = template?.style?.sizeScale ?? 1;
+
+  const hasCaptions = !!template && !!(cues?.length || lines?.length);
+  useEffect(() => {
+    if (audio || !hasCaptions) return;
+    const video = frame.current?.querySelector("video");
+    if (!video) return;
+    return observeCaptionFrames(video, (ms) => {
+      const paused = video.paused;
+      setClock((old) =>
+        old?.src === src && old.ms === ms && old.paused === paused
+          ? old
+          : { src, ms, paused },
+      );
+    });
+  }, [audio, src, hasCaptions]);
+
+  const sample = clock?.src === src ? clock : null;
+  const paused = sample?.paused ?? true;
+  const mediaMs =
+    sample && !sample.paused ? sample.ms : (playheadMs ?? sample?.ms ?? 0);
+  const active = cues ? previewCueAt(cues, mediaMs) : undefined;
+  // Retain the selected cue for placement while parked at zero. During
+  // playback an empty interval in the track is also empty in the preview.
+  const parked = paused && mediaMs === 0;
+  const timing = active ?? (!cues || parked ? cue : null);
+  const text =
+    active?.text ?? (timing || !cues ? (lines?.join("\n") ?? "") : "");
+  const sampleMs =
+    paused && time !== undefined
+      ? Math.max(0, Math.min(1999, time * 2000))
+      : mediaMs % 2000;
+  const shownMs = timing
+    ? parked
+      ? Math.max(mediaMs, timing.startMs)
+      : mediaMs
+    : sampleMs;
+  const requestedScale = placement?.scale ?? 1;
+  const singleCueText = cues?.length ? "" : text;
+  const fittedScale = useMemo(
+    () =>
+      size && template && requestedScale > 1
+        ? fitPreviewScale(
+            size,
+            template,
+            fonts,
+            requestedScale,
+            cues?.length ? cues : [{ text: singleCueText }],
+          )
+        : requestedScale,
+    [size, template, fonts, requestedScale, cues, singleCueText],
+  );
+  const requestedY = placement?.y;
+  const layout = useMemo(
+    () =>
+      template && size && text
+        ? layoutCaptionPreview({
+            text,
+            frame: size,
+            template,
+            fonts,
+            placement:
+              requestedY == null ? null : { y: requestedY, scale: fittedScale },
+          })
+        : null,
+    [text, size, template, fonts, requestedY, fittedScale],
+  );
+  const current =
+    layout && size
+      ? {
+          y: (layout.top + layout.blockHeight / 2) / size.height,
+          scale: placement?.scale ?? 1,
+        }
+      : (placement ?? defaultPlacement(template, ratio !== null && ratio < 1));
 
   function update(next: CaptionPlacement) {
     onPlacementChange?.({
@@ -167,16 +273,7 @@ export function CaptionStage({
   const frameStyle = {
     ...(ratio ? { ["--stage-ratio" as string]: String(ratio) } : {}),
   } as CSSProperties;
-  // The server sizes captions from the short frame side (4.2% x template x
-  // customer scale); `cqmin` follows the same side of the preview frame.
-  const captionStyle = {
-    ...templateFrame(template ?? fallbackTemplate),
-    ...fontVars(fonts),
-    top: `${current.y * 100}%`,
-    fontSize: `calc(${(0.042 * 1.21 * Math.min(1.6, sizeScale * current.scale)) / sizeScale} * 100cqmin)`,
-  } as CSSProperties;
-
-  return (
+  const stage = (
     <div
       ref={frame}
       className={"caption-stage" + (audio ? " is-audio" : "")}
@@ -193,21 +290,30 @@ export function CaptionStage({
         playsInline={!audio || undefined}
         onLoadedMetadata={(e) => {
           const media = e.currentTarget;
-          if (media instanceof HTMLVideoElement && media.videoWidth)
-            setRatio(media.videoWidth / media.videoHeight);
+          if (
+            media instanceof HTMLVideoElement &&
+            media.videoWidth &&
+            media.videoHeight
+          )
+            setSource({
+              src,
+              width: media.videoWidth,
+              height: media.videoHeight,
+            });
           onLoadedMetadata?.(media);
         }}
         onTimeUpdate={(e) => onTimeUpdate?.(e.currentTarget.currentTime * 1000)}
         onError={onError}
       />
-      {!audio && lines.length > 0 && template && (
-        <div
-          className={
-            "caption-stage-caption caption-fonts" +
-            (editable ? " is-editable" : "")
-          }
-          data-band={template.style?.boxStyle === "band" || undefined}
-          style={captionStyle}
+      {!audio && template && size && layout && (
+        <PreviewCaptionLines
+          className={"caption-stage-caption" + (editable ? " is-editable" : "")}
+          template={template}
+          frame={size}
+          layout={layout}
+          startMs={timing?.startMs ?? 0}
+          endMs={timing?.endMs ?? 2000}
+          timeMs={shownMs}
           tabIndex={editable ? 0 : undefined}
           role={editable ? "group" : undefined}
           aria-label={
@@ -221,16 +327,6 @@ export function CaptionStage({
           onPointerCancel={end}
           onKeyDown={editable ? keys : undefined}
         >
-          {lines.map((line, index) => (
-            <TemplateLine
-              key={index}
-              template={template}
-              text={line}
-              highlight={Math.floor(time * line.split(" ").length)}
-              dir="auto"
-              lang={/\p{Script=Arabic}/u.test(line) ? "ur" : undefined}
-            />
-          ))}
           {editable && coach && !touched && (
             <span className="caption-stage-coach" aria-hidden="true">
               <Move size={13} /> Drag to move
@@ -243,23 +339,14 @@ export function CaptionStage({
               className="caption-stage-handle"
               aria-hidden="true"
               onPointerDown={(e) => begin("resize", e)}
-              onPointerMove={move}
-              onPointerUp={end}
-              onPointerCancel={end}
             />
           )}
-        </div>
+        </PreviewCaptionLines>
       )}
     </div>
   );
+  return audio ? stage : <div className="caption-stage-viewport">{stage}</div>;
 }
-
-const fallbackTemplate: CaptionTemplate = {
-  id: "clean:1",
-  name: "clean",
-  color: "#FFFFFF",
-  box: false,
-};
 
 /** Move/resize hint with Smaller, Bigger and Reset beside the stage. */
 export function PlacementControls({
@@ -407,7 +494,6 @@ export function StageTransport({
       })
       .join(" ");
   }, [cues, length]);
-  const element = media.current;
   const seek = (
     <input
       type="range"
@@ -420,7 +506,11 @@ export function StageTransport({
       value={Math.min(at, length || 1)}
       style={{ ["--seek" as string]: `${length ? (at / length) * 100 : 0}%` }}
       onChange={(e) => {
-        if (element) element.currentTime = Number(e.target.value);
+        const element = media.current;
+        if (!element) return;
+        const seconds = e.currentTarget.valueAsNumber;
+        element.currentTime = seconds;
+        setAt(seconds);
       }}
     />
   );
@@ -469,6 +559,7 @@ export function StageTransport({
         className="stage-transport-button"
         aria-label={muted ? "Unmute" : "Mute"}
         onClick={() => {
+          const element = media.current;
           if (element) element.muted = !element.muted;
         }}
       >
@@ -478,6 +569,7 @@ export function StageTransport({
           <Volume2 size={16} aria-hidden="true" />
         )}
       </button>
+      <StageFullscreenControl media={media} />
     </div>
   );
 }

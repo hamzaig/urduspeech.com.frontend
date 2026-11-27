@@ -1,0 +1,84 @@
+/* Output-pixel lengths are projected onto the video frame's query container. */
+.preview-caption,
+.caption-stage-caption.preview-caption {
+  position: absolute;
+  display: block;
+  transform: none;
+  pointer-events: none;
+  text-align: center;
+  touch-action: none;
+  user-select: none;
+}
+
+.preview-caption.is-editable {
+  pointer-events: auto;
+}
+
+.preview-caption-band {
+  position: absolute;
+  inset-inline: 0;
+  opacity: var(--preview-opacity);
+}
+
+.preview-caption-line {
+  position: absolute;
+  left: 50%;
+  width: max-content;
+  white-space: pre;
+  overflow-wrap: normal;
+  isolation: isolate;
+  transform: translateX(-50%) scale(var(--preview-entrance));
+  transform-origin: center bottom;
+  line-height: 0;
+  letter-spacing: normal;
+  font-kerning: none;
+  font-optical-sizing: none;
+  --preview-row-size: var(--preview-latin-size);
+  font-size: var(--preview-row-size);
+  text-shadow: var(--preview-shadow, none);
+  filter: var(--preview-glow, none);
+  opacity: var(--preview-opacity);
+  font-synthesis: none;
+  paint-order: stroke fill;
+}
+
+.preview-caption-line,
+.preview-caption-line .preview-caption-latin {
+  font-family: var(--preview-latin);
+  font-weight: var(--preview-latin-weight);
+  -webkit-text-stroke: var(--preview-latin-bold) currentColor;
+}
+
+.preview-caption-line[lang="ur"] {
+  --preview-row-size: var(--preview-urdu-size);
+  font-family: var(--preview-urdu);
+  font-weight: var(--preview-urdu-weight);
+  -webkit-text-stroke: var(--preview-urdu-bold) currentColor;
+}
+
+.preview-caption-line .preview-caption-latin {
+  font-size: calc(var(--preview-latin-size) * var(--preview-word-scale, 1));
+}
+
+.preview-caption-line [data-spoken] {
+  --preview-word-scale: var(--preview-highlight-scale);
+  font-size: calc(var(--preview-row-size) * var(--preview-word-scale));
+  color: var(--preview-highlight);
+}
+
+/* A zero-width strut puts all runs on the native alphabetic baseline. */
+.preview-caption-line::before {
+  content: "";
+  display: inline-block;
+  width: 0;
+  height: var(--preview-ascent);
+  vertical-align: baseline;
+}
+
+.preview-caption-line::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: calc(-1 * var(--preview-line-pad));
+  background: var(--preview-line-box, transparent);
+}

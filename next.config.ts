@@ -1,5 +1,20 @@
 import type { NextConfig } from "next";
 
+// Only this endpoint on the configured backend serves the completed MP4.
+const upstream = process.env.BACKEND_ORIGIN;
+const streamOrigin =
+  upstream && URL.canParse(upstream) ? new URL(upstream) : null;
+const finalVideoStream =
+  streamOrigin?.protocol === "https:" &&
+  !streamOrigin.username &&
+  !streamOrigin.password &&
+  !streamOrigin.port &&
+  streamOrigin.pathname === "/" &&
+  !streamOrigin.search &&
+  !streamOrigin.hash
+    ? new URL("/v1/downloads/stream", streamOrigin.origin).href
+    : "";
+
 const CONTENT_SECURITY_POLICY = [
   "default-src 'self'",
   "base-uri 'self'",
@@ -12,7 +27,7 @@ const CONTENT_SECURITY_POLICY = [
   "font-src 'self' data:",
   // Studio previews stream the uploaded source from S3 via signed URLs.
   "media-src 'self' blob: https://*.amazonaws.com https://*.s3.amazonaws.com",
-  "connect-src 'self' https://*.amazonaws.com https://*.s3.amazonaws.com",
+  `connect-src 'self' https://*.amazonaws.com https://*.s3.amazonaws.com ${finalVideoStream}`.trim(),
   "upgrade-insecure-requests",
 ].join("; ");
 

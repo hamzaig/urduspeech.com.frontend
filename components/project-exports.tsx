@@ -7,6 +7,7 @@ import {
   Download,
   FileText,
   LoaderCircle,
+  Play,
 } from "lucide-react";
 import { outputLabel } from "@/components/output-options";
 import { explain, ApiError } from "@/lib/api";
@@ -22,6 +23,9 @@ type Props = {
   dirty: boolean;
   videoBlock: string;
   files: ExportFile[];
+  selectedStyle: string;
+  renderedStyle: string;
+  onWatch: () => void;
   onEdit: () => void;
   onRender: () => void;
   onCancel: () => void;
@@ -39,6 +43,9 @@ export function ProjectExports({
   dirty,
   videoBlock,
   files,
+  selectedStyle,
+  renderedStyle,
+  onWatch,
   onEdit,
   onRender,
   onCancel,
@@ -77,7 +84,10 @@ export function ProjectExports({
           </span>
           <div>
             <h3 id="video-export-title">Video with captions</h3>
-            <p>One MP4 with the styled captions embedded.</p>
+            <p>
+              MP4 with embedded captions ·{" "}
+              {ready ? renderedStyle : selectedStyle}
+            </p>
           </div>
         </div>
         {pending ? (
@@ -110,18 +120,29 @@ export function ProjectExports({
                 ` · ${render.width} × ${render.height}`}
               {render.watermark && " · Watermarked"}
             </p>
-            <button
-              type="button"
-              onClick={() => download(`/v1/renders/${render.id}/download`)}
-              disabled={busy || dirty}
-            >
-              <Download size={16} />
-              Download MP4
-            </button>
+            <div className="final-video-actions">
+              <button type="button" onClick={onWatch} disabled={busy || dirty}>
+                <Play size={16} aria-hidden="true" /> Watch final video
+              </button>
+              <button
+                type="button"
+                className="secondary"
+                onClick={() => download(`/v1/renders/${render.id}/download`)}
+                disabled={busy || dirty}
+              >
+                <Download size={16} />
+                Download MP4
+              </button>
+            </div>
           </>
         ) : (
           <>
             {videoBlock && <p className="export-help">{videoBlock}</p>}
+            {!current && render?.state === "completed" && (
+              <p className="export-help">
+                Create a new MP4 to include your current captions and styling.
+              </p>
+            )}
             {current && render?.state === "failed" && (
               <p className="export-help" role="status">
                 {render.errorCode
@@ -153,7 +174,7 @@ export function ProjectExports({
             disabled={busy}
             onClick={() => download(`/v1/renders/${render.id}/download`)}
           >
-            Download previous MP4
+            Download previous MP4 · {renderedStyle}
           </button>
         )}
       </section>

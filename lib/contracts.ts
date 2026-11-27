@@ -52,7 +52,8 @@ export type Usage = {
     maxSourceSeconds: number;
     maxUploadBytes: number;
     concurrentProcessing: number;
-    maxRenderHeight: 720 | 1080;
+    maxRenderHeight: 720 | 1080 | 2160;
+    maxRenderBytes?: number;
     watermark: boolean;
     sourceRetentionDays: number;
     id: string;
@@ -125,7 +126,8 @@ export type PlanCatalog = {
     maxSourceSeconds: number;
     maxUploadBytes: number;
     concurrentProcessing: number;
-    maxRenderHeight: 720 | 1080;
+    maxRenderHeight: 720 | 1080 | 2160;
+    maxRenderBytes?: number;
     watermark: boolean;
     sourceRetentionDays: number;
     id: string;
@@ -140,7 +142,7 @@ export type PlanCatalog = {
   overage: false;
   topUp: false;
   batch: false;
-  render4k: false;
+  render4k: boolean;
   providers: {
     stripe: { checkoutAvailable: boolean; reason: null | string };
     manual: {
@@ -309,6 +311,11 @@ export type Render = {
   trackId: string;
   sourceVersionId: string;
   presetVersionId: string;
+  appearance?: {
+    captionPlacement: null | { y: number; scale: number };
+    captionFonts: { urdu: string; latin: string };
+    placementSource: "requested" | "fitted";
+  };
   state: "pending" | "rendering" | "completed" | "failed" | "cancelled";
   progressMs: number;
   width: number;
@@ -350,7 +357,8 @@ export type BillingSummary = {
       maxSourceSeconds: number;
       maxUploadBytes: number;
       concurrentProcessing: number;
-      maxRenderHeight: 720 | 1080;
+      maxRenderHeight: 720 | 1080 | 2160;
+      maxRenderBytes?: number;
       watermark: boolean;
       sourceRetentionDays: number;
       id: string;
@@ -423,11 +431,11 @@ export type ComputeAccounts = {
       appName: string;
       environment: string;
       imageId?: string;
-      imageSource?: string;
       alignmentImageId?: string;
       timeoutMs: number;
       cpu: number;
       memoryMiB: number;
+      imageSource?: string;
     };
   }[];
 };
@@ -447,6 +455,7 @@ export type ComputeAccountInput = {
     timeoutMs: number;
     cpu: number;
     memoryMiB: number;
+    imageSource?: string;
   };
 };
 export type ComputeAccountPatch = {
@@ -466,6 +475,7 @@ export type ComputeAccountPatch = {
     timeoutMs: number;
     cpu: number;
     memoryMiB: number;
+    imageSource?: string;
   };
 };
 export type ManualPaymentReviews = {
@@ -494,46 +504,50 @@ export type ManualPaymentReviews = {
   }[];
   nextCursor: string | null;
 };
-export type ProjectActivity = {
-  jobs: { id: string; state: string }[];
-  renders: { id: string; state: string }[];
-  exports: { id: string; state: string }[];
-  uploads: { id: string; state: string }[];
-};
-export type ContactMessage = {
-  id: string;
-  name: string;
-  email: string;
-  subject: string;
-  message: string;
-  read: boolean;
-  createdAt: string;
-};
-export type ContactMessages = { messages: ContactMessage[]; unread: number };
-export type AdminUser = {
-  id: string;
-  email: string;
-  name: string;
-  emailVerified: boolean;
-  createdAt: string;
-  lastLoginAt: string | null;
-  plan: { code: string; name: string; endsAt: string | null };
-  blocked: boolean;
+export type ContactMessages = {
+  messages: {
+    id: string;
+    name: string;
+    email: string;
+    subject: string;
+    message: string;
+    read: boolean;
+    createdAt: string;
+  }[];
+  unread: number;
 };
 export type AdminUsers = {
-  users: AdminUser[];
-  nextBefore: string | null;
+  users: {
+    id: string;
+    email: string;
+    name: string;
+    emailVerified: boolean;
+    createdAt: string;
+    lastLoginAt: null | string;
+    plan: { code: string; name: string; endsAt: null | string };
+    blocked: boolean;
+  }[];
+  nextBefore: null | string;
   totals: { users: number; paid: number; blocked: number };
 };
 export type AdminUserDetail = {
-  user: AdminUser;
+  user: {
+    id: string;
+    email: string;
+    name: string;
+    emailVerified: boolean;
+    createdAt: string;
+    lastLoginAt: null | string;
+    plan: { code: string; name: string; endsAt: null | string };
+    blocked: boolean;
+  };
   usage: {
     allowanceSeconds: number;
     consumedSeconds: number;
     reservedSeconds: number;
     remainingSeconds: number;
     activeJobs: number;
-    blockingReason: string | null;
+    blockingReason: null | string;
   };
   counts: { projects: number; uploads: number; failedUploads: number };
   jobs: Record<string, number>;
@@ -542,7 +556,7 @@ export type AdminUserDetail = {
     state: string;
     createdAt: string;
     updatedAt: string;
-    durationSeconds: number | null;
+    durationSeconds: null | number;
   }[];
   payments: {
     id: string;
@@ -550,7 +564,27 @@ export type AdminUserDetail = {
     status: string;
     amountMinor: number;
     currency: string;
-    plan: string | null;
+    plan: null | string;
     createdAt: string;
   }[];
 };
+export type RenderFeedbackPage = {
+  items: {
+    renderId: string;
+    projectId: string;
+    projectTitle: string;
+    userEmail: string;
+    rating: number;
+    comment: null | string;
+    submittedAt: string;
+  }[];
+  nextCursor: null | string;
+};
+export type ProjectActivity = {
+  jobs: { id: string; state: string }[];
+  renders: { id: string; state: string }[];
+  exports: { id: string; state: string }[];
+  uploads: { id: string; state: string }[];
+};
+export type ContactMessage = ContactMessages["messages"][number];
+export type AdminUser = AdminUsers["users"][number];

@@ -80,6 +80,10 @@ const mappings = {
     document.paths["/v1/admin/compute/accounts/{accountId}"].patch.requestBody
       .content["application/json"].schema,
   ManualPaymentReviews: response("/v1/admin/billing/manual-payments"),
+  ContactMessages: response("/v1/admin/contact-messages"),
+  AdminUsers: response("/v1/admin/users"),
+  AdminUserDetail: response("/v1/admin/users/{userId}"),
+  RenderFeedbackPage: response("/v1/admin/render-feedback"),
 };
 if (document.paths["/v1/projects/{projectId}/activity"])
   mappings.ProjectActivity = response("/v1/projects/{projectId}/activity");
@@ -87,13 +91,22 @@ const text =
   "// Generated from reviewed backend OpenAPI; run scripts/generate-api.mjs.\n" +
   Object.entries({ ...document.components.schemas, ...mappings })
     .map(([name, schema]) => "export type " + name + " = " + type(schema) + ";")
-    .join("\n");
+    .join("\n") +
+  '\nexport type ContactMessage = ContactMessages["messages"][number];' +
+  '\nexport type AdminUser = AdminUsers["users"][number];';
 await writeFile(
   "lib/contracts.ts",
   await format(text, { parser: "typescript" }),
 );
 // Explicit operator paths only. Webhooks, health and future admin APIs stay out.
 const admin = new Set([
+  "/v1/admin/render-feedback",
+  "/v1/admin/contact-messages",
+  "/v1/admin/contact-messages/{messageId}",
+  "/v1/admin/users",
+  "/v1/admin/users/{userId}",
+  "/v1/admin/users/{userId}/block",
+  "/v1/admin/users/{userId}/plan",
   "/v1/admin/session",
   "/v1/admin/settings",
   "/v1/admin/settings/{key}",

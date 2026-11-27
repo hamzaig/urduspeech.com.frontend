@@ -158,10 +158,12 @@ export function CaptionChoiceStep({
   projectId,
   presets,
   initial,
+  maxRenderHeight,
 }: {
   projectId: string;
   presets: Preset[];
   initial: Defaults;
+  maxRenderHeight?: 720 | 1080 | 2160;
 }) {
   const router = useRouter();
   // Refreshing the page keeps the customer on the same step with the same
@@ -464,6 +466,7 @@ export function CaptionChoiceStep({
               template={template}
               lines={sampleLines(options)}
               time={cycle}
+              maxRenderHeight={maxRenderHeight}
               fonts={fonts}
               placement={placement}
               onPlacementChange={setPlacement}

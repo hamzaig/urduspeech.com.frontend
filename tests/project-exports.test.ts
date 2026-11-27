@@ -36,6 +36,9 @@ function options(overrides: Partial<ComponentProps<typeof ProjectExports>>) {
       onRender() {},
       onCancel() {},
       onFiles() {},
+      onWatch() {},
+      selectedStyle: "Line box",
+      renderedStyle: "Word pop",
       download() {},
       ...overrides,
     }),
@@ -45,6 +48,8 @@ function options(overrides: Partial<ComponentProps<typeof ProjectExports>>) {
 test("the selected render downloads directly even after its source expires", () => {
   const html = options({ render, current: true, videoBlock: "Source expired" });
   assert.match(html, /Download MP4/);
+  assert.match(html, /Watch final video/);
+  assert.match(html, /Word pop/);
   assert.match(html, /404 × 720/);
   assert.doesNotMatch(html, /Create captioned MP4|Download previous MP4/);
 });
@@ -53,6 +58,9 @@ test("a changed caption track or appearance keeps the previous video distinct", 
   const html = options({ render, current: false });
   assert.match(html, /Create captioned MP4/);
   assert.match(html, /Download previous MP4/);
+  assert.match(html, /Word pop/);
+  assert.match(html, /Line box/);
+  assert.doesNotMatch(html, /Watch final video/);
   assert.doesNotMatch(html, /Ready to download/);
 });
 
