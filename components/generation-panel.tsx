@@ -1,95 +1,134 @@
 import Link from "next/link";
-import { Play } from "lucide-react";
+import type { ReactNode } from "react";
+import { AudioLines, Check, Play } from "lucide-react";
 import type { JobStatusV1 } from "@/lib/contracts";
 
-const STAGES = [
-  ["media", "Preparing audio"],
-  ["canonical", "Transcribing speech"],
-  ["timing", "Timing words"],
-  ["correction", "Checking text"],
-  ["variants", "Writing captions"],
-] as const;
+const stages: Record<string, [string, string]> = {
+  created: [
+    "Preparing your recording",
+    "Your recording is queued for processing.",
+  ],
+  uploaded: [
+    "Preparing your recording",
+    "Checking the source for caption generation.",
+  ],
+  validating: [
+    "Checking your recording",
+    "Verifying the media before transcription.",
+  ],
+  audio_preparing: [
+    "Preparing audio",
+    "Preparing the selected audio track for transcription.",
+  ],
+  timing_transcribing: [
+    "Timing the speech",
+    "Finding when each word is spoken.",
+  ],
+  canonical_transcribing: [
+    "Transcribing speech",
+    "Writing the words from your recording.",
+  ],
+  correcting: [
+    "Checking your captions",
+    "Preparing the text in your selected caption format.",
+  ],
+  aligning: [
+    "Matching captions to your audio",
+    "Your captions are written. We’re syncing each line with the recording.",
+  ],
+  provider_retrying: [
+    "Waiting to retry",
+    "Processing will resume automatically.",
+  ],
+  partial_ready: [
+    "Your transcript is available",
+    "Open the transcript below to review the available text.",
+  ],
+};
 
-const FAILED = ["failed", "cancelled", "validation_failed"];
-
-/**
- * Wizard step 3 while captions are being generated: a progress bar driven by
- * the job's completed stages, or a start button when no job exists yet.
- */
 export function GenerationPanel({
   job,
   mediaReady,
   busy,
   onStart,
+  reviewReady,
+  renderState,
+  cancelAction,
 }: {
   job: JobStatusV1 | null;
   mediaReady: boolean;
   busy: boolean;
   onStart: () => void;
+  reviewReady: boolean;
+  renderState?: string;
+  cancelAction: ReactNode;
 }) {
-  const done = new Set(job?.completedStages ?? []);
-  const failed = !!job && FAILED.includes(job.state);
-  const percent = !job
-    ? 0
-    : Math.min(96, 6 + Math.round((done.size / STAGES.length) * 90));
-  const current = STAGES.find(([key]) => !done.has(key));
+  const stopped =
+    !!job && ["failed", "cancelled", "validation_failed"].includes(job.state);
+  const waiting = job?.freeQueueBusy && !stopped && !reviewReady;
+  const [title, detail] = reviewReady
+    ? [
+        "Your captions are ready",
+        renderState === "completed"
+          ? "Your captioned MP4 is also ready to download."
+          : renderState && !["failed", "cancelled"].includes(renderState)
+            ? "Your MP4 is being prepared. You can review your captions now."
+            : "Review the text and timing in your caption editor.",
+      ]
+    : stopped
+      ? [
+          job.state === "cancelled"
+            ? "Caption generation cancelled"
+            : "Caption generation stopped",
+          job.errorCode?.replaceAll("_", " ").toLowerCase() ??
+            "You can try again.",
+        ]
+      : waiting
+        ? [
+            "Your video is in the Free queue",
+            "Both Free workers are busy. Your video will start automatically when a slot opens.",
+          ]
+        : job
+          ? (stages[job.state] ?? [
+              "Preparing your captions",
+              "You can leave this page and return to your project later.",
+            ])
+          : [
+              "Ready to generate captions",
+              "Your recording is checked and ready.",
+            ];
   return (
-    <section className="generation-panel" aria-labelledby="generation-title">
-      <h2 id="generation-title">
-        {failed
-          ? "Caption generation stopped"
-          : job?.freeQueueBusy
-            ? "Your video is in the Free queue"
-            : job
-            ? "Generating your captions"
-            : "Ready to generate captions"}
-      </h2>
-      {failed ? (
-        <p>
-          {job.errorCode
-            ? `Reason: ${job.errorCode.replaceAll("_", " ").toLowerCase()}.`
-            : "Processing did not finish."}{" "}
-          Support reference: {job.supportId}. You can try again.
-        </p>
-      ) : job?.freeQueueBusy ? (
-        <div>
-          <p role="status">Both Free workers are busy. Your video will start automatically when a slot opens. You can leave this page.</p>
-          <Link href="/studio/billing">Compare paid plans for separate processing slots</Link>
-        </div>
-      ) : job ? (
-        <>
-          <p role="status">
-            {current ? current[1] + "…" : "Finishing up…"} This usually takes
-            about as long as your recording. You can leave this page.
-          </p>
-          <progress
-            max={100}
-            value={percent}
-            aria-label="Caption generation progress"
-          />
-          <ol className="generation-stages">
-            {STAGES.map(([key, label]) => (
-              <li key={key} data-done={done.has(key) || undefined}>
-                {label}
-              </li>
-            ))}
-          </ol>
-        </>
-      ) : (
-        <p>
-          {mediaReady
-            ? "Your recording is checked. Start generating captions."
-            : "We are checking your recording. This takes a moment after upload."}
-        </p>
+    <section
+      className="generation-panel generation-focus"
+      aria-labelledby="generation-title"
+    >
+      <div className="generation-symbol" aria-hidden="true">
+        {reviewReady ? <Check /> : <AudioLines />}
+      </div>
+      <div role="status">
+        <h2 id="generation-title">{title}</h2>
+        <p>{detail}</p>
+      </div>
+      {waiting && <Link href="/studio/billing">Compare paid plans</Link>}
+      {reviewReady && (
+        <a className="button" href="#caption-editor-title">
+          Review captions
+        </a>
       )}
-      {mediaReady && (!job || failed) && (
-        <div className="wizard-actions">
-          <button onClick={onStart} disabled={busy || !mediaReady}>
-            <Play size={16} aria-hidden="true" />
-            {failed ? "Try again" : "Generate captions"}
-          </button>
-        </div>
+      {mediaReady && !reviewReady && (!job || stopped) && (
+        <button onClick={onStart} disabled={busy}>
+          <Play size={16} />
+          {stopped ? "Try again" : "Generate captions"}
+        </button>
       )}
+      {job && (
+        <details>
+          <summary>Processing details</summary>
+          <p>Status: {job.state.replaceAll("_", " ")}</p>
+          <p>Support reference: {job.supportId}</p>
+        </details>
+      )}
+      {cancelAction}
     </section>
   );
 }
