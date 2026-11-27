@@ -72,6 +72,30 @@
     "method": "POST"
   },
   {
+    "path": "/v1/admin/contact-messages",
+    "method": "GET"
+  },
+  {
+    "path": "/v1/admin/contact-messages/{messageId}",
+    "method": "PATCH"
+  },
+  {
+    "path": "/v1/admin/users",
+    "method": "GET"
+  },
+  {
+    "path": "/v1/admin/users/{userId}",
+    "method": "GET"
+  },
+  {
+    "path": "/v1/admin/users/{userId}/block",
+    "method": "POST"
+  },
+  {
+    "path": "/v1/admin/users/{userId}/plan",
+    "method": "POST"
+  },
+  {
     "path": "/v1/billing/manual/requests",
     "method": "POST"
   },
@@ -288,35 +312,23 @@
     "method": "GET"
   },
   {
+    "path": "/v1/renders/{renderId}/feedback-prompt",
+    "method": "POST"
+  },
+  {
+    "path": "/v1/renders/{renderId}/feedback",
+    "method": "POST"
+  },
+  {
+    "path": "/v1/admin/render-feedback",
+    "method": "GET"
+  },
+  {
     "path": "/v1/account",
     "method": "DELETE"
   },
   {
     "path": "/v1/deletions/{deletionId}",
     "method": "GET"
-  },
-  {
-    "path": "/v1/admin/contact-messages",
-    "method": "GET"
-  },
-  {
-    "path": "/v1/admin/contact-messages/{messageId}",
-    "method": "PATCH"
-  },
-  {
-    "path": "/v1/admin/users",
-    "method": "GET"
-  },
-  {
-    "path": "/v1/admin/users/{userId}",
-    "method": "GET"
-  },
-  {
-    "path": "/v1/admin/users/{userId}/block",
-    "method": "POST"
-  },
-  {
-    "path": "/v1/admin/users/{userId}/plan",
-    "method": "POST"
   }
 ]

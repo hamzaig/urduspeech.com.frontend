@@ -61,14 +61,19 @@ export const CAPTION_FONTS: readonly CaptionFontOption[] = CATALOG.map(
 export const DEFAULT_FONTS = { urdu: "noto-nastaliq", latin: "inter" } as const;
 export type CaptionFontChoice = { urdu?: string; latin?: string };
 
-/** CSS custom properties that switch a caption preview to the chosen fonts. */
-export function fontVars(choice: CaptionFontChoice | null | undefined) {
+export function resolveCaptionFonts(choice: CaptionFontChoice | null | undefined) {
   const urdu =
     CAPTION_FONTS.find((f) => f.id === choice?.urdu && f.script === "urdu") ??
     CAPTION_FONTS.find((f) => f.id === DEFAULT_FONTS.urdu)!;
   const latin =
     CAPTION_FONTS.find((f) => f.id === choice?.latin && f.script === "latin") ??
     CAPTION_FONTS.find((f) => f.id === DEFAULT_FONTS.latin)!;
+  return { urdu, latin };
+}
+
+/** CSS custom properties that switch a caption preview to the chosen fonts. */
+export function fontVars(choice: CaptionFontChoice | null | undefined) {
+  const { urdu, latin } = resolveCaptionFonts(choice);
   return {
     "--cap-urdu": `"${urdu.css}"`,
     "--cap-latin": `"${latin.css}"`,

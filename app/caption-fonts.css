@@ -1,3 +1,5 @@
+@import "./caption-preview.css";
+
 /* Caption preview faces: the same pinned OFL files the MP4 renderer uses. */
 @font-face {
   font-family: "cap-noto-nastaliq";

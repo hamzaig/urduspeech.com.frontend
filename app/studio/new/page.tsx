@@ -204,6 +204,7 @@ function NewProjectWizard() {
             projectId={resumedProject}
             presets={presets}
             initial={options}
+            maxRenderHeight={usage?.plan.maxRenderHeight}
           />
         )}
       </div>

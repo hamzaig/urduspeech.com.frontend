@@ -1976,6 +1976,93 @@ video.local-player {
   font-variant-numeric: tabular-nums;
 }
 
+/* The stage keeps its own aspect-ratio box, including while the transport is fullscreen. */
+.caption-stage-viewport {
+  width: 100%;
+  min-width: 0;
+}
+
+html:root :is(.wizard-preview, .preview-player)[data-stage-fullscreen] {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: grid;
+  grid-template: minmax(0, 1fr) auto / minmax(0, 1fr);
+  align-content: stretch;
+  gap: 0;
+  box-sizing: border-box;
+  /* Let the fixed insets follow the visible viewport when a phone rotates. */
+  width: auto;
+  height: auto;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right)
+    env(safe-area-inset-bottom) env(safe-area-inset-left);
+  overflow: hidden;
+  overscroll-behavior: contain;
+  border: 0;
+  border-radius: 0;
+  background: var(--color-stage-deep);
+  box-shadow: none;
+}
+
+[data-stage-fullscreen] > :not(.preview-matte, .caption-stage-viewport, .stage-transport) {
+  display: none;
+}
+
+[data-stage-fullscreen] > .preview-matte {
+  display: contents;
+  container-type: normal;
+}
+
+.preview-matte > .caption-stage-viewport,
+[data-stage-fullscreen] .caption-stage-viewport {
+  display: grid;
+  place-items: center;
+  align-self: stretch;
+  min-height: 0;
+  container-type: size;
+}
+
+[data-stage-fullscreen] .caption-stage-viewport > .caption-stage:not(.is-audio) {
+  width: min(100cqw, calc(100cqh * var(--stage-ratio)));
+  max-height: none;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+:root [data-stage-fullscreen] > .stage-transport {
+  --wizard-tile: var(--color-rule);
+  gap: clamp(4px, 1vw, 12px);
+  margin: 0;
+  padding: 4px clamp(6px, 2vw, 24px);
+  border: 0;
+  border-top: 1px solid var(--color-rule);
+  background: var(--color-surface);
+}
+
+[data-stage-fullscreen] .stage-transport-button {
+  min-width: 44px;
+  min-height: 44px;
+}
+
+[data-stage-fullscreen] .stage-transport-seek {
+  height: 44px;
+  background-size: 100% 6px;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+[data-stage-fullscreen] .stage-transport-time {
+  white-space: nowrap;
+}
+
+html:has([data-stage-fullscreen="viewport"]),
+body:has([data-stage-fullscreen="viewport"]) {
+  overflow: hidden;
+}
+
 /* Placement controls (wizard and project page) */
 .placement-controls {
   display: flex;

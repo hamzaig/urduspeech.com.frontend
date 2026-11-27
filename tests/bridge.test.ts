@@ -71,6 +71,13 @@ test("only known public product paths are bridged", () => {
   assert.equal(allowedRoute("/v1/projects", "GET"), true);
   assert.equal(allowedRoute("/v1/projects", "PUT"), false);
   assert.equal(allowedRoute("/v1/admin/settings", "GET"), true);
+  assert.equal(allowedRoute("/v1/admin/render-feedback", "GET"), true);
+  assert.equal(allowedRoute("/v1/admin/render-feedback", "POST"), false);
+  for (const path of ["feedback-prompt", "feedback"]) {
+    const endpoint = "/v1/renders/c9019e35-d21c-40b6-b070-75373654d5d3/" + path;
+    assert.equal(allowedRoute(endpoint, "POST"), true);
+    assert.equal(allowedRoute(endpoint, "GET"), false);
+  }
   assert.equal(allowedRoute("/v1/admin/billing/manual-payments", "GET"), true);
   assert.equal(allowedRoute("/v1/admin/compute/accounts", "DELETE"), false);
 });

@@ -16,6 +16,8 @@ import type {
   ManualPaymentReviews,
 } from "@/lib/contracts";
 import { PageTitle, ErrorNotice, Saved } from "@/components/common";
+import { AdminRenderFeedback } from "@/components/admin-render-feedback";
+import "@/components/admin-render-feedback.css";
 type Setting = AdminSettings["settings"][number];
 type Account = ComputeAccounts["accounts"][number];
 type Payment = ManualPaymentReviews["items"][number];
@@ -102,12 +104,14 @@ export default function Admin() {
       <nav className="operations-nav" aria-label="Operations sections">
         <a href="#users">Users</a>
         <a href="#contact-messages">Contact messages</a>
+        <a href="#render-feedback">Render feedback</a>
         <a href="#payment-reviews">Payment reviews</a>
         <a href="#compute-accounts">Modal accounts</a>
         <a href="#private-settings">Service settings</a>
       </nav>
       <UserDirectory fresh={session.fresh} />
       <ContactInbox />
+      <AdminRenderFeedback />
       <PaymentReviews fresh={session.fresh} />
       <ModalAccounts fresh={session.fresh} />
       <ServiceSettings fresh={session.fresh} />
