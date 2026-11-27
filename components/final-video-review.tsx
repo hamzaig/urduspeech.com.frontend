@@ -88,6 +88,7 @@ export function FinalVideoReview({
     const signal = request.current?.signal;
     if (promptChecked.current || !signal || signal.aborted) return;
     promptChecked.current = true;
+    let next: "form" | "claim-error";
     try {
       const result = await api<{ show: boolean }>(
         `/v1/renders/${renderId}/feedback-prompt`,
@@ -96,25 +97,34 @@ export function FinalVideoReview({
           signal,
         },
       );
-      if (signal.aborted || !dialog.current?.open) return;
-      if (result.show) {
-        const player = video.current;
-        if (
-          document.fullscreenElement &&
-          dialog.current.contains(document.fullscreenElement)
-        ) {
-          await document.exitFullscreen().catch(() => {});
-        }
-        if (player?.webkitDisplayingFullscreen) player.webkitExitFullscreen?.();
-        if (!signal.aborted) setFeedback("form");
-      } else setFeedback("skipped");
+      if (!result.show) {
+        if (!signal.aborted) setFeedback("skipped");
+        return;
+      }
+      next = "form";
     } catch {
-      if (!signal.aborted) {
-        // The server might already have claimed the invitation even if its
-        // reply was lost. The viewer can still open the form explicitly.
-        setFeedback("claim-error");
+      // The server may have recorded the invitation before its reply was lost.
+      next = "claim-error";
+    }
+
+    // Both the form and its manual fallback live outside the native video.
+    const surface = dialog.current;
+    const player = video.current;
+    if (signal.aborted || !surface?.open) return;
+    if (
+      document.fullscreenElement &&
+      surface.contains(document.fullscreenElement)
+    ) {
+      await document.exitFullscreen().catch(() => {});
+    }
+    if (player?.webkitDisplayingFullscreen) {
+      try {
+        player.webkitExitFullscreen?.();
+      } catch {
+        // Safari can leave native playback itself as the video ends.
       }
     }
+    if (!signal.aborted && surface.open) setFeedback(next);
   }
 
   function skipFeedback() {
