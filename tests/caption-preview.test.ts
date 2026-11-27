@@ -3,9 +3,11 @@ import test from "node:test";
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import type { CaptionTemplate } from "../components/caption-template";
+import { CaptionStage } from "../components/caption-stage";
 import { PreviewCaptionLines } from "../components/preview-caption-lines";
 import {
   layoutCaptionPreview,
+  fitPreviewScale,
   previewOutputFrame,
   karaokeWordEnds,
   spokenWord,
@@ -171,7 +173,11 @@ test("mixed Urdu/ASCII stays in logical order with the selected Latin face and o
     createElement(PreviewCaptionLines, {
       frame: input.frame,
       template: wordPop,
-      layout: layoutCaptionPreview({ ...input, template: wordPop, text: mixed }),
+      layout: layoutCaptionPreview({
+        ...input,
+        template: wordPop,
+        text: mixed,
+      }),
       startMs: 2013,
       endMs: 3887,
       timeMs: 3120,
@@ -215,4 +221,44 @@ test("line boxes and legacy bands use their respective native block padding", ()
     template: { id: "boxed:1", name: "boxed", box: true, color: "#FFFFFF" },
   });
   assert.deepEqual(boxed.band, { top: 998, bottom: 1088 });
+});
+
+test("one long cue limits the scale of the entire export, including a short active cue", () => {
+  const short = [{ text: "آج کی نئی بات" }];
+  const track = [...short, { text: latin }, { text: mixed }];
+  assert.equal(fitPreviewScale(portrait, wordPop, fonts, 1.5, short), 1.5);
+  assert.equal(fitPreviewScale(portrait, wordPop, fonts, 1.5, track), 1.25);
+  const hd = layoutCaptionPreview({
+    ...input,
+    template: wordPop,
+    frame: { width: 3840, height: 2160 },
+    placement: { y: 0.5, scale: 1.5 },
+  });
+  assert.deepEqual([hd.fontSize, hd.lineHeight], [91, 228]);
+});
+
+test("CaptionStage uses the actual frame and playhead even when the page still supplies the previous cue", () => {
+  const cues = [
+    { text: latin, startMs: 203, endMs: 1933 },
+    { text: mixed, startMs: 2013, endMs: 3887 },
+  ];
+  const props = {
+    src: "/fixture.mp4",
+    outputFrame: portrait,
+    template: wordPop,
+    fonts,
+    placement: null,
+    cue: cues[0],
+    lines: [latin],
+    cues,
+    onPlacementChange() {},
+  };
+  const at = (ms: number) =>
+    renderToStaticMarkup(
+      createElement(CaptionStage, { ...props, playheadMs: ms }),
+    );
+  assert.match(at(3120), /data-spoken="true"[^>]*>A<\/span>/);
+  assert.match(at(3120), /class="caption-stage-handle"/);
+  assert.match(at(3120), /tabindex="0"/i);
+  assert.doesNotMatch(at(1960), /data-preview-line/);
 });

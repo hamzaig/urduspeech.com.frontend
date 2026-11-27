@@ -25,6 +25,7 @@ import type { CaptionTemplate } from "@/components/caption-template";
 import { PreviewCaptionLines } from "@/components/preview-caption-lines";
 import type { CaptionFontChoice } from "@/lib/caption-fonts";
 import {
+  fitPreviewScale,
   layoutCaptionPreview,
   observeCaptionFrames,
   previewCueAt,
@@ -123,8 +124,14 @@ export function CaptionStage({
     y: number;
     start: CaptionPlacement;
   } | null>(null);
-  const [source, setSource] = useState<(PreviewFrame & { src: string }) | null>(null);
-  const [clock, setClock] = useState<{ src: string; ms: number; paused: boolean } | null>(null);
+  const [source, setSource] = useState<(PreviewFrame & { src: string }) | null>(
+    null,
+  );
+  const [clock, setClock] = useState<{
+    src: string;
+    ms: number;
+    paused: boolean;
+  } | null>(null);
   const [touched, setTouched] = useState(false);
   const native = source?.src === src ? source : null;
   const encodedWidth = outputFrame?.width ?? 0;
@@ -143,33 +150,71 @@ export function CaptionStage({
     if (!video || audio) return;
     return observeCaptionFrames(video, (ms) => {
       const paused = video.paused;
-      setClock((old) => old?.src === src && old.ms === ms && old.paused === paused
-        ? old : { src, ms, paused });
+      setClock((old) =>
+        old?.src === src && old.ms === ms && old.paused === paused
+          ? old
+          : { src, ms, paused },
+      );
     });
   }, [audio, src]);
 
   const sample = clock?.src === src ? clock : null;
   const paused = sample?.paused ?? true;
-  const mediaMs = paused ? playheadMs ?? sample?.ms ?? 0 : sample!.ms;
+  const mediaMs =
+    sample && !sample.paused ? sample.ms : (playheadMs ?? sample?.ms ?? 0);
   const active = cues ? previewCueAt(cues, mediaMs) : undefined;
   // Retain the selected cue for placement while parked at zero. During
   // playback an empty interval in the track is also empty in the preview.
   const parked = paused && mediaMs === 0;
   const timing = active ?? (!cues || parked ? cue : null);
-  const text = active?.text ?? (timing || !cues ? lines?.join("\n") ?? "" : "");
-  const sampleMs = paused && time !== undefined
-    ? Math.max(0, Math.min(1999, time * 2000))
-    : mediaMs % 2000;
-  const shownMs = timing ? (parked ? Math.max(mediaMs, timing.startMs) : mediaMs) : sampleMs;
-  const layout = useMemo(
-    () => template && size && text
-      ? layoutCaptionPreview({ text, frame: size, template, fonts, placement })
-      : null,
-    [text, size, template, fonts, placement],
+  const text =
+    active?.text ?? (timing || !cues ? (lines?.join("\n") ?? "") : "");
+  const sampleMs =
+    paused && time !== undefined
+      ? Math.max(0, Math.min(1999, time * 2000))
+      : mediaMs % 2000;
+  const shownMs = timing
+    ? parked
+      ? Math.max(mediaMs, timing.startMs)
+      : mediaMs
+    : sampleMs;
+  const requestedScale = placement?.scale ?? 1;
+  const singleCueText = cues?.length ? "" : text;
+  const fittedScale = useMemo(
+    () =>
+      size && template && requestedScale > 1
+        ? fitPreviewScale(
+            size,
+            template,
+            fonts,
+            requestedScale,
+            cues?.length ? cues : [{ text: singleCueText }],
+          )
+        : requestedScale,
+    [size, template, fonts, requestedScale, cues, singleCueText],
   );
-  const current = layout && size
-    ? { y: (layout.top + layout.blockHeight / 2) / size.height, scale: placement?.scale ?? 1 }
-    : placement ?? defaultPlacement(template, ratio !== null && ratio < 1);
+  const requestedY = placement?.y;
+  const layout = useMemo(
+    () =>
+      template && size && text
+        ? layoutCaptionPreview({
+            text,
+            frame: size,
+            template,
+            fonts,
+            placement:
+              requestedY == null ? null : { y: requestedY, scale: fittedScale },
+          })
+        : null,
+    [text, size, template, fonts, requestedY, fittedScale],
+  );
+  const current =
+    layout && size
+      ? {
+          y: (layout.top + layout.blockHeight / 2) / size.height,
+          scale: placement?.scale ?? 1,
+        }
+      : (placement ?? defaultPlacement(template, ratio !== null && ratio < 1));
 
   function update(next: CaptionPlacement) {
     onPlacementChange?.({
@@ -243,8 +288,16 @@ export function CaptionStage({
         playsInline={!audio || undefined}
         onLoadedMetadata={(e) => {
           const media = e.currentTarget;
-          if (media instanceof HTMLVideoElement && media.videoWidth && media.videoHeight)
-            setSource({ src, width: media.videoWidth, height: media.videoHeight });
+          if (
+            media instanceof HTMLVideoElement &&
+            media.videoWidth &&
+            media.videoHeight
+          )
+            setSource({
+              src,
+              width: media.videoWidth,
+              height: media.videoHeight,
+            });
           onLoadedMetadata?.(media);
         }}
         onTimeUpdate={(e) => onTimeUpdate?.(e.currentTarget.currentTime * 1000)}
@@ -284,9 +337,6 @@ export function CaptionStage({
               className="caption-stage-handle"
               aria-hidden="true"
               onPointerDown={(e) => begin("resize", e)}
-              onPointerMove={move}
-              onPointerUp={end}
-              onPointerCancel={end}
             />
           )}
         </PreviewCaptionLines>

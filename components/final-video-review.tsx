@@ -110,7 +110,8 @@ export function FinalVideoReview({
       } else setFeedback("skipped");
     } catch {
       if (!signal.aborted) {
-        promptChecked.current = false;
+        // The server might already have claimed the invitation even if its
+        // reply was lost. The viewer can still open the form explicitly.
         setFeedback("claim-error");
       }
     }
@@ -131,7 +132,9 @@ export function FinalVideoReview({
     try {
       await api<{ saved: true }>(`/v1/renders/${renderId}/feedback`, {
         ...mutation("POST", { rating, comment: comment.trim() || undefined }),
-        signal: AbortSignal.any([signal, AbortSignal.timeout(20000)]),
+        // A submitted rating can finish even when the viewer leaves the page.
+        keepalive: true,
+        signal: AbortSignal.timeout?.(20000),
       });
       if (!signal.aborted) {
         setFeedback("sent");
@@ -220,9 +223,9 @@ export function FinalVideoReview({
           <button
             className="text-button"
             type="button"
-            onClick={() => void afterPlayback()}
+            onClick={() => setFeedback("form")}
           >
-            Retry feedback
+            Leave feedback
           </button>
         )}
       </div>

@@ -85,8 +85,7 @@ export function PreviewCaptionLines({
       ),
     [layout, style, frame.width],
   );
-  if (timeMs < assTimeMs(startMs) || timeMs >= assTimeMs(endMs))
-    return null;
+  if (timeMs < assTimeMs(startMs) || timeMs >= assTimeMs(endMs)) return null;
 
   const active = spokenWord(ends, startMs, timeMs);
   const cq = (px: number) => (px * 100) / frame.width + "cqw";
@@ -101,7 +100,8 @@ export function PreviewCaptionLines({
 
   const captionStyle = {
     top: (100 * layout.boundsTop) / frame.height + "%",
-    height: (100 * (layout.boundsBottom - layout.boundsTop)) / frame.height + "%",
+    height:
+      (100 * (layout.boundsBottom - layout.boundsTop)) / frame.height + "%",
     insetInline: (100 * layout.safeX) / frame.width + "%",
     fontSize: cq(layout.fontSize),
     color: template.color,
