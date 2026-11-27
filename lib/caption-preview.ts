@@ -33,8 +33,19 @@ export function previewOutputFrame(
   };
 }
 
-const graphemes = new Intl.Segmenter("ur", { granularity: "grapheme" });
-const count = (text: string) => [...graphemes.segment(text)].length;
+const segmenter =
+  typeof Intl.Segmenter === "function"
+    ? new Intl.Segmenter("ur", { granularity: "grapheme" })
+    : null;
+function* graphemes(text: string) {
+  if (segmenter) {
+    for (const { segment } of segmenter.segment(text)) yield segment;
+  } else {
+    // Older browsers can still keep Urdu vowel marks with their letters.
+    yield* text.match(/\P{M}\p{M}*|\p{M}+/gu) ?? [];
+  }
+}
+const count = (text: string) => [...graphemes(text)].length;
 const hasArabic = /\p{Script=Arabic}/u;
 // generateAss explicitly switches just these runs to the Latin face in an Urdu line.
 export const latinRun = /([A-Za-z0-9@._:/?=+%#&-]+)/;
@@ -57,7 +68,7 @@ function wrap(text: string, rules: ReturnType<typeof dimensions>) {
   // widths here would choose different words for the next ASS event.
   const width = (line: string) => {
     let width = 0;
-    for (const { segment } of graphemes.segment(line))
+    for (const segment of graphemes(line))
       width +=
         (segment === " " ? 0.32 : /[A-ZMW@]/u.test(segment) ? 0.95 : 0.8) *
         fontSize;
@@ -386,8 +397,8 @@ export function observeCaptionFrames(
     if (!video.paused && !video.ended) pending = requestAnimationFrame(tick);
   };
   const play = () => {
-    sync();
-    if (!presented) {
+    if (presented) sync();
+    else {
       cancelAnimationFrame(pending);
       tick();
     }

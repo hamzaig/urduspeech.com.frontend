@@ -1,0 +1,791 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-font",
+        "value": "cap-poppins",
+        "files": [
+          "app/caption-fonts.css"
+        ],
+        "createdAt": "2026-11-27T19:05:43.050Z",
+        "reason": "The export renderer pins Poppins SemiBold for a selectable caption face. This declaration supplies the matching live preview."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-noto-nastaliq",
+        "files": [
+          "app/caption-fonts.css"
+        ],
+        "createdAt": "2026-11-27T19:06:11.730Z",
+        "reason": "The rendering catalog pins this selectable caption face. The Studio preview needs the matching font file for MP4 parity."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-gulzar",
+        "files": [
+          "app/caption-fonts.css"
+        ],
+        "createdAt": "2026-11-27T19:06:11.750Z",
+        "reason": "The rendering catalog pins this selectable caption face. The Studio preview needs the matching font file for MP4 parity."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-noto-naskh",
+        "files": [
+          "app/caption-fonts.css"
+        ],
+        "createdAt": "2026-11-27T19:06:11.775Z",
+        "reason": "The rendering catalog pins this selectable caption face. The Studio preview needs the matching font file for MP4 parity."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-lateef",
+        "files": [
+          "app/caption-fonts.css"
+        ],
+        "createdAt": "2026-11-27T19:06:11.833Z",
+        "reason": "The rendering catalog pins this selectable caption face. The Studio preview needs the matching font file for MP4 parity."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-inter",
+        "files": [
+          "app/caption-fonts.css"
+        ],
+        "createdAt": "2026-11-27T19:06:11.864Z",
+        "reason": "The rendering catalog pins this selectable caption face. The Studio preview needs the matching font file for MP4 parity."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-bebas-neue",
+        "files": [
+          "app/caption-fonts.css"
+        ],
+        "createdAt": "2026-11-27T19:06:11.897Z",
+        "reason": "The rendering catalog pins this selectable caption face. The Studio preview needs the matching font file for MP4 parity."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-playfair",
+        "files": [
+          "app/caption-fonts.css"
+        ],
+        "createdAt": "2026-11-27T19:06:11.918Z",
+        "reason": "The rendering catalog pins this selectable caption face. The Studio preview needs the matching font file for MP4 parity."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-amiri",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.637Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-scheherazade",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.646Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-harmattan",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.656Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-markazi",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.666Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-noto-kufi",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.677Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-reem-kufi",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.689Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-kufam",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.699Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-noto-sans-arabic",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.711Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-cairo",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.719Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-almarai",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.729Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-el-messiri",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.738Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-mada",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.748Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-changa",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.758Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-ibm-plex-arabic",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.768Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-alexandria",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.779Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-vazirmatn",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.789Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-beiruti",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.799Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-rakkas",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.811Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-lalezar",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.819Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-jomhuria",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.830Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-baloo-bhaijaan",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.838Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-blaka",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.848Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-handjet",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.858Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-lemonada",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.869Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-playpen-arabic",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.880Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-open-sans",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.889Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-lato",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.898Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-work-sans",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.907Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-dm-sans",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.918Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-plus-jakarta",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.929Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-lexend",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.938Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-urbanist",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.950Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-sora",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.962Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-archivo",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.973Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-barlow-condensed",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.986Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-oswald",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:07.999Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-fira-sans",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.014Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-kanit",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.027Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-exo",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.038Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-titillium",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.050Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-red-hat",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.061Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-lora",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.072Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-pt-serif",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.086Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-libre-baskerville",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.097Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-eb-garamond",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.110Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-dm-serif",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.121Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-zilla-slab",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.134Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-spectral",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.146Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-anton",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.157Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-archivo-black",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.170Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-bangers",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.182Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-bungee",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.194Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-righteous",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.205Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-alfa-slab",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.219Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-russo",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.232Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-fjalla",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.247Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-lilita",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.260Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-luckiest-guy",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.275Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-titan",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.288Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-staatliches",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.300Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-orbitron",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.314Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-press-start",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.325Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-shrikhand",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.338Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-baloo",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.350Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-lobster",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.365Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-abril",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.382Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-pacifico",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.395Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-dancing-script",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.413Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-caveat",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.428Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-satisfy",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.445Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-great-vibes",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.464Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-kalam",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.480Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-permanent-marker",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.496Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-indie-flower",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.513Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-amatic",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.525Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-kaushan",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.538Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-jetbrains-mono",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.551Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-space-mono",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.565Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      },
+      {
+        "rule": "design-system-font",
+        "value": "cap-courier-prime",
+        "files": [
+          "app/caption-fonts-imported.css"
+        ],
+        "createdAt": "2026-11-27T19:29:08.577Z",
+        "reason": "Studio uses this selectable caption catalog font to preview the same typeface burned into the exported MP4."
+      }
+    ]
+  }
+}

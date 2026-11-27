@@ -145,9 +145,11 @@ export function CaptionStage({
   const ratio = display ? display.width / display.height : null;
   const editable = !!onPlacementChange && !audio;
 
+  const hasCaptions = !!template && !!(cues?.length || lines?.length);
   useEffect(() => {
+    if (audio || !hasCaptions) return;
     const video = frame.current?.querySelector("video");
-    if (!video || audio) return;
+    if (!video) return;
     return observeCaptionFrames(video, (ms) => {
       const paused = video.paused;
       setClock((old) =>
@@ -156,7 +158,7 @@ export function CaptionStage({
           : { src, ms, paused },
       );
     });
-  }, [audio, src]);
+  }, [audio, src, hasCaptions]);
 
   const sample = clock?.src === src ? clock : null;
   const paused = sample?.paused ?? true;
