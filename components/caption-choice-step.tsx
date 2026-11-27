@@ -167,6 +167,7 @@ export function CaptionChoiceStep({
   // Refreshing the page keeps the customer on the same step with the same
   // choices: the draft lives in this browser until captions are generated.
   const [draft] = useState(() => readDraft(projectId));
+  const [showPreview, setShowPreview] = useState(false);
   const [step, setStep] = useState<Step>(draft?.step ?? 1);
   // AI correction and automatic MP4 are on by default in the wizard.
   const [options, setOptions] = useState<Defaults>(
@@ -273,7 +274,8 @@ export function CaptionChoiceStep({
   // Loop the sample's karaoke highlight over a two-second cycle.
   const cycle = (time % 2000) / 2000;
   return (
-    <div className="wizard-shell">
+    <div className="wizard-shell" data-show-preview={showPreview}>
+      <button type="button" className="wizard-view-switch secondary" aria-expanded={showPreview} aria-controls="wizard-live-preview" onClick={() => setShowPreview(!showPreview)}>{showPreview ? "Back to choices" : "View sample on video"}</button>
       <WizardRail
         steps={rail}
         current={step}
@@ -289,7 +291,7 @@ export function CaptionChoiceStep({
             <p>{STEP_TITLES[step].help}</p>
           </div>
         </header>
-        <div className="wizard-body">
+        <div key={step} className="wizard-body">
           {error && <ErrorNotice message={error} />}
           {step === 1 && (
             <>
@@ -456,7 +458,7 @@ export function CaptionChoiceStep({
           )}
         </footer>
       </section>
-      <aside className="wizard-card wizard-preview" aria-labelledby="wizard-preview-title">
+      <aside id="wizard-live-preview" className="wizard-card wizard-preview" aria-labelledby="wizard-preview-title">
         <header className="wizard-preview-head">
           <h2 id="wizard-preview-title">Live preview</h2>
           <span className="wizard-pill">Sample text</span>

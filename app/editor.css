@@ -2164,3 +2164,58 @@ video.local-player {
   display: grid;
   gap: var(--space-sm);
 }
+
+/* Keep the choice area and navigation stable as a catalogue grows or filters. */
+.wizard-shell .wizard-body {
+  min-inline-size: 0;
+  align-content: start;
+}
+
+.wizard-body > *, .wizard-body fieldset,
+.wizard-main .font-grid > *, .wizard-main .template-grid > * {
+  min-inline-size: 0;
+}
+
+.wizard-main .font-grid, .wizard-main .template-grid {
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 7.75rem), 1fr));
+  align-content: start;
+}
+
+.wizard-main .font-option {
+  align-self: stretch;
+}
+
+.wizard-upload .upload-form {
+  gap: var(--space-md);
+  padding: var(--space-md);
+}
+
+.wizard-shell :is(.wizard-foot button, .font-tab, .font-chip) {
+  min-block-size: 2.75rem;
+}
+
+@media (min-width: 56.01rem) and (min-height: 40rem) {
+  .wizard-main:has(.wizard-body) {
+    block-size: clamp(32rem, 72dvh, 48rem);
+  }
+  .wizard-main .wizard-body {
+    flex: 1 1 auto;
+    min-block-size: 0;
+    overflow-y: auto;
+    scrollbar-gutter: stable;
+  }
+  .wizard-main > :is(header, footer, .media-readiness) {
+    flex-shrink: 0;
+  }
+}
+
+@media (max-width: 56rem) {
+  .wizard-shell .wizard-main { order: 1; }
+  .wizard-shell .wizard-preview { order: 2; }
+  .wizard-foot { padding-block-end: max(var(--space-sm), env(safe-area-inset-bottom)); }
+  .wizard-body :is(.font-grid, .template-grid) {
+    max-block-size: 48svh;
+    overflow-y: auto;
+    padding: 0.25rem;
+  }
+}

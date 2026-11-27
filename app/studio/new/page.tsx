@@ -2,7 +2,7 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Upload, FileVideo, X, ShieldCheck } from "lucide-react";
+import { Upload, FileVideo, X, ShieldCheck, Languages, Type, Palette, SlidersHorizontal, Sparkles } from "lucide-react";
 import { api, ApiError, mutation, explain } from "@/lib/api";
 import { trackEvent } from "@/lib/analytics";
 import type {
@@ -18,7 +18,7 @@ import {
   type Preset,
 } from "@/components/output-options";
 import { PageTitle, ErrorNotice } from "@/components/common";
-import { WizardSteps } from "@/components/wizard-steps";
+import { WizardRail } from "@/components/wizard-steps";
 import { CaptionChoiceStep } from "@/components/caption-choice-step";
 export default function NewProject() {
   return (
@@ -214,7 +214,6 @@ function NewProjectWizard() {
         title="New upload"
         description="Upload your audio or video. Next you choose captions, font, style and options, then generate."
       />
-      <WizardSteps current={0} />
       {!ready ? (
         setupError ? (
           <ErrorNotice
@@ -232,8 +231,16 @@ function NewProjectWizard() {
           </p>
         )
       ) : (
-        <div className="new-grid">
-          <div className="upload-form">
+        <div className="wizard-shell wizard-upload">
+          <WizardRail current={0} steps={[
+            { label: "Upload", detail: "", icon: Upload },
+            { label: "Captions", detail: "", icon: Languages },
+            { label: "Font", detail: "", icon: Type },
+            { label: "Style", detail: "", icon: Palette },
+            { label: "Options", detail: "", icon: SlidersHorizontal },
+            { label: "Generate", detail: "", icon: Sparkles },
+          ]} />
+          <div className="upload-form wizard-card wizard-main">
             {error && (
               <div>
                 <ErrorNotice message={error} />
@@ -365,7 +372,7 @@ function NewProjectWizard() {
               </div>
             </section>
           </div>
-          <aside className="upload-aside" aria-labelledby="upload-summary">
+          <aside className="upload-aside wizard-card wizard-preview" aria-labelledby="upload-summary">
             <h2 id="upload-summary">Upload details</h2>
             <dl>
               <div>

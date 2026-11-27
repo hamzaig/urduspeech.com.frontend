@@ -21,6 +21,7 @@ export type JobStatusV1 = {
   state: string;
   version: number;
   supportId: string;
+  freeQueueBusy?: boolean;
   completedStages: string[];
   retry: { attempt: number; nextAttemptAt: null | string };
   errorCode: null | string;
