@@ -201,7 +201,6 @@ export function CaptionChoiceStep({
   const template =
     presets.find(({ id }) => id === options.captionPresetVersionId) ??
     presets[0];
-  const premiumOnFree = template?.tier === "premium";
 
   function set<K extends keyof Defaults>(key: K, value: Defaults[K]) {
     setOptions((old) => {
@@ -351,12 +350,6 @@ export function CaptionChoiceStep({
                 onChange={(id) => id && set("captionPresetVersionId", id)}
                 name="wizard-template"
               />
-              {premiumOnFree && (
-                <p className="wizard-note">
-                  Premium style: captions and SRT/VTT work on every plan; the
-                  captioned MP4 with this style needs a paid plan.
-                </p>
-              )}
             </fieldset>
           )}
           {step === 4 && (

@@ -75,8 +75,7 @@ export const commonQuestions: readonly QuestionItem[] = [
       <p>
         Download a plain UTF-8 text transcript (TXT). When timing is ready, you
         can export SRT or WebVTT (VTT) subtitles. Supported video projects can
-        also render a burned-in captioned MP4 in Clean, Social highlight, or
-        Boxed Nastaliq presets.
+        also render a captioned MP4 with any style in the template gallery.
       </p>
     ),
   },

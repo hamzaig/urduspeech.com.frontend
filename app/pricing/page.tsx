@@ -46,7 +46,7 @@ const included = [
   "Browser cue editor with local recording playback, non-overlapping timestamp checks, and saved track versions",
   "Optional conservative AI text correction with accept/reject suggestions",
   "Unlimited UTF-8 TXT, SRT, and WebVTT subtitle downloads for your projects",
-  "Clean, Social highlight (#FFD54F), and Boxed burned-in MP4 presets",
+  "All caption templates for MP4 exports, including Word pop and karaoke",
 ];
 
 export default function Pricing() {

@@ -150,8 +150,7 @@ export function OutputOptions({
           defaultLabel="Account default"
         />
         <small>
-          Previews are approximate; the rendered MP4 uses the server template.
-          Premium templates need a paid plan.
+          The preview approximates how your selected style will look in the MP4.
         </small>
       </fieldset>
     </fieldset>
