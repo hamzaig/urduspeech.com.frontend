@@ -201,7 +201,7 @@ export default function ProjectEditor({
           .then(async (j) => {
             if (!alive.current) return;
             setJob(j);
-            if (settledJobs.includes(j.state)) await load();
+            if (settledJobs.includes(j.state) || (!track && j.capabilities.timedCaptionsReady)) await load();
           })
           .catch((e) => {
             if (alive.current) {
@@ -538,7 +538,36 @@ export default function ProjectEditor({
         ),
       )
     : 0;
-  const generating = !!job && !settledJobs.includes(job.state);
+  const generating = !!job && !settledJobs.includes(job.state) && job.state !== "validation_failed";
+  const focusGeneration = generating && !track;
+  const cancelAction = job?.capabilities.canCancel && (
+      <button
+        className="secondary"
+        disabled={busy}
+        onClick={() =>
+          (![
+            "created",
+            "upload_pending",
+            "uploaded",
+            "validating",
+            "quota_reserved",
+          ].includes(job.state) &&
+            !window.confirm(
+              "Processing has already started, so these minutes will still be used. Retrying this file later will not charge them again. Cancel processing?",
+            )) ||
+          action(async () =>
+            setJob(
+              await api<JobStatusV1>(
+                "/v1/jobs/" + job.id + "/cancel",
+                mutation("POST", {}, crypto.randomUUID()),
+              ),
+            ),
+          )
+        }
+      >
+        Cancel processing
+      </button>
+  );
   const previewPreset = presets.find(({ id }) => id === preset);
   const hasDraft = !!(track || transcript);
   const processingStatus =
@@ -566,7 +595,7 @@ export default function ProjectEditor({
       <PageTitle
         title={project ? <bdi>{project.title}</bdi> : "Your project"}
         description={
-          project && !hasDraft
+          project && !job && !hasDraft
             ? "Check your recording and start transcription."
             : undefined
         }
@@ -588,17 +617,21 @@ export default function ProjectEditor({
               onComplete={load}
             />
           )}
-          {!track && <WizardSteps current={5} />}
-          {(!track || generating) && (job || (mediaReady && !uploadId)) && (
+          {!job && !track && <WizardSteps current={5} />}
+          {(job || (!track && mediaReady && !uploadId)) && (
             <GenerationPanel
               job={job}
+              reviewReady={!!track}
+              renderState={render?.state}
+              cancelAction={cancelAction}
               mediaReady={mediaReady}
               busy={busy}
               onStart={process}
             />
           )}
+          {!focusGeneration && <>
           <div className="project-status-bar">
-            <details className="processing-panel" open={!hasDraft}>
+            <details className="processing-panel" open={!job && !hasDraft}>
               <summary>
                 <strong>Project status</strong>
                 <span className="status-label" role="status">
@@ -634,35 +667,7 @@ export default function ProjectEditor({
                       Start transcription
                     </button>
                     )}
-                    {job?.capabilities.canCancel && (
-                      <button
-                        className="secondary"
-                        disabled={busy}
-                        onClick={() =>
-                          (![
-                            "created",
-                            "upload_pending",
-                            "uploaded",
-                            "validating",
-                            "quota_reserved",
-                          ].includes(job.state) &&
-                            !window.confirm(
-                              "Processing has already started, so these minutes will still be used. Retrying this file later will not charge them again. Cancel processing?",
-                            )) ||
-                          action(async () =>
-                            setJob(
-                              await api<JobStatusV1>(
-                                "/v1/jobs/" + job.id + "/cancel",
-                                mutation("POST", {}, crypto.randomUUID()),
-                              ),
-                            ),
-                          )
-                        }
-                      >
-                        Cancel processing
-                      </button>
-                    )}
-                    <button
+                    {hasDraft && <button
                       className="text-button"
                       disabled={busy}
                       onClick={() =>
@@ -678,7 +683,7 @@ export default function ProjectEditor({
                       }
                     >
                       Save as defaults
-                    </button>
+                    </button>}
                   </div>
                 </section>
               </div>
@@ -1160,6 +1165,7 @@ export default function ProjectEditor({
               Delete project
             </button>
           </details>
+          </>}
         </>
       )}
     </div>
