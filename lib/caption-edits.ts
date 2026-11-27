@@ -25,3 +25,14 @@ export function captionChanges(
       endMs,
     }));
 }
+
+/** Seconds on the player, with milliseconds when adjusting a caption boundary. */
+export function captionTime(ms: number, precise = false) {
+  const value = Math.max(0, Math.floor(ms));
+  const minutes = Math.floor(value / 60000);
+  const seconds = String(Math.floor(value / 1000) % 60).padStart(2, "0");
+  const fraction = String(value % 1000)
+    .padStart(3, "0")
+    .replace(/0+$/, "");
+  return `${minutes}:${seconds}${precise && fraction ? "." + fraction : ""}`;
+}

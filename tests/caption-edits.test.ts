@@ -1,7 +1,7 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import { bridge, MAX_BODY } from "../lib/bridge";
-import { captionChanges } from "../lib/caption-edits";
+import { captionChanges, captionTime } from "../lib/caption-edits";
 
 for (const [hours, count] of [
   [3, 1919],
@@ -70,3 +70,10 @@ for (const [hours, count] of [
     assert.equal(calls, 1);
   });
 }
+
+test("caption boundaries display millisecond precision and long recording times", () => {
+  assert.equal(captionTime(1005, true), "0:01.005");
+  assert.equal(captionTime(60120, true), "1:00.12");
+  assert.equal(captionTime(3600000, true), "60:00");
+  assert.equal(captionTime(61001), "1:01");
+});
